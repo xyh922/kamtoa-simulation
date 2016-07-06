@@ -188,7 +188,6 @@
           parent="base_link" translateX="0" translateY="-0.5" flipY="1"/>
 
     <!-- Hokuyo Sensors Model -->
-
         <link name="hokuyo_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
@@ -234,9 +233,7 @@
             </sensor>
         </gazebo>
 
-
-
-        <!-- Differential drive controller  -->
+    <!-- Differential drive controller  -->
     <gazebo>
       <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
 
@@ -254,13 +251,13 @@
         <broadcastTF>1</broadcastTF>
         <wheelTorque>30</wheelTorque>
         <wheelAcceleration>1.8</wheelAcceleration>
-        <commandTopic>cmd_vel</commandTopic>
+        <commandTopic>kamtoa/cmd_vel</commandTopic>
         <odometryFrame>odom</odometryFrame>
         <odometryTopic>odom</odometryTopic>
         <robotBaseFrame>base_footprint</robotBaseFrame>
 
 
       </plugin>
-    </gazebo> 
+    </gazebo>
 
 </robot>
