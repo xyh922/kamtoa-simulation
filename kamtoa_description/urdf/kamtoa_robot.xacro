@@ -7,6 +7,7 @@
     <xacro:include filename="$(find kamtoa_description)/urdf/constant.xacro" />
     <xacro:include filename="$(find kamtoa_description)/urdf/material.xacro" />
     <xacro:include filename="$(find kamtoa_description)/urdf/hokuyo.xacro" />
+    <xacro:include filename="$(find kamtoa_description)/urdf/camera.xacro" />
     <xacro:include filename="$(find kamtoa_description)/urdf/diff_drive_plugin.xacro" />
 
     <!-- Base_Footprint (ground mark)  -->
