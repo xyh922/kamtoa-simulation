@@ -1,0 +1,5 @@
+<launch>
+
+    <node pkg="kamtoa_teleop" type="kamtoa_keyboard.py" name="kamtoa_keyboard" output="screen" />
+
+</launch>

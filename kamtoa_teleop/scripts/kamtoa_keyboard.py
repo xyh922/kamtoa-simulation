@@ -87,9 +87,9 @@ def vels(speed,turn):
 
 if __name__=="__main__":
     settings = termios.tcgetattr(sys.stdin)
-    
-    rospy.init_node('turtlebot_teleop')
-    pub = rospy.Publisher('/cmd_vel', Twist, queue_size=5)
+
+    rospy.init_node('Kamtoa_teleop_keyboard')
+    pub = rospy.Publisher('kamtoa/cmd_vel', Twist, queue_size=5)
 
     x = 0
     th = 0
@@ -152,10 +152,6 @@ if __name__=="__main__":
             twist.linear.x = control_speed; twist.linear.y = 0; twist.linear.z = 0
             twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = control_turn
             pub.publish(twist)
-
-            #print("loop: {0}".format(count))
-            #print("target: vx: {0}, wz: {1}".format(target_speed, target_turn))
-            #print("publihsed: vx: {0}, wz: {1}".format(twist.linear.x, twist.angular.z))
 
     except:
         print e

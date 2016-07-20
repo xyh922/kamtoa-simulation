@@ -20,7 +20,9 @@
             <commandTopic>kamtoa/cmd_vel</commandTopic>
             <odometryFrame>odom</odometryFrame>
             <odometryTopic>kamtoa/odom</odometryTopic>
-            <robotBaseFrame>base_footprint</robotBaseFrame>
+            <robotBaseFrame>kamtoa/base_footprint</robotBaseFrame>
+            <legacyMode>true</legacyMode> <!-- LegacyMode = true : NORMAL Z Axis : Direcion Up -->
+            <odometrySource>1</odometrySource>
         </plugin>
     </gazebo>
 </robot>

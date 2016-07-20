@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <launch>
+
   <include file="$(find kamtoa_description)/launch/view_static_robot.launch" />
   <include file="$(find kamtoa_description)/launch/kamtoa_empty.launch" />
-  <include file="$(find kamtoa_teleop)/launch/teleop_joystick.launch" />
+  <!-- Keyboard Teleop -->
+  <include file="$(find kamtoa_teleop)/launch/teleop_keyboard.launch" output="screen" />
+
 </launch>
