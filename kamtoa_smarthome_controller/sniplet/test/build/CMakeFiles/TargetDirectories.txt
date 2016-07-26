@@ -1,0 +1,3 @@
+/home/c3mx/tutorial-ros/src/gazebo_plugin_tutorial/src/test/build/CMakeFiles/edit_cache.dir
+/home/c3mx/tutorial-ros/src/gazebo_plugin_tutorial/src/test/build/CMakeFiles/rebuild_cache.dir
+/home/c3mx/tutorial-ros/src/gazebo_plugin_tutorial/src/test/build/CMakeFiles/publisher.dir
