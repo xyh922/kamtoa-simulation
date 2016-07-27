@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation
 )
 
 find_package(gazebo REQUIRED)
@@ -32,8 +33,8 @@ find_package(gazebo REQUIRED)
 ## * Let MSG_DEP_SET be the set of packages whose message types you use in
 ##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
 ## * In the file package.xml:
-##   * add a build_depend tag for "message_generation"
-##   * add a build_depend and a run_depend tag for each package in MSG_DEP_SET
+####   * add a build_depend tag for "message_generation"
+####   * add a build_depend and a run_depend tag for each package in MSG_DEP_SET
 ##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
 ##     but can be declared for certainty nonetheless:
 ##     * add a run_depend tag for "message_runtime"
@@ -69,10 +70,10 @@ find_package(gazebo REQUIRED)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs  # Or other packages containing msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -108,6 +109,11 @@ catkin_package(
 #  LIBRARIES kamtoa_smarthome_controller
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
+    CATKIN_DEPENDS
+    roscpp
+    rospy
+    std_msgs
+    message_runtime
 )
 
 ###########
@@ -141,8 +147,15 @@ list(APPEND CMAKE_CXX_FLAGS "${GAZEBO_CXX_FLAGS}")
 # target_link_libraries(kamtoa_smarthome_controller_node
 #   ${catkin_LIBRARIES}
 # )
+
+
 add_executable(gazebo_light_controller src/gazebo_light_controller.cpp)
+add_dependencies(gazebo_light_controller kamtoa_smarthome_controller_generate_messages_cpp)
 target_link_libraries(gazebo_light_controller ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
+
+
+
+
 #############
 ## Install ##
 #############

@@ -1,2 +1,2 @@
 string target
-string action
+int32 action
