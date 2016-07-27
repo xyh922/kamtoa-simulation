@@ -60,10 +60,10 @@ void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
         //Read Value From Left Joystick (VERTICAL ACCESS ONLY)
         twist.linear.x = l_scale_*joy->axes[linear_];
 
-        deadman_triggered = joy->buttons[6];//joy->axes[deadman_];
+        deadman_triggered = joy->axes[deadman_];
         goal_cancle_button = joy->buttons[4];
 
-        if(deadman_triggered == 1/*-1*/) //Deadman Triggered Activated
+        if(deadman_triggered == -1) //Deadman Triggered Activated
         {
                 off_teleop = false;
                 twist_pub_.publish(twist);

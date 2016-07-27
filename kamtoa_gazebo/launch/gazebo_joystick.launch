@@ -2,7 +2,8 @@
 <launch>
 
   <include file="$(find kamtoa_description)/launch/view_static_robot.launch" />
-  <include file="$(find kamtoa_description)/launch/kamtoa_empty.launch" />
+  <!-- <include file="$(find kamtoa_description)/launch/kamtoa_empty.launch" /> -->
+  <include file="$(find kamtoa_gazebo)/launch/kamtoa_world.launch" />
   <!-- Joystick Teleop -->
   <include file="$(find kamtoa_teleop)/launch/teleop_joystick.launch" />
 
