@@ -545,7 +545,7 @@
       </link>
       <static>1</static>
     </model>
-    <light name='user_spot_light_0' type='spot'>
+    <light name='light0' type='spot'>
       <pose frame=''>4.66955 0.968105 1 0 -0 0</pose>
       <diffuse>0.5 0.5 0.5 1</diffuse>
       <specular>0.1 0.1 0.1 1</specular>
@@ -563,7 +563,7 @@
         <falloff>1</falloff>
       </spot>
     </light>
-    <light name='user_spot_light_1' type='spot'>
+    <light name='light1' type='spot'>
       <pose frame=''>-3.49192 -2.86997 1 0 -0 0</pose>
       <diffuse>0.5 0.5 0.5 1</diffuse>
       <specular>0.1 0.1 0.1 1</specular>
@@ -581,7 +581,7 @@
         <falloff>1</falloff>
       </spot>
     </light>
-    <light name='user_spot_light_2' type='spot'>
+    <light name='light2' type='spot'>
       <pose frame=''>3.84217 -4.13933 1 0 -0 0</pose>
       <diffuse>0.5 0.5 0.5 1</diffuse>
       <specular>0.1 0.1 0.1 1</specular>
@@ -599,7 +599,7 @@
         <falloff>1</falloff>
       </spot>
     </light>
-    <light name='user_spot_light_3' type='spot'>
+    <light name='light3' type='spot'>
       <pose frame=''>-5.46263 1.80043 1 0 -0 0</pose>
       <diffuse>0.5 0.5 0.5 1</diffuse>
       <specular>0.1 0.1 0.1 1</specular>
@@ -955,19 +955,19 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <light name='user_spot_light_0'>
+      <light name='light0'>
         <pose frame=''>-0.994281 0.968105 6.6796 0 -0 0</pose>
       </light>
-      <light name='user_spot_light_1'>
+      <light name='light1'>
         <pose frame=''>-3.48644 -2.9108 7.70585 0 -0 0</pose>
       </light>
-      <light name='user_spot_light_2'>
+      <light name='light2'>
         <pose frame=''>3.84217 -4.13933 8.24999 0 -0 0</pose>
       </light>
-      <light name='user_spot_light_3'>
+      <light name='light3'>
         <pose frame=''>-5.46263 1.80043 6.28113 0 -0 0</pose>
       </light>
-      <light name='user_spot_light_4'>
+      <light name='light4'>
         <pose frame=''>4.34776 1.47036 7.61868 0 -0 0</pose>
       </light>
     </state>
@@ -1177,7 +1177,7 @@
       </link>
       <pose frame=''>1.47199 0.833828 0 0 -0 0</pose>
     </model>
-    <light name='user_spot_light_4' type='spot'>
+    <light name='light4' type='spot'>
       <pose frame=''>5.12 1.47036 1 0 -0 0</pose>
       <diffuse>0.5 0.5 0.5 1</diffuse>
       <specular>0.1 0.1 0.1 1</specular>
