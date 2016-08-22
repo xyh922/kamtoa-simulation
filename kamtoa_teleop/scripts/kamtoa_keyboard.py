@@ -47,6 +47,13 @@ space key, k : force stop
 anything else : stop smoothly
 CTRL-C to quit
 """
+lightSwitches = {
+    '1':'light0',
+    '2':'light1',
+    '3':'light2',
+    '4':'light3',
+    '5':'light4'
+}
 
 moveBindings = {
         'i':(1,0),
@@ -91,6 +98,7 @@ if __name__=="__main__":
     rospy.init_node('Kamtoa_teleop_keyboard')
     pub = rospy.Publisher('kamtoa/cmd_vel', Twist, queue_size=5)
 
+    light_select = ''
     x = 0
     th = 0
     status = 0
@@ -123,6 +131,8 @@ if __name__=="__main__":
                 th = 0
                 control_speed = 0
                 control_turn = 0
+            elif key in lightSwitches.keys():
+
             else:
                 count = count + 1
                 if count > 4:

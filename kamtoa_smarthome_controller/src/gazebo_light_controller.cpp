@@ -5,6 +5,7 @@
  *  Author : Theppasith Nisitsukcharoen
  *  26-Jul-2016
  *******************************/
+ 
 // Gazebo Headers
 #include <gazebo/gazebo.hh>
 #include <gazebo/gazebo_client.hh>
@@ -109,9 +110,6 @@ void LightController::light_msg_callback(const kamtoa_smarthome_controller::smar
           gazebo_pub->Publish(lightMsg);
           break;
     }
-
-    // lightMsg Feedback Routine from gazebo , server Create Here
-    // and Publish the status to ROS
 }
 
 
