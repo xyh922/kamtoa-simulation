@@ -2,6 +2,7 @@
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
 #include <actionlib_msgs/GoalID.h>
+#include <iostream>
 
 /*************************************************************************************/
 class KamtoaJoystick
@@ -16,6 +17,7 @@ class KamtoaJoystick
     ros::Publisher    twist_pub_,auto_stop_pub_;
     ros::Subscriber   joy_sub_;
 
+    std::string            twist_pub_topic_name_,joystick_sub_topic_name_;
     bool              stop_state;
     int               linear_   , angular_ , deadman_;
     double            l_scale_  , a_scale_;
@@ -33,13 +35,15 @@ KamtoaJoystick::KamtoaJoystick() :
     nh_.param("axis_angular",   angular_, angular_  );
     nh_.param("scale_angular",  a_scale_, a_scale_  );
     nh_.param("scale_linear",   l_scale_, l_scale_  );
+    nh_.param("twist_pub_topic", twist_pub_topic_name_,"cmd_vel");
+    nh_.param("joystick_sub_topic", joystick_sub_topic_name_,"joy");
 
     // Teleop Boolean Switch
     off_teleop  = false;
 
     //Publisher and Subscriber
-    twist_pub_  = nh_.advertise<geometry_msgs::Twist>("kamtoa/cmd_vel", 1);
-    joy_sub_    = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &KamtoaJoystick::joyCallback, this);
+    twist_pub_  = nh_.advertise<geometry_msgs::Twist>(twist_pub_topic_name_, 1);
+    joy_sub_    = nh_.subscribe<sensor_msgs::Joy>(joystick_sub_topic_name_, 10, &KamtoaJoystick::joyCallback, this);
 
     //Navigation Stopper
     auto_stop_pub_ = nh_.advertise<actionlib_msgs::GoalID>("kamtoa/move_base/cancel", 1);
@@ -52,6 +56,7 @@ void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 
         //Geometry Joystick Control
         geometry_msgs::Twist twist;
+
         int deadman_triggered;
 
         //Read Value From Right Joystick (HORIZONTAL ACCESS ONLY)
