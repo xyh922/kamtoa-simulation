@@ -1,0 +1,23 @@
+<launch>
+
+    <!-- Initiate the iCreate Controller ! -->
+    <node pkg="create_node" type="turtlebot_node.py" name="iCreate_controller" output="screen">
+      	 <param name="port" type="string" value="/dev/ttyUSB0"/>
+	       <param name="publish_tf" type="string" value="True"/>
+         <param name="cmd_vel_timeout" type="int" value="10"/>
+    </node>
+
+    <!-- Setup the Configuration of ROBOT -->
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser_broadcaster" args="0.1 0 0 0 0 0 1 base_link laser 100" />
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link" args="0 0 0.22 0 0 0 1 base_footprint base_link 100" />
+
+    <!--- Laser Scanner Node-->
+    <node name="rplidarNode"          pkg="rplidar_ros"  type="rplidarNode" output="screen">
+        <param name="serial_port"         type="string" value="/dev/ttyUSB1"/>
+        <param name="serial_baudrate"     type="int"    value="115200"/>
+        <param name="frame_id"            type="string" value="laser"/>
+        <param name="inverted"            type="bool"   value="false"/>
+        <param name="angle_compensate"    type="bool"   value="true"/>
+    </node>
+
+</launch>

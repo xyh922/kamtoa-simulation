@@ -30,13 +30,15 @@ KamtoaJoystick::KamtoaJoystick() :
         angular_(2),
         deadman_(3)
 {
+    twist_pub_topic_name_ = "cmd_vel";
+    joystick_sub_topic_name_ = "joy";
     nh_.param("axis_linear",    linear_,  linear_   );
     nh_.param("button_deadman_switch",    deadman_,  deadman_   );
     nh_.param("axis_angular",   angular_, angular_  );
     nh_.param("scale_angular",  a_scale_, a_scale_  );
     nh_.param("scale_linear",   l_scale_, l_scale_  );
-    nh_.param("twist_pub_topic", twist_pub_topic_name_,"cmd_vel");
-    nh_.param("joystick_sub_topic", joystick_sub_topic_name_,"joy");
+    nh_.param("twist_pub_topic", twist_pub_topic_name_);
+    nh_.param("joystick_sub_topic", joystick_sub_topic_name_);
 
     // Teleop Boolean Switch
     off_teleop  = false;
@@ -51,40 +53,40 @@ KamtoaJoystick::KamtoaJoystick() :
 
 void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
-        //Goal Nav Cancle Button
-        int goal_cancle_button;
+    //Goal Nav Cancle Button
+    int goal_cancle_button;
 
-        //Geometry Joystick Control
-        geometry_msgs::Twist twist;
+    //Geometry Joystick Control
+    geometry_msgs::Twist twist;
 
-        int deadman_triggered;
+    int deadman_triggered;
 
-        //Read Value From Right Joystick (HORIZONTAL ACCESS ONLY)
-        twist.angular.z = a_scale_*joy->axes[angular_];
+    //Read Value From Right Joystick (HORIZONTAL ACCESS ONLY)
+    twist.angular.z = a_scale_*joy->axes[angular_];
 
-        //Read Value From Left Joystick (VERTICAL ACCESS ONLY)
-        twist.linear.x = l_scale_*joy->axes[linear_];
+    //Read Value From Left Joystick (VERTICAL ACCESS ONLY)
+    twist.linear.x = l_scale_*joy->axes[linear_];
 
-        deadman_triggered = joy->axes[deadman_];
-        goal_cancle_button = joy->buttons[4];
+    deadman_triggered = joy->axes[deadman_];
+    goal_cancle_button = joy->buttons[4];
 
-        if(deadman_triggered == -1) //Deadman Triggered Activated
-        {
-                off_teleop = false;
-                twist_pub_.publish(twist);
-        }
-        else if (deadman_triggered != -1 && !off_teleop)
-        {
-                twist_pub_.publish(*new geometry_msgs::Twist());        //Publish 0,0,0 (stop)
-                auto_stop_pub_.publish(*new actionlib_msgs::GoalID());  //Publish Goal Cancel Message
-                off_teleop = true;                                      //Put the Teleop Off
-        }
+    if(deadman_triggered == -1) //Deadman Triggered Activated
+    {
+        off_teleop = false;
+        twist_pub_.publish(twist);
+    }
+    else if (deadman_triggered != -1 && !off_teleop)
+    {
+        twist_pub_.publish(*new geometry_msgs::Twist());        //Publish 0,0,0 (stop)
+        auto_stop_pub_.publish(*new actionlib_msgs::GoalID());  //Publish Goal Cancel Message
+        off_teleop = true;                                      //Put the Teleop Off
+    }
 }
 
 
 int main(int argc, char** argv)
 {
-        ros::init(argc, argv, "Kamtoa_Joystick_Teleop_Node");
-        KamtoaJoystick teleop_dumbo;
-        ros::spin();
+    ros::init(argc, argv, "Kamtoa_Joystick_Teleop_Node");
+    KamtoaJoystick teleop_dumbo;
+    ros::spin();
 }

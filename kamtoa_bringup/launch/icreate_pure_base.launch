@@ -1,0 +1,4 @@
+<!-- Launch file for base initiation -->
+<launch>
+      <include file="$(find kamtoa_base)/launch/icreate_base.launch"/>
+</launch>
