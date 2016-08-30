@@ -1,9 +1,10 @@
+<?xml version="1.0"?>
 <!-- Launch file for base initiation -->
 <launch>
-	<!-- Running the Base (iCreate + RPLidar) -->
+	<!-- Running the Base (iCreate + RPLidar + transformation configuration) -->
 	<include file="$(find kamtoa_base)/launch/icreate_base.launch"/>
 	<!-- Open the Camera -->
 	<include file="$(find video_stream_opencv)/launch/camera.launch"/>
-	<!-- Open Mic -->
+	<!-- Open Mic for audio streaming -->
 	<include file="$(find audio_capture)/launch/capture.launch"/>
 </launch>
