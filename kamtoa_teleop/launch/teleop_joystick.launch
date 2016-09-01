@@ -13,7 +13,6 @@
 
     <param name="scale_linear" value="0.25" type="double"/>
     <param name="scale_angular" value="1.0" type="double"/>
+
     <node  pkg="kamtoa_teleop" type="kamtoa_joystick" name="kamtoa_joystick" output="screen" />
-
-
 </launch>
