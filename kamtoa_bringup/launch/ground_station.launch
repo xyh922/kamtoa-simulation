@@ -8,6 +8,9 @@
     <include file="$(find kamtoa_teleop)/launch/teleop_joystick.launch" />
 
     <!-- Run RQT GUI With the custom perspective -->
-    <include file="$(find kamtoa_bringup)/launch/gui/rqt_gui.launch"/>
+    <!-- <include file="$(find kamtoa_bringup)/launch/gui/rqt_gui.launch"/> -->
+
+    <!-- Run Rviz with the custom perspective -->
+
 
 </launch>
