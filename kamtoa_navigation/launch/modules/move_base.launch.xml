@@ -29,16 +29,16 @@
 
     <!-- reset frame_id parameters using user input data -->
     <param name="global_costmap/global_frame" value="$(arg global_frame_id)"/>
-    <param name="global_costmap/robot_base_frame" value="$(arg name)_$(arg base_frame_id)"/>
-    <param name="local_costmap/global_frame" value="$(arg name)_$(arg odom_frame_id)"/>
-    <param name="local_costmap/robot_base_frame" value="$(arg name)_$(arg base_frame_id)"/>
-    <param name="DWAPlannerROS/global_frame_id" value="$(arg name)_$(arg odom_frame_id)"/>
+    <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+    <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
+    <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+    <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
 
     <!-- (OUTPUT) from move_base cmd_vel now mapped to velocity_smoother -->
     <remap from="cmd_vel" to="/navigation_raw_cmd_vel"/>
 
     <!-- odometry and laser_scan topics mapping -->
-    <remap from="odom" to="$(arg name)/$(arg odom_topic)"/>
-    <remap from="scan" to="$(arg name)/$(arg laser_topic)"/>
+    <remap from="odom" to="$(arg odom_topic)"/>
+    <remap from="scan" to="$(arg laser_topic)"/>
   </node>
 </launch>

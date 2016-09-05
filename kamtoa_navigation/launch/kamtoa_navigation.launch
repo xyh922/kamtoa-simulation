@@ -2,11 +2,11 @@
 <!-- Fully Autonomous Navigation Launch file-->
 <launch>
 
-  <!-- Map server
+  <!-- Map server -->
   <arg name="map" default="skycafe"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(find kamtoa_navigation)/maps/$(arg map).yaml"/>
-  -->
-  
+
+
   <!-- Initial pose for the Localizer -->
   <arg name="initial_pose_x" default="0.0"/>
   <arg name="initial_pose_y" default="0.0"/>
