@@ -2,7 +2,7 @@
 <!-- Navigation Node -->
 <launch>
   <!-- ACML Parameters -->
-  <arg name="name"/>
+  <arg name="name" default=""/>
   <arg name="use_map_topic"   default="false"/>
   <arg name="scan_topic"      default="scan"/>
   <arg name="initial_pose_x"  default="0.0"/>

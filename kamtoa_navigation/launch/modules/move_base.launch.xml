@@ -1,31 +1,32 @@
-<!-- 
-    ROS navigation stack with velocity smoother and safety (reactive) controller
+<!--
+    ROS navigation stack with velocity smoother
 -->
 <launch>
-  <include file="$(find hg_robot_2dnav)/launch/velocity_smoother.launch.xml"/>
-  <!--include file="$(find dungbeetle_2dnav)/launch/includes/safety_controller.launch.xml"/ -->
-  <arg name="name"/>
+  <!-- <include file="$(find kamtoa_navigation)/launch/velocity_smoother.launch.xml"/> to higher level -->
+
+  <arg name="name" default=""/>
   <arg name="odom_frame_id"   default="odom"/>
   <arg name="base_frame_id"   default="base_link"/>
   <arg name="global_frame_id" default="map"/>
   <arg name="odom_topic" default="odom" />
   <arg name="laser_topic" default="scan" />
-  
+
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/costmap_common_params.yaml" command="load" ns="local_costmap" />   
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/local_costmap_params.yaml" command="load" />   
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/global_costmap_params.yaml" command="load" />
-    <!--rosparam file="$(find dungbeetle_2dnav)/param/dwa_local_planner_params.yaml" command="load" /-->
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/base_local_planner_params.yaml" command="load" />
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/move_base_params.yaml" command="load" />
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/global_planner_params.yaml" command="load" />
-    <rosparam file="$(find hg_robot_2dnav)/param/omnibot/navfn_global_planner_params.yaml" command="load" />
-    
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/global_costmap_params.yaml" command="load" />
+
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/planner/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/move_base_params.yaml" command="load" />
+
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/planner/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/icreate/planner/navfn_global_planner_params.yaml" command="load" />
+
     <!-- external params file that could be loaded into the move_base namespace -->
     <!--rosparam file="$(arg custom_param_file)" command="load" /-->
-    
+
     <!-- reset frame_id parameters using user input data -->
     <param name="global_costmap/global_frame" value="$(arg global_frame_id)"/>
     <param name="global_costmap/robot_base_frame" value="$(arg name)_$(arg base_frame_id)"/>
@@ -33,7 +34,10 @@
     <param name="local_costmap/robot_base_frame" value="$(arg name)_$(arg base_frame_id)"/>
     <param name="DWAPlannerROS/global_frame_id" value="$(arg name)_$(arg odom_frame_id)"/>
 
-    <remap from="cmd_vel" to="/navigation_velocity_smoother/raw_cmd_vel"/>
+    <!-- (OUTPUT) from move_base cmd_vel now mapped to velocity_smoother -->
+    <remap from="cmd_vel" to="/navigation_raw_cmd_vel"/>
+
+    <!-- odometry and laser_scan topics mapping -->
     <remap from="odom" to="$(arg name)/$(arg odom_topic)"/>
     <remap from="scan" to="$(arg name)/$(arg laser_topic)"/>
   </node>

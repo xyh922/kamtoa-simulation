@@ -48,7 +48,7 @@ KamtoaJoystick::KamtoaJoystick() :
     joy_sub_    = nh_.subscribe<sensor_msgs::Joy>(joystick_sub_topic_name_, 10, &KamtoaJoystick::joyCallback, this);
 
     //Navigation Stopper
-    auto_stop_pub_ = nh_.advertise<actionlib_msgs::GoalID>("kamtoa/move_base/cancel", 1);
+    auto_stop_pub_ = nh_.advertise<actionlib_msgs::GoalID>("move_base/cancel", 1);
 }
 
 void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
@@ -61,10 +61,8 @@ void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 
     int deadman_triggered;
 
-    //Read Value From Right Joystick (HORIZONTAL ACCESS ONLY)
+    //Read Velocities Value From Joystick
     twist.angular.z = a_scale_*joy->axes[angular_];
-
-    //Read Value From Left Joystick (VERTICAL ACCESS ONLY)
     twist.linear.x = l_scale_*joy->axes[linear_];
 
     deadman_triggered = joy->axes[deadman_];
