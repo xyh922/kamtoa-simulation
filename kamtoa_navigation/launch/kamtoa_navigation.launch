@@ -3,7 +3,7 @@
 <launch>
 
   <!-- Map server -->
-  <arg name="map" default="skycafe2"/>
+  <arg name="map" default="room1"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(find kamtoa_navigation)/maps/$(arg map).yaml"/>
 
 
