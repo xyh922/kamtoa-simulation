@@ -132,6 +132,7 @@ if __name__=="__main__":
                 control_speed = 0
                 control_turn = 0
             elif key in lightSwitches.keys():
+                print "lightSwitch pressed!"
 
             else:
                 count = count + 1

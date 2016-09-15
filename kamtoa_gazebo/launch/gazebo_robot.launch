@@ -7,8 +7,7 @@
 
   <!-- Initialize Gazebo and Spawn URDF Model -->
   <include file="$(find kamtoa_gazebo)/launch/kamtoa_world.launch" />
-  
-  <!-- Keyboard Teleop -->
-  <include file="$(find kamtoa_teleop)/launch/teleop_keyboard.launch"/>
+
+  <!-- Need to run Keyboard Teleop Node Manually (Display Convienient) -->
 
 </launch>
