@@ -73,8 +73,6 @@ VelocityProfiler::VelocityProfiler()
                                           &VelocityProfiler::joyCallback, this);
      laserscan_sub_   = nh_.subscribe<sensor_msgs::LaserScan>(laser_sub_topic_name_, 10,
                                           &VelocityProfiler::laserScanCallback, this);
-
-
 }
 
 
@@ -94,11 +92,12 @@ void VelocityProfiler::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
       twist.linear.x    = joy->axes[linear_];
 
       // Deadman 's Switch
-      int deadman_triggered;
+      int deadman_triggered,manual_deadman;
       deadman_triggered = joy->axes[deadman_];
+      manual_deadman =  joy->buttons[4];
 
       // Deadman Triggered Activated
-      if(deadman_triggered == -1){
+      if(deadman_triggered == -1 && !manual_deadman){
         // get the LaserScan most nearest distance (in bound angle) which we calculated before
         float nearest = global_nearest;
 
@@ -107,12 +106,26 @@ void VelocityProfiler::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
         activate = true; //off_teleop = false;
       }
       // Deadman Triggered OFF
-      else if (deadman_triggered != -1 && !activate){
+      else if (deadman_triggered != -1 && !manual_deadman){
           twist = *new geometry_msgs::Twist();
           //twist_pub_.publish(*new geometry_msgs::Twist());        //Publish 0,0,0 (stop)
           activate = false; //off_teleop = true;                                      //Put the Teleop Off
           return;
       }
+
+      if(deadman_triggered == 1 && manual_deadman){
+        //Read Velocities Value From Joystick
+        twist.angular.z = a_scale_*joy->axes[angular_];
+        twist.linear.x = l_scale_*joy->axes[linear_];
+        activate = true; //off_teleop = false;
+      }else if(deadman_triggered == 1 && !manual_deadman){
+        twist = *new geometry_msgs::Twist();
+        //twist_pub_.publish(*new geometry_msgs::Twist());        //Publish 0,0,0 (stop)
+        activate = false; //off_teleop = true;                                      //Put the Teleop Off
+        return;
+      }
+
+
 }
 
 void VelocityProfiler::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& scans)
@@ -152,7 +165,7 @@ int main(int argc, char** argv)
        // Edit Message payloads
            // Payload is set by the callback from joystick
 
-       // Log file
+       // Log file to console
        if(vel_profiler.isActivate()){
           ROS_INFO("[Activated] %f", vel_profiler.twist.linear.x);
        }else{
