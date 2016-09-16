@@ -135,6 +135,7 @@ include_directories(
 ## Declare a C++ executable
 # add_executable(kamtoa_velocity_profile_node src/kamtoa_velocity_profile_node.cpp)
 add_executable(velocity_profiler src/velocity_profiler.cpp)
+add_executable(publisher src/publisher.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(kamtoa_velocity_profile_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -144,7 +145,7 @@ add_executable(velocity_profiler src/velocity_profiler.cpp)
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries(velocity_profiler ${catkin_LIBRARIES})
-
+target_link_libraries(publisher ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############
