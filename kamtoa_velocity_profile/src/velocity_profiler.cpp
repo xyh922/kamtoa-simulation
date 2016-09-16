@@ -15,10 +15,6 @@
 #include <sensor_msgs/LaserScan.h>
 
 /****************************************************************/
-
-float global_nearest; //TODO:Change to Maximum of Double
-
-/****************************************************************/
 class VelocityProfiler
 {
      public:
@@ -39,10 +35,11 @@ class VelocityProfiler
      std::string       laser_sub_topic_name_;
 
      // Teleop Boolean Switch
-     bool off_teleop  ;
-     int                startAngle , endAngle;
+     bool              off_teleop;
+     int               startAngle , endAngle;
      int               linear_   , angular_ , deadman_;
      double            l_scale_  , a_scale_;
+     float             global_nearest;
 };
  /****************************************************************/
 
@@ -51,6 +48,8 @@ VelocityProfiler::VelocityProfiler()
      twist_pub_topic_name_ = "cmd_vel";
      joystick_sub_topic_name_ = "joy";
      laser_sub_topic_name_ = "scan";
+     startAngle = 170;
+     endAngle = 190;
      nh_.param("twist_pub_topic", twist_pub_topic_name_);
      nh_.param("joystick_sub_topic", joystick_sub_topic_name_);
 
@@ -59,6 +58,8 @@ VelocityProfiler::VelocityProfiler()
      nh_.param("axis_angular",   angular_, angular_  );
      nh_.param("scale_angular",  a_scale_, a_scale_  );
      nh_.param("scale_linear",   l_scale_, l_scale_  );
+     nh_.param("start_angle",  startAngle);
+     nh_.param("end_angle",   endAngle);
 
      //Publisher and Subscriber
      twist_pub_       = nh_.advertise<geometry_msgs::Twist>(twist_pub_topic_name_, 1);
@@ -67,24 +68,23 @@ VelocityProfiler::VelocityProfiler()
      laserscan_sub_   = nh_.subscribe<sensor_msgs::LaserScan>(laser_sub_topic_name_, 10,
                                           &VelocityProfiler::laserScanCallback, this);
 
-    startAngle = 170;
-    endAngle = 190;
+
 }
 
 void VelocityProfiler::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
 
-      // Assume that we've got the laserNearestDistance
+      // Assume that we've already got the laserNearestDistance
 
       //Geometry Joystick Control
       geometry_msgs::Twist twist;
 
-      int deadman_triggered;
-
       // Receive the joystick value , direction
-      twist.angular.z = a_scale_*joy->axes[angular_];
-      twist.linear.x  = l_scale_*joy->axes[linear_];
+      twist.angular.z   = a_scale_*joy->axes[angular_];
+      twist.linear.x    = l_scale_*joy->axes[linear_];
 
+      // Deadman 's Switch
+      int deadman_triggered;
       deadman_triggered = joy->axes[deadman_];
 
       // Deadman Triggered Activated
@@ -102,11 +102,13 @@ void VelocityProfiler::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 
       // get the LaserScan most nearest distance (in bound angle) which we calculated before
       float nearest = global_nearest;
+
       // put the nearest distance in the velocity function
       double velocity = velocity_function(nearest);
       std::cout << "VEL = " << velocity <<std::endl;
-      // cmd_vel = (joy_trigger%) * ( velocity_function(laser_distance_range) )
-      twist.linear.x =  velocity * joy->axes[angular_];
+
+      twist.linear.x =  velocity * joy->axes[linear_];
+
       // pub cmd_vel
       twist_pub_.publish(twist);
 }
@@ -121,12 +123,14 @@ void VelocityProfiler::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr&
       std::cout << "Minimum : " << local_nearest << std::endl;
       global_nearest = local_nearest;
 
+      // For Console Test
       velocity_function(global_nearest);
 
 }
 
 double VelocityProfiler::velocity_function(float distance)
 {
+      // Equation goes Here
     std::cout << "Velo Funct got : " << distance <<std::endl;
 }
 int main(int argc, char** argv)
