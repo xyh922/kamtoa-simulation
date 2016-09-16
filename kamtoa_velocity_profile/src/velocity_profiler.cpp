@@ -19,18 +19,21 @@ class VelocityProfiler
 {
      public:
      VelocityProfiler();
-     geometry_msgs::Twist twist;
-     geometry_msgs::Twist next_twist;
-     void   publishTwist();
+     void                 publishTwist();
+     bool                 isActivate();
+     void                 setVelocityInRange();
+     geometry_msgs::Twist current_twist;
+     geometry_msgs::Twist set_point_twist;
+     ros::Time            last_time;
 
-     bool   isActivate();
      private:
      void   joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
      void   laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& scans);
      double velocity_function(float distance);
 
+
      ros::NodeHandle   nh_;
-     ros::Publisher    twist_pub_;
+     ros::Publisher    twist_pub_,setpoint_pub_;
      ros::Subscriber   joy_sub_,laserscan_sub_;
 
      // Params
@@ -39,46 +42,89 @@ class VelocityProfiler
      std::string       laser_sub_topic_name_;
 
      // Teleop Boolean Switch
-     bool              off_teleop;
      int               startAngle , endAngle;
      int               linear_   , angular_ , deadman_;
      double            l_scale_  , a_scale_;
      float             global_nearest;
 
      bool              activate;
+     // Velocity Params
+     double            acc;
+
+
 };
  /****************************************************************/
 
 VelocityProfiler::VelocityProfiler()
 {
-     twist_pub_topic_name_ = "cmd_vel";
+     twist_pub_topic_name_    = "/kamtoa/cmd_vel";
      joystick_sub_topic_name_ = "joy";
-     laser_sub_topic_name_ = "scan";
-     startAngle = 170;
-     endAngle = 190;
-     nh_.param("twist_pub_topic", twist_pub_topic_name_);
-     nh_.param("joystick_sub_topic", joystick_sub_topic_name_);
+     laser_sub_topic_name_    = "scan";
+     startAngle               = 170;
+     endAngle                 = 190;
+     acc                      = 0;
+
+     nh_.param("twist_pub_topic", twist_pub_topic_name_,twist_pub_topic_name_);
+     nh_.param("joystick_sub_topic", joystick_sub_topic_name_,joystick_sub_topic_name_);
 
      nh_.param("axis_linear",    linear_,1);
      nh_.param("button_deadman_switch",    deadman_,2);
      nh_.param("axis_angular",   angular_, 3  );
      nh_.param("scale_angular",  a_scale_, a_scale_  );
      nh_.param("scale_linear",   l_scale_, l_scale_  );
-     nh_.param("start_angle",  startAngle);
-     nh_.param("end_angle",   endAngle);
+
+     // Angle Params
+     nh_.param("start_angle",  startAngle,startAngle);
+     nh_.param("end_angle",   endAngle,endAngle);
+
+     // Acceleration
+     nh_.param("acc",  acc , acc);
+
+     std::cout << "Acc : " << acc <<std::endl;
 
      //Publisher and Subscriber
      twist_pub_       = nh_.advertise<geometry_msgs::Twist>(twist_pub_topic_name_, 1);
+     setpoint_pub_     = nh_.advertise<geometry_msgs::Twist>("/setpoint", 1);
+
      joy_sub_         = nh_.subscribe<sensor_msgs::Joy>(joystick_sub_topic_name_, 10,
                                           &VelocityProfiler::joyCallback, this);
      laserscan_sub_   = nh_.subscribe<sensor_msgs::LaserScan>(laser_sub_topic_name_, 10,
                                           &VelocityProfiler::laserScanCallback, this);
 }
 
+void VelocityProfiler::setVelocityInRange(){
+
+     // Get the delta time
+     double delta = (ros::Time::now() - last_time).toSec();
+
+     double current_linear_vel = current_twist.linear.x;
+     double current_angular_vel = current_twist.angular.z; // in case
+
+     // Set points
+     double set_point_linear_vel = set_point_twist.linear.x;
+     double set_point_angular_vel = set_point_twist.angular.z;
+
+     double maxVel2 = velocity_function(global_nearest);
+
+    if( set_point_linear_vel > maxVel2 )
+      set_point_linear_vel = maxVel2;
+
+     double minVel = current_linear_vel - acc*delta;
+     double maxVel = current_linear_vel + acc*delta;
+
+     current_linear_vel = (set_point_linear_vel < minVel) ? minVel : (set_point_linear_vel > maxVel)? maxVel : set_point_linear_vel;
+
+     // Pack the Payload to be sent soon
+     current_twist.linear.x = current_linear_vel;
+     current_twist.angular.z = set_point_angular_vel;
+
+}
 
 void VelocityProfiler::publishTwist()
 {
-      twist_pub_.publish(twist);
+      ROS_INFO ("Published : %f ", current_twist.linear.x);
+      setpoint_pub_.publish(set_point_twist);
+      twist_pub_.publish(current_twist);
 }
 
 bool VelocityProfiler::isActivate(){
@@ -88,44 +134,38 @@ bool VelocityProfiler::isActivate(){
 void VelocityProfiler::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
 
-      // Edit cmd_vel payload according to joystick value
-      twist.linear.x    = joy->axes[linear_];
-
       // Deadman 's Switch
-      int deadman_triggered,manual_deadman;
-      deadman_triggered = joy->axes[deadman_];
-      manual_deadman =  joy->buttons[4];
+      bool deadman_triggered =  (joy->axes[deadman_] == -1); // -1 For Logitech F710 Series
+      bool manual_deadman    =  (joy->buttons[4] == 1); // For Movement without velocity function
+
+      // Nearest Distance
+      float nearest = global_nearest;
 
       // Deadman Triggered Activated
-      if(deadman_triggered == -1 && !manual_deadman){
-        // get the LaserScan most nearest distance (in bound angle) which we calculated before
-        float nearest = global_nearest;
-
-        twist.linear.x =  velocity_function(nearest) * joy->axes[linear_];
-
-        activate = true; //off_teleop = false;
+      if(deadman_triggered && !manual_deadman){
+          // Set the setpoint
+          set_point_twist.linear.x =  l_scale_*joy->axes[linear_]; // 0.4
+          set_point_twist.angular.z = 0;
+          activate = true;
       }
-      // Deadman Triggered OFF
       else if (deadman_triggered != -1 && !manual_deadman){
-          twist = *new geometry_msgs::Twist();
-          //twist_pub_.publish(*new geometry_msgs::Twist());        //Publish 0,0,0 (stop)
-          activate = false; //off_teleop = true;                                      //Put the Teleop Off
+          current_twist.linear.x  = 0;                      //twist = * new geometry_msgs::Twist();
+          current_twist.angular.z = 0;
+          activate = false;                         //Put the Teleop Off
           return;
       }
 
-      if(deadman_triggered == 1 && manual_deadman){
-        //Read Velocities Value From Joystick
-        twist.angular.z = a_scale_*joy->axes[angular_];
-        twist.linear.x = l_scale_*joy->axes[linear_];
-        activate = true; //off_teleop = false;
-      }else if(deadman_triggered == 1 && !manual_deadman){
-        twist = *new geometry_msgs::Twist();
-        //twist_pub_.publish(*new geometry_msgs::Twist());        //Publish 0,0,0 (stop)
-        activate = false; //off_teleop = true;                                      //Put the Teleop Off
-        return;
+      // Manual Controller
+      if(!deadman_triggered && manual_deadman){
+          current_twist.angular.z = a_scale_*joy->axes[angular_];
+          current_twist.linear.x  = l_scale_*joy->axes[linear_];
+          activate = false;
+      }else if(!deadman_triggered && !manual_deadman){
+          current_twist.linear.x  = 0;                      //twist = * new geometry_msgs::Twist();
+          current_twist.angular.z = 0;
+          activate = false;
+          return;
       }
-
-
 }
 
 void VelocityProfiler::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& scans)
@@ -135,18 +175,15 @@ void VelocityProfiler::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr&
       for(int i = startAngle ; i < endAngle ; i++){
           local_nearest = std::min(scans->ranges[i] , local_nearest);
       }
-      //std::cout << "Minimum : " << local_nearest << std::endl;
-      global_nearest = local_nearest;
 
-      // For Console Test
-      // velocity_function(global_nearest);
+      global_nearest = local_nearest;
 
 }
 
 double VelocityProfiler::velocity_function(float distance)
 {
-      //std::cout << "Vel Func Call : " << distance << std::endl;
-      return 1;
+      double slope = 0.4;
+      return slope* distance;
 }
 int main(int argc, char** argv)
 {
@@ -159,26 +196,17 @@ int main(int argc, char** argv)
      // Begin the loop
      while (ros::ok())
      {
-       // Create a message
-           // Create as a global message geometry_msgs::Twist twist;
+         // Bound the value ( exceed the acceleration or not ? )
+         if(vel_profiler.isActivate())vel_profiler.setVelocityInRange();
 
-       // Edit Message payloads
-           // Payload is set by the callback from joystick
+         // Publish the message
+         vel_profiler.publishTwist();
 
-       // Log file to console
-       if(vel_profiler.isActivate()){
-          ROS_INFO("[Activated] %f", vel_profiler.twist.linear.x);
-       }else{
-          ROS_INFO("[Off] %f", vel_profiler.twist.linear.x);
-       }
-       // Publish the message
-       if(vel_profiler.isActivate()){
-          vel_profiler.publishTwist();
-       }
+         // Last Time
+         vel_profiler.last_time = ros::Time::now();
 
-       ros::spinOnce();
-
-       loop_rate.sleep();
+         ros::spinOnce();
+         loop_rate.sleep();
 
      }
 }
