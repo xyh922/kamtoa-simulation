@@ -5,14 +5,15 @@
         <param name="dev" type="string" value="/dev/input/js0"/>
     </node>
 
-    <!-- Axes -->
-    <param name="axis_linear" value="1" type="int"/>
-    <param name="axis_angular" value="3" type="int"/>
-    <param name="button_deadman_switch" value="2" type="int"/>
-    <param name="scale_linear" value="0.4" type="double"/>
-    <param name="scale_angular" value="1.0" type="double"/>
-    <param name="acc" value="0.8" type="double"/>
-    <param name="twist_pub_topic" value="/kamtoa/cmd_vel" type="string"/>
-    <node  pkg="kamtoa_velocity_profile" type="velocity_profiler" name="velocity_profiler_node" output="screen" />
+    <!-- Velocity Profiler -->
+    <node  pkg="kamtoa_velocity_profile" type="velocity_profiler" name="velocity_profiler_node" output="screen" >
+        <param name="axis_linear" value="1" type="int"/>
+        <param name="axis_angular" value="3" type="int"/>
+        <param name="button_deadman_switch" value="2" type="int"/>
+        <param name="scale_linear" value="0.4" type="double"/>
+        <param name="scale_angular" value="1.0" type="double"/>
+        <param name="acc" value="0.8" type="double"/>
+        <param name="twist_pub_topic" value="/kamtoa/cmd_vel" type="string"/>
+    </node>
 
 </launch>

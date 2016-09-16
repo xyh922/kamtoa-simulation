@@ -57,12 +57,14 @@ class VelocityProfiler
 
 VelocityProfiler::VelocityProfiler()
 {
-     twist_pub_topic_name_    = "/kamtoa/cmd_vel";
-     joystick_sub_topic_name_ = "joy";
-     laser_sub_topic_name_    = "scan";
+     twist_pub_topic_name_    = "/cmd_vel";
+     joystick_sub_topic_name_ = "/joy";
+     laser_sub_topic_name_    = "/scan";
      startAngle               = 170;
      endAngle                 = 190;
      acc                      = 0;
+
+     ros::NodeHandle   nh_("velocity_profiler_node");
 
      nh_.param("twist_pub_topic", twist_pub_topic_name_,twist_pub_topic_name_);
      nh_.param("joystick_sub_topic", joystick_sub_topic_name_,joystick_sub_topic_name_);
@@ -79,8 +81,6 @@ VelocityProfiler::VelocityProfiler()
 
      // Acceleration
      nh_.param("acc",  acc , acc);
-
-     std::cout << "Acc : " << acc <<std::endl;
 
      //Publisher and Subscriber
      twist_pub_       = nh_.advertise<geometry_msgs::Twist>(twist_pub_topic_name_, 1);
