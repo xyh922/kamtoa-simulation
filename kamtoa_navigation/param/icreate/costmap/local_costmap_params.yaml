@@ -1,6 +1,6 @@
 local_costmap:
    global_frame: map
-   robot_base_frame: omnibot_base_link
+   robot_base_frame: /base_footprint
    update_frequency: 10.0
    publish_frequency: 2.0
    static_map: false
@@ -13,4 +13,3 @@ local_costmap:
 #    - {name: sonar_layer,     type: "range_sensor_layer::RangeSensorLayer"}
     - {name: obstacle_layer,      type: "costmap_2d::VoxelLayer"}
     - {name: inflation_layer,     type: "costmap_2d::InflationLayer"}
-    

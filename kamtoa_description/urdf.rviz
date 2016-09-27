@@ -1,14 +1,14 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 78
+    Help Height: 0
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Local Planner1
+        - /Camera1/Visibility1
       Splitter Ratio: 0.5
-    Tree Height: 189
+    Tree Height: 267
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -140,7 +140,7 @@ Visualization Manager:
       Image Rendering: background and overlay
       Image Topic: /kamtoa/camera_rgb/kamtoa/camera/rgb
       Name: Camera
-      Overlay Alpha: 0.5
+      Overlay Alpha: 1
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
@@ -150,13 +150,13 @@ Visualization Manager:
         Global Path: true
         Goal: true
         Grid: true
-        LaserScan: true
+        LaserScan: false
         Local Costmap: true
         Local Planner: true
         Map: true
         Polygon: true
         PoseArray: true
-        RobotModel: true
+        RobotModel: false
         Value: true
       Zoom Factor: 1
     - Alpha: 1
@@ -186,7 +186,7 @@ Visualization Manager:
         X: 0
         Y: 0
         Z: 0
-      Topic: /move_base/TrajectoryPlannerROS/local_plan
+      Topic: /move_base/DWAPlannerROS/local_plan
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -201,7 +201,7 @@ Visualization Manager:
         X: 0
         Y: 0
         Z: 0
-      Topic: /move_base/TrajectoryPlannerROS/global_plan
+      Topic: /move_base/DWAPlannerROS/global_plan
       Unreliable: false
       Value: true
     - Arrow Length: 0.300000012
@@ -271,22 +271,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 34.543129
+      Distance: 38.6414757
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.37344539
-        Y: 1.87940848
-        Z: 0.76718837
+        X: 2.49700379
+        Y: -2.29517317
+        Z: 0.802549005
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.53979635
+      Pitch: 1.54979634
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.17039394
+      Yaw: 2.75539422
     Saved: ~
 Window Geometry:
   Camera:
