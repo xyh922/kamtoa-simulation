@@ -3,11 +3,10 @@
 
   <!-- Initialize RVIZ  -->
   <include file="$(find kamtoa_description)/launch/view_static_robot.launch" />
-  <!-- <include file="$(find kamtoa_description)/launch/kamtoa_empty.launch" /> -->
 
   <!-- Initialize Gazebo and Spawn URDF Model -->
   <include file="$(find kamtoa_gazebo)/launch/kamtoa_world.launch" />
-  
+
   <!-- Keyboard Teleop -->
   <include file="$(find kamtoa_teleop)/launch/teleop_keyboard.launch"/>
 

@@ -96,7 +96,7 @@ if __name__=="__main__":
     settings = termios.tcgetattr(sys.stdin)
 
     rospy.init_node('Kamtoa_teleop_keyboard')
-    pub = rospy.Publisher('kamtoa/cmd_vel', Twist, queue_size=5)
+    pub = rospy.Publisher('cmd_vel', Twist, queue_size=5)
 
     light_select = ''
     x = 0

@@ -13,7 +13,7 @@
   	<!-- flip the image horizontally (mirror it) -->
   	<arg name="flip_horizontal" default="false" />
   	<!-- flip the image vertically -->
-  	<arg name="flip_vertical" default="true" />
+  	<arg name="flip_vertical" default="false" />
   	<!-- if show a image_view window subscribed to the generated stream -->
 	<arg name="visualize" default="false"/>
 
