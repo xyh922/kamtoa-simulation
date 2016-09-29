@@ -5,7 +5,7 @@
  *  Author : Theppasith Nisitsukcharoen
  *  26-Jul-2016
  *******************************/
- 
+
 // Gazebo Headers
 #include <gazebo/gazebo.hh>
 #include <gazebo/gazebo_client.hh>
@@ -124,6 +124,10 @@ int main(int argc, char **argv)
         // Create Controller instance
         LightController lightController;
         ROS_INFO("[Smarthome-Sim] Light Controller Instance Create Successful ! ");
+
+        // Prompt For Example command
+        std::cout << " Example CLI Command : " << std::endl;
+        std::cout << "  rostopic pub /smarthome/light/action kamtoa_smarthome_controller/smarthome_action \'{target: \"spot\", action: 1}\' " <<std::endl;
 
         // Polling
         while(ros::ok()){
