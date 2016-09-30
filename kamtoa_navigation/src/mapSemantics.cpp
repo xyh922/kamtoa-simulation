@@ -62,22 +62,23 @@ void goTo(int poi_number){
 
 int main(int argc, char** argv)
 {
-     ros::init(argc, argv, "Map_Semantics_Node");
+     ros::init(argc, argv, "Map_Semantics_Manager_Node");
 
      ros::NodeHandle n;
 
-     goToPub = n.advertise<move_base_msgs::MoveBaseGoal>
-                                  ("/kamtoa/goal", 10);
+     goToPub = n.advertise<move_base_msgs::MoveBaseGoal>("/kamtoa/goal", 10);
 
      // Read the POIs from file
      ROS_INFO("Read the waypoint from file : waypoint.csv ");
      read_waypoint_from_file("/waypoints/waypoint.csv",
                               &poi_array , &poi_array_name);
 
-     // Now we know All of the POIs
-     list_poi();
+     // This Node Should Publish Markers
+     
 
      while(ros::ok()){
+
+        list_poi();
         std::cout << "enter poi : " << std::endl;
         int in;
         std::cin >> in;
