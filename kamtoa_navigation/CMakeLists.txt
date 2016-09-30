@@ -133,6 +133,10 @@ include_directories(
 # add_executable(kamtoa_navigation_node src/kamtoa_navigation_node.cpp)
 add_executable(pointTransporter src/pointTransporter.cpp)
 target_link_libraries(pointTransporter ${catkin_LIBRARIES})
+
+add_executable(mapSemantics src/mapSemantics.cpp)
+target_link_libraries(mapSemantics ${catkin_LIBRARIES})
+
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(kamtoa_navigation_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
