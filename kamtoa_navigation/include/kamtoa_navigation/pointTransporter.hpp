@@ -97,6 +97,7 @@ void PointTransporter::onReceiveGoalCallback(
     // Set the goal message's payload
     goal.target_pose.header.frame_id = "/map";
     goal.target_pose.header.stamp = ros::Time::now();
+
     goal.target_pose.pose.position.x    = receivedGoal->target_pose.pose.position.x;
     goal.target_pose.pose.position.y    = receivedGoal->target_pose.pose.position.y;
     goal.target_pose.pose.orientation.x = receivedGoal->target_pose.pose.orientation.x;

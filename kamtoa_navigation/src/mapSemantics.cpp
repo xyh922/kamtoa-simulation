@@ -74,7 +74,6 @@ int main(int argc, char** argv)
                               &poi_array , &poi_array_name);
 
      // This Node Should Publish Markers
-     
 
      while(ros::ok()){
 
