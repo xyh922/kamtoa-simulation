@@ -29,6 +29,7 @@ ros::Publisher goToPub;
 
 // Provide Service to Give the users Location List
 // [TODO: Implement this function as an services]
+
 void list_poi(){
   std::cout << "========================" << std::endl;
   std::cout << " POI Lists ." <<std::endl;

@@ -3,12 +3,12 @@
 <robot name="kamtoa_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <!-- Wheel file -->
-    <xacro:include filename="$(find kamtoa_description)/urdf/wheel.urdf.xacro" />
-    <xacro:include filename="$(find kamtoa_description)/urdf/constant.xacro" />
-    <xacro:include filename="$(find kamtoa_description)/urdf/material.xacro" />
-    <xacro:include filename="$(find kamtoa_description)/urdf/hokuyo.xacro" />
-    <xacro:include filename="$(find kamtoa_description)/urdf/camera.xacro" />
-    <xacro:include filename="$(find kamtoa_description)/urdf/diff_drive_plugin.xacro" />
+    <xacro:include filename="$(find kamtoa_description)/urdf/shared_component/wheel.urdf.xacro" />
+    <xacro:include filename="$(find kamtoa_description)/urdf/kamtoa_prototype/constant.xacro" />
+    <xacro:include filename="$(find kamtoa_description)/urdf/kamtoa_prototype/material.xacro" />
+    <xacro:include filename="$(find kamtoa_description)/urdf/shared_component/hokuyo.xacro" />
+    <xacro:include filename="$(find kamtoa_description)/urdf/kamtoa_prototype/camera.xacro" />
+    <xacro:include filename="$(find kamtoa_description)/urdf/kamtoa_prototype/diff_drive_plugin.xacro" />
 
     <!-- Base_Footprint (ground mark)  -->
     <link name="base_footprint">

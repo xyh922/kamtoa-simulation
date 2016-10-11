@@ -79,7 +79,9 @@ PointTransporter::PointTransporter(void){
 PointTransporter::~PointTransporter(void){
     std::cout << std::endl;
     ROS_INFO("Destructor Called : Remove every instance");
+
     // [TODO:]Stop Every move_base command
+
     delete actionClient;
 }
 

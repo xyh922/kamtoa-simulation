@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <robot name="kamtoa_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- Hokuyo Sensors Model -->
     <link name="camera_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>

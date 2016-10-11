@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<robot name="som_o_robot_30cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Constants -->
+  <xacro:include filename="$(find som_o_description)/urdf/30cm/constants.xacro" />
+
+
+  <!-- Body of Robot -->
+
+  <!-- Footprint (require Base Link inclusion) -->
+  <xacro:include filename="$(find som_o_description)/urdf/30cm/base_footprint.xacro" />
+
+  <!-- Base Link (Main chassis) -->
+  <xacro:include filename="$(find som_o_description)/urdf/30cm/base_link.xacro" />
+
+  <!-- Wheels (Plugin) -->
+
+</robot>

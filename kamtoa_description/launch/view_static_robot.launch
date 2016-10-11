@@ -1,7 +1,7 @@
 <launch>
   <arg name="model" />
   <!-- <param name ="robot_description" textfile="$(find kamtoa_description)/urdf/kamtoa_robot.xacro" /> -->
-  <param name ="robot_description" command="$(find xacro)/xacro --inorder $(find kamtoa_description)/urdf/kamtoa_robot.xacro" />
+  <param name ="robot_description" command="$(find xacro)/xacro --inorder $(find kamtoa_description)/urdf/kamtoa_prototype/kamtoa_robot.xacro" />
 
   <param name ="use_gui" value="true"  />
 
