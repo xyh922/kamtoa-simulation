@@ -6,29 +6,32 @@
     <xacro:property name="M_PI_2" value="1.570796327"/>
     <xacro:property name="DEG_TO_RAD" value="0.017453293"/>
 
-
-    <xacro:property name="thickness" value="0.003"/>
-    <xacro:property name="wheel_radius" value="0.040"/>
-
     <!-- Base Link Constants -->
     <!-- Inertial components , Mass (Kgs) -->
-    <xacro:property name="base_mass" value="0.040"/>
-    <xacro:property name="base_radius" value="0.400"/>
-    <xacro:property name="base_height" value="0.400"/>
+    <xacro:property name="base_mass" value="0.2"/>
+    <xacro:property name="base_radius" value="0.20"/>
+    <xacro:property name="base_height" value="0.40"/>
+    <xacro:property name="base_link_visual_mesh_offset_z" value="0.55"/>
 
 
-
-    <!-- Collision model -->
+    <!-- Collision 133.091 Origin to base Link model -->
     <!-- Chassis Collsion -->
-    <xacro:property name="base_col_box_height" value="0.250"/>
+    <xacro:property name="base_col_box_height" value="0.300"/>
     <xacro:property name="base_col_box_length" value="0.200"/>
     <xacro:property name="base_col_box_width" value="0.140"/>
 
-    <!-- <xacro:property name="base_radius" value="0.400"/>
-    <xacro:property name="base_height" value="0.400"/> -->
+    <!-- Wheels -->
+    <xacro:property name="wheel_radius" value="0.042" />
+    <xacro:property name="wheel_height" value="0.026" />
+    <xacro:property name="wheel_mass" value="2.5" /> <!-- in kg-->
+    <xacro:property name="base_x_origin_to_wheel_origin" value="0" />
+    <xacro:property name="base_y_origin_to_wheel_origin" value="0.092" />
+    <xacro:property name="base_z_origin_to_wheel_origin" value="0.00" />
+
     <!-- Macro for calculating inertia of cylinder -->
     <xacro:macro name="cylinder_inertia" params="m r h">
-        <inertia ixx="${m*(3*r*r+h*h)/12}" ixy="0" ixz="0" iyy="${m*(3*r*r+h*h)/12}" iyz="0" izz="${m*r*r/2}"/>
+        <inertia ixx="${m*(3*r*r+h*h)/12}" ixy="0" ixz="0"
+          iyy="${m*(3*r*r+h*h)/12}" iyz="0" izz="${m*r*r/2}"/>
     </xacro:macro>
 
 

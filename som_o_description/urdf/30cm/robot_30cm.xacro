@@ -15,5 +15,8 @@
   <xacro:include filename="$(find som_o_description)/urdf/30cm/base_link.xacro" />
 
   <!-- Wheels (Plugin) -->
+  <xacro:include filename="$(find som_o_description)/urdf/shared_components/wheel.xacro" />
+  <wheel fb="front" lr="right" parent="base_footprint" translateX="0" translateY="1" flipY="1" />
+  <wheel fb="front" lr="left" parent="base_footprint" translateX="0" translateY="-1" flipY="1" />
 
 </robot>

@@ -11,21 +11,20 @@
       <cylinder_inertia m="${base_mass}" r="${base_radius}" h="${base_height}" />
   </inertial>
 
-  <!-- [TODO: Create the Mesh from Fusion without wheel and use as ] -->
+  <!-- Base_Link Visual (mesh from STL) -->
   <visual>
-      <origin xyz="0 0 0.055" rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-          <mesh filename="package://som_o_description/meshes/full_export.stl"/>
+          <mesh filename="package://som_o_description/meshes/obodroid1.stl"/>
       </geometry>
       <material name="White" />
   </visual>
 
-  <!-- [TODO : Use BOX Collision Model and except the wheel boundary] -->
+  <!-- Base_Link Collision Model -->
   <collision>
-      <origin xyz="0 0 0" rpy="0 0 0 " />
+      <origin xyz="0 0 ${base_col_box_height/2}" rpy="0 0 0 " />
       <geometry>
           <box size="${base_col_box_length} ${base_col_box_width} ${base_col_box_height}" />
-
       </geometry>
   </collision>
   </link>
@@ -35,6 +34,7 @@
       <material>Gazebo/White</material>
       <turnGravityOff>false</turnGravityOff>
   </gazebo>
+
 
 
 </robot>
