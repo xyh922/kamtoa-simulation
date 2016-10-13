@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<robot name="kamtoa_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="som_o_robot_20cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<!-- Definitions for colors -->
+<!-- Definitions for colors for using in Gazebo and RViz -->
 
     <material name="Black">
         <color rgba="0.0 0.0 0.0 1.0" />

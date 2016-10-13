@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+    Launch file for spawning a URDF (XACRO) Robot Model
+    which is used by
+      @Gazebo world
+      @Rviz Robot Model Topic
+    Company : Obodroid Corporation
+    Author : Theppasith N. <theppasith@gmail.com>
+-->
+
+<launch>
+
+    <arg name="model_name" default="" />
+
+    <!-- Spawn robot from robot_description global parameter -->
+    <node name="urdf_spawner" pkg="gazebo_ros"
+      type="spawn_model" respawn="false" output="screen"
+      args="-urdf -model $(arg model_name) -param robot_description"/>
+
+</launch>

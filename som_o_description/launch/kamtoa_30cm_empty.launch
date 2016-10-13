@@ -1,8 +1,5 @@
 <launch>
 
-    <!-- Environment PATH -->
-    <!-- <env name="GAZEBO_MODEL_PATH" value="$(find som_o_description/meshes/)"/> -->
-
     <!-- these are the arguments you can pass this launch file, for example paused:=true -->
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="true"/>

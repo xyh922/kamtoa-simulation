@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+    Launch file for spawning World Model
+    which is used by
+      @Gazebo world
+    Company : Obodroid Corporation
+    Author : Theppasith N. <theppasith@gmail.com>
+-->
+<launch>
+    <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+
+    <!-- World name inherited from outer launch file calling -->
+    <arg name="world_name" default="" />
+
+  <!-- start gazebo with world -->
+  <param name="/use_sim_time" value="true" />
+  <node name="gazebo" pkg="gazebo_ros" type="gazebo"
+    args="$(find kamtoa_gazebo)/world/$(arg world_name)"
+    respawn="false" output="screen"/>
+
+
+</launch>

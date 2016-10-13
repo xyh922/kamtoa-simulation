@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
-<robot name="som_o_robot_30cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="som_o_robot_20cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <!-- Constants (m-kg-s-radians unit system) -->
     <xacro:property name="M_PI" value="3.1415926535897931"/>
     <xacro:property name="M_PI_2" value="1.570796327"/>
     <xacro:property name="DEG_TO_RAD" value="0.017453293"/>
 
+    <!-- Meterials properties -->
+    <xacro:property name="metal_sheet_thickness" value="0.03"/>
+
     <!-- Base Link Constants -->
     <!-- Inertial components , Mass (Kgs) -->
     <xacro:property name="base_mass" value="0.2"/>
     <xacro:property name="base_radius" value="0.20"/>
-    <xacro:property name="base_height" value="0.40"/>
+    <xacro:property name="base_height" value="0.22"/>
     <xacro:property name="base_link_visual_mesh_offset_z" value="0.55"/>
 
-
-    <!-- Collision 133.091 Origin to base Link model -->
     <!-- Chassis Collsion -->
-    <xacro:property name="base_col_box_height" value="0.300"/>
+    <xacro:property name="base_col_box_height" value="0.183091"/>
     <xacro:property name="base_col_box_length" value="0.200"/>
     <xacro:property name="base_col_box_width" value="0.140"/>
 
@@ -33,6 +34,5 @@
         <inertia ixx="${m*(3*r*r+h*h)/12}" ixy="0" ixz="0"
           iyy="${m*(3*r*r+h*h)/12}" iyz="0" izz="${m*r*r/2}"/>
     </xacro:macro>
-
 
 </robot>

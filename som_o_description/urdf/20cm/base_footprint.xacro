@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-
-<robot name="som_o_robot_30cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="som_o_robot_20cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <!-- Base_Footprint (ground mark)  -->
     <link name="base_footprint">

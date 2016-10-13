@@ -8,7 +8,7 @@
     <arg name="world_name" value="building1.world"/>
 
 
-  <!-- start gazebo with an empty plane -->
+  <!-- start gazebo with world -->
   <param name="/use_sim_time" value="true" />
   <node name="gazebo" pkg="gazebo_ros" type="gazebo" args="$(find kamtoa_gazebo)/world/building1.world" respawn="false" output="screen"/>
 
