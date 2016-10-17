@@ -1170,7 +1170,7 @@
             <iyz>0</iyz>
             <izz>1</izz>
           </inertia>
-          <mass>1</mass>
+          <mass>10</mass>
         </inertial>
         <kinematic>0</kinematic>
         <gravity>1</gravity>

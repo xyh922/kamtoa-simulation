@@ -4,7 +4,7 @@
     Company : Obodroid Corporation
     Author : Theppasith N. <theppasith@gmail.com>
 -->
-<robot name="som_o_robot_20cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="som_o_robot_25cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <!-- Constants (m-kg-s-radians unit system) -->
     <xacro:property name="M_PI" value="3.1415926535897931"/>
@@ -17,14 +17,14 @@
     <!-- Base Link Constants -->
     <!-- Inertial components , Mass (kgs) -->
     <xacro:property name="base_mass" value="0.2"/>
-    <xacro:property name="base_radius" value="0.20"/>
+    <xacro:property name="base_radius" value="0.25"/>
     <xacro:property name="base_height" value="0.22"/>
     <xacro:property name="base_link_visual_mesh_offset_z" value="0.55"/>
 
     <!-- Chassis Collsion -->
     <xacro:property name="base_col_box_height" value="0.183091"/>
     <xacro:property name="base_col_box_length" value="0.200"/>
-    <xacro:property name="base_col_box_width" value="0.130"/>
+    <xacro:property name="base_col_box_width" value="0.180"/>
 
     <!-- Wheels -->
     <xacro:property name="wheel_radius" value="0.042" />

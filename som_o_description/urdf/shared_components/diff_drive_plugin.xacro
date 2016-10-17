@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="som_o_robot_20cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="diff_drive_plugin" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- Differential drive controller  -->
     <gazebo>
         <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">

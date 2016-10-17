@@ -5,20 +5,20 @@
     Author : Theppasith N. <theppasith@gmail.com>
 -->
 
-<robot name="som_o_robot_20cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="som_o_robot_25cm" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Constants -->
-  <xacro:include filename="$(find som_o_description)/urdf/20cm/constants.xacro" />
+  <xacro:include filename="$(find som_o_description)/urdf/25cm/constants.xacro" />
 
   <!-- Material (Color) -->
   <xacro:include filename="$(find som_o_description)/urdf/shared_components/material.xacro" />
 
   <!-- Body of Robot -->
       <!-- Footprint (require Base Link inclusion) -->
-      <xacro:include filename="$(find som_o_description)/urdf/20cm/base_footprint.xacro" />
+      <xacro:include filename="$(find som_o_description)/urdf/25cm/base_footprint.xacro" />
 
       <!-- Base Link (Main chassis) -->
-      <xacro:include filename="$(find som_o_description)/urdf/20cm/base_link.xacro" />
+      <xacro:include filename="$(find som_o_description)/urdf/25cm/base_link.xacro" />
 
       <!-- Wheels (Plugin) -->
       <xacro:include filename="$(find som_o_description)/urdf/shared_components/wheel.xacro" />

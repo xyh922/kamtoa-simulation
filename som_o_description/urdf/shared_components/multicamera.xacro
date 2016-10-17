@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!--
+    Multicamera Xacro file
+    Company : Obodroid Corporation
+    Author : Theppasith N. <theppasith@gmail.com>
+-->
+<robot name="multicam" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- MultiCamera -->
+  <link name="multicam_link_left">
+  <visual>
+      <origin xyz="0 0.07 0" rpy="0 0 0" />
+      <geometry>
+          <box size="0.003 0.003 0.003" />
+      </geometry>
+  </visual>
+  </link>
+
+  <link name="multicam_link">
+  <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+          <box size="0.003 0.003 0.003" />
+      </geometry>
+  </visual>
+  </link>
+
+  <link name="multicam_link_right">
+  <visual>
+      <origin xyz="0 -0.07 0" rpy="0 0 0" />
+      <geometry>
+          <box size="0.003 0.003 0.003" />
+      </geometry>
+  </visual>
+  </link>
+
+  <joint name="lidar_joint_to_multicam" type="fixed">
+      <origin xyz="0 0 0.015" rpy="0 0 0" />
+      <parent link="lidar_link" />
+      <child link="multicam_link" />
+  </joint>
+
+  <joint name="joint_to_right_multicam" type="fixed">
+      <origin xyz="0 0.07 0" rpy="0 0 0" />
+      <parent link="multicam_link" />
+      <child link="multicam_link_right" />
+  </joint>
+
+  <joint name="joint_to_left_multicam" type="fixed">
+      <origin xyz="0 -0.07 0" rpy="0 0 0" />
+      <parent link="multicam_link" />
+      <child link="multicam_link_left" />
+  </joint>
+
+  <gazebo reference="multicam_link">
+      <turnGravityOff>false</turnGravityOff>
+      <material>Gazebo/Grey</material>
+  </gazebo>
+
+  <gazebo reference="multicam_link_right">
+      <turnGravityOff>false</turnGravityOff>
+      <material>Gazebo/Red</material>
+  </gazebo>
+
+
+  <gazebo reference="multicam_link_left">
+      <turnGravityOff>false</turnGravityOff>
+      <material>Gazebo/Red</material>
+  </gazebo>
+
+
+  <!-- Gazebo Plugin -->
+  <gazebo reference="multicam_link">
+    <sensor type="multicamera" name="stereo_camera">
+      <update_rate>30.0</update_rate>
+
+      <camera name="left">
+        <pose>0 0.07 0 0 0 0</pose>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+
+      <camera name="right">
+        <pose>0 -0.07 0 0 0 0</pose>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>800</width>
+          <height>800</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+
+
+      <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>multisense_sl/camera</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>left_camera_optical_frame</frameName>
+        <rightFrameName>right_camera_optical_frame</rightFrameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.0</distortionK3>
+        <distortionT1>0.0</distortionT1>
+        <distortionT2>0.0</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+
+
+</robot>

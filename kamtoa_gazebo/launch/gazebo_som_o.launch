@@ -3,13 +3,18 @@
     ENTRY FILE FOR LAUNCHING FULL SIMULATION
     Company : Obodroid Corporation
     Author : Theppasith N. <theppasith@gmail.com>
+
+    Example Run command : roslaunch gazebo_som_o.launch size:="20"
+    (For 20cm model simulation)
+    
 -->
 
 <launch>
 
   <!-- Parameters by Console Arguments -->
-  <arg name="model_name" default="som_o_robot_20cm"/>
-  <arg name="urdf_path"  default="$(find som_o_description)/urdf/20cm/$(arg model_name).xacro"/>
+  <arg name="size" default="20"/>
+  <arg name="model_name" default="som_o_robot_$(arg size)cm"/>
+  <arg name="urdf_path"  default="$(find som_o_description)/urdf/$(arg size)cm/$(arg model_name).xacro"/>
   <arg name="world_name" default="building1.world"/>
 
   <!-- ROBOT Description file for RVIZ and Gazebo [Globally Set]-->
