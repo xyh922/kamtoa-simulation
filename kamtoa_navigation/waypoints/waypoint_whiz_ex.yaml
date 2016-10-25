@@ -1,0 +1,200 @@
+name : room_right_bed
+position:
+      x: -6.67002805349
+      y: 0.133941284293
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.934011886921
+      w: 0.357241927958
+
+name : room_right_closet
+position:
+      x: -4.95839506537
+      y: 1.00612021617
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.770873053113
+      w: 0.636988803656
+
+name : room_right_front
+position:
+      x: -4.90081650987
+      y: -0.77041212564
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.661304125625
+      w: 0.750117893022
+
+name : room_right_toilet
+position:
+      x: -8.44922006649
+      y: -0.0364815174967
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.762851164862
+      w: 0.646574125888
+
+
+name : room_left_front
+position:
+      x: -4.87816948679
+      y: -1.39963734413
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.730697367573
+      w: 0.682701513856
+
+
+name : room_left_bed
+position:
+      x: -7.27719836777
+      y: -3.21572868923
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.946601897332
+      w: 0.322404788995
+
+name : room_left_toilet
+position:
+      x: -6.02253234687
+      y: -3.0176874532
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.74635778246
+      w: 0.665544935043
+
+name : room_left_closet
+position:
+      x: -4.99326271658
+      y: -4.06343596186
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.705149282806
+      w: 0.709058875523
+
+name : main_toilet
+position:
+      x: -3.69885686457
+      y: -0.814242013903
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.736677169138
+      w: 0.676244592193
+
+name : room_center_front
+position:
+      x: -3.74342143005
+      y: -1.45605027098
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.700581710841
+      w: 0.713572187262
+
+name : room_center_bed
+position:
+      x: -3.32958963252
+      y: -3.41092099407
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.331908868681
+      w: 0.943311455931
+
+name : hallway
+position:
+      x: -2.63544751426
+      y: -1.13860725851
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.997407474523
+      w: 0.0719606125983
+
+name : kitchen
+position:
+      x: -1.21363343643
+      y: 0.50896462641
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.917992206713
+      w: 0.396598422103
+
+name : living_room_desk
+position:
+      x: 0.809398277115
+      y: -0.938875204533
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.705653343115
+      w: 0.708557237879
+
+name : living_room_sofa
+position:
+      x: -0.326398044394
+      y: -2.43739563986
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.959812318618
+      w: 0.280642678559
+
+
+name : living_room_tv
+position:
+      x: 0.713953395933
+      y: -2.16035035514
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.113143594746
+      w: 0.993578646594
+
+name : living_room_inside_corner
+position:
+      x: 0.802551409667
+      y: -3.87325645971
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: -0.966780646481
+      w: 0.255607475614
+
+name : home_base
+position:
+      x: -0.982753477353
+      y: -1.83597089136
+      z: 0.0
+    orientation:
+      x: 0.0
+      y: 0.0
+      z: 0.399719416273
+      w: 0.916637544646
