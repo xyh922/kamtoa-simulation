@@ -10,19 +10,20 @@
   <arg name="global_frame_id" default="map"/>
   <arg name="odom_topic" default="odom" />
   <arg name="laser_topic" default="scan" />
+  <arg name="robot" default="icreate" />
 
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/costmap/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/only_global_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/only_local_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/global_costmap_params.yaml" command="load" />
 
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/planner/base_local_planner_params.yaml" command="load" />
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/move_base_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/planner/dwa_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/move_base_params.yaml" command="load" />
 
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/planner/global_planner_params.yaml" command="load" />
-    <rosparam file="$(find kamtoa_navigation)/param/icreate/planner/navfn_global_planner_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/planner/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/planner/navfn_global_planner_params.yaml" command="load" />
 
     <!-- external params file that could be loaded into the move_base namespace -->
     <!--rosparam file="$(arg custom_param_file)" command="load" /-->
