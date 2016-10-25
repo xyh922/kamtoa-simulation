@@ -74,7 +74,7 @@
     <sensor type="multicamera" name="stereo_camera">
       <update_rate>30.0</update_rate>
 
-      <camera name="left">
+      <camera name="cam_left">
         <pose>0 0.07 0 0 0 0</pose>
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
@@ -93,7 +93,7 @@
         </noise>
       </camera>
 
-      <camera name="right">
+      <camera name="cam_right">
         <pose>0 -0.07 0 0 0 0</pose>
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
@@ -116,21 +116,19 @@
       <plugin name="stereo_camera_controller" filename="libgazebo_ros_multicamera.so">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>multisense_sl/camera</cameraName>
+        <cameraName>multicamera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
         <frameName>left_camera_optical_frame</frameName>
         <rightFrameName>right_camera_optical_frame</rightFrameName>
         <hackBaseline>0.07</hackBaseline>
-        <distortionK1>0.0</distortionK1>
-        <distortionK2>0.0</distortionK2>
+        <distortionK1>1.0</distortionK1>
+        <distortionK2>2.0</distortionK2>
         <distortionK3>0.0</distortionK3>
         <distortionT1>0.0</distortionT1>
         <distortionT2>0.0</distortionT2>
       </plugin>
     </sensor>
   </gazebo>
-
-
 
 </robot>

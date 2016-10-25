@@ -25,7 +25,7 @@
 
     <!-- ~odom_alpha1 (double, default: 0.2)
     Specifies the expected noise in odometry's rotation estimate from the rotational component of the robot's motion. -->
-    <param name="odom_alpha1"               value="0.2"/>
+    <param name="odom_alpha1"               value="0.6"/>
 
     <!-- ~odom_alpha2 (double, default: 0.2)
     Specifies the expected noise in odometry's rotation estimate from translational component of the robot's motion. -->
@@ -37,7 +37,7 @@
 
     <!-- ~odom_alpha4 (double, default: 0.2)
     Specifies the expected noise in odometry's translation estimate from the rotational component of the robot's motion. -->
-    <param name="odom_alpha4"               value="0.2"/>
+    <param name="odom_alpha4"               value="0.4"/>
 
     <!-- Publish scans from best pose at a max of 10 Hz -->
     <param name="gui_publish_rate"          value="10.0"/>
@@ -46,9 +46,9 @@
     <param name="laser_max_beams"           value="60"/>
 
     <!-- Maximum scan range to be considered; -1.0 will cause the laser's reported maximum range to be used. -->
-    <param name="laser_max_range"           value="12.0"/>
-    <param name="min_particles"             value="500"/>
-    <param name="max_particles"             value="2000"/>
+    <param name="laser_max_range"           value="6.0"/>
+    <param name="min_particles"             value="100"/>
+    <param name="max_particles"             value="500"/>
     <param name="kld_err"                   value="0.05"/>
     <param name="kld_z"                     value="0.99"/>
     <param name="laser_z_hit"               value="0.5"/>

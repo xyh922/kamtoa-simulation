@@ -15,7 +15,7 @@
   <arg name="size" default="20"/>
   <arg name="model_name" default="som_o_robot_$(arg size)cm"/>
   <arg name="urdf_path"  default="$(find som_o_description)/urdf/$(arg size)cm/$(arg model_name).xacro"/>
-  <arg name="world_name" default="whiz_ex.world"/>
+  <arg name="world_name" default="whiz_ex_decorated.world"/>
 
   <!-- ROBOT Description file for RVIZ and Gazebo [Globally Set]-->
   <param name ="robot_description" command="$(find xacro)/xacro --inorder $(arg urdf_path)" />

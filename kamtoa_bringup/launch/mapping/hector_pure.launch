@@ -6,7 +6,7 @@
 	<node pkg="hector_mapping" type="hector_mapping" name="hector_height_mapping" output="screen">
 			<param name="scan_topic" value="scan" />
 			<param name="base_frame" value="base_link" />
-			<param name="odom_frame" value="base_link" />
+			<param name="odom_frame" value="odom" />
 
 			<param name="output_timing" value="false"/>
 			<param name="advertise_map_service" value="true"/>
@@ -26,6 +26,6 @@
 			<param name="map_start_x" value="0.5"/>
 			<param name="map_start_y" value="0.5"/>
 
-		</node>
+	</node>
 
 </launch>
