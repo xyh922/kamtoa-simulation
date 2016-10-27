@@ -2,7 +2,7 @@
     <!-- Initiate the iCreate Controller ! -->
     <node pkg="create_node" type="turtlebot_node.py" name="iCreate_controller" output="screen">
       	 <param name="port" type="string" value="/dev/ttyUSB0"/>
-	       <param name="publish_tf" type="string" value="True"/>
+	       <param name="publish_tf" value="true"/>
          <param name="cmd_vel_timeout" type="int" value="10"/>
     </node>
 

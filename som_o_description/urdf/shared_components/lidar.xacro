@@ -32,15 +32,16 @@
         <sensor type="ray" name="lidar_sensor">
             <pose>${lidar_size/2} 0 0 0 0 0</pose>
             <visualize>true</visualize>
-            <update_rate>40</update_rate>
+            <update_rate>5.5</update_rate>
+            <!-- update rate 40 -->
             <ray>
                 <scan>
                     <horizontal>
                         <samples>360</samples>
+                        <!-- samples 360 -->
                         <resolution>1</resolution>
                         <min_angle>-2</min_angle>
                         <max_angle>2</max_angle>
-
                     </horizontal>
                 </scan>
                 <range>

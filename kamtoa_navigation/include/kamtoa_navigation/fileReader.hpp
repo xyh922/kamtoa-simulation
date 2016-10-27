@@ -45,8 +45,8 @@ void read_waypoint_from_file(std::string filename ,
     }
 
     //Count All tokenized word
-    size_t point_amount = (size_t)( tokenized.size() / 6.0);
-    std::cout << "Point" << point_amount <<std::endl;
+    size_t point_amount = (size_t)( tokenized.size() / 6.0 );
+
     //Number must be matched with the header of the file
     if(point_amount == waypoint_count)
     {

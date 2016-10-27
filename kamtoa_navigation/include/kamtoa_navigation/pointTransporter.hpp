@@ -93,6 +93,8 @@ void PointTransporter::onReceiveGoalCallback(
     // On received goal from upper layer
     ROS_INFO("Got the new Goal (x,y,yaw) from Upper Layer");
 
+    // [TODO:] Set the speed to zero and set the heading to the free area
+
     // Start the navigation process
     move_base_msgs::MoveBaseGoal goal;
 
