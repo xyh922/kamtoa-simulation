@@ -9,4 +9,5 @@
 	<include file="$(find kamtoa_bringup)/launch/camera/camera1.launch"/>
 	<!-- Open Mic for audio streaming -->
 	<include file="$(find audio_capture)/launch/capture.launch"/>
+	
 </launch>

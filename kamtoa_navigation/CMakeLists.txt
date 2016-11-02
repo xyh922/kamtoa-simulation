@@ -7,6 +7,7 @@ project(kamtoa_navigation)
 find_package(catkin REQUIRED COMPONENTS
   actionlib
   move_base_msgs
+  visualization_msgs
   roscpp
   roslib
   tf
@@ -131,11 +132,7 @@ include_directories(
 
 ## Declare a C++ executable
 # add_executable(kamtoa_navigation_node src/kamtoa_navigation_node.cpp)
-add_executable(pointTransporter src/pointTransporter.cpp)
-target_link_libraries(pointTransporter ${catkin_LIBRARIES})
 
-add_executable(mapSemantics src/mapSemantics.cpp)
-target_link_libraries(mapSemantics ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above

@@ -25,7 +25,6 @@
         <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
       </include>
 
-
       <!-- Velocity Smoother -->
       <include file="$(find kamtoa_navigation)/launch/modules/velocity_smoother.launch.xml"/>
 
@@ -33,7 +32,6 @@
       <include file="$(find kamtoa_navigation)/launch/modules/move_base.launch.xml">
           <arg name="robot" value="$(arg robot)"/>
       </include>
-
 
   </group>
 

@@ -2,7 +2,7 @@
 <!-- Ground station Launch File -->
 <launch>
     <!-- Run the audio listener -->
-    <include file="$(find audio_play)/launch/play.launch"/>
+    <!-- <include file="$(find audio_play)/launch/play.launch"/> -->
 
     <!-- Run the joystick driver and joystick teleop cmd_vel node -->
     <include file="$(find kamtoa_teleop)/launch/teleop_joystick.launch" />
