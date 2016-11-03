@@ -4,10 +4,22 @@
       action on to robot language
     - The only place to resolve the index number
       into the target goal position
-    -
  *  Author : Theppasith Nisitsukcharoen
  *  29-Sept-2016
  *******************************/
+
+/******************************
+  Update 3-Nov-2016
+  @Provided Services
+  1. List All POI
+    - return poi[]
+  2. [TODO:]Resolve POI (by index)
+    - return move_base_goal ?
+
+  @Messages
+  1. poi.msg - a single poi
+
+*******************************/
 
 #include <ros/ros.h>
 #include <ros/package.h>
@@ -29,11 +41,12 @@
 // POI Array
 std::vector<move_base_msgs::MoveBaseGoal> poi_array;
 std::vector<std::string>   poi_array_name;
-
 ros::Publisher goToPub;
+ros::Publisher marker_pub;
 
 // Provide Service to Give the users Location List
 // [TODO: Implement this function as an services]
+
 
 void list_poi(){
   std::cout << "========================" << std::endl;
@@ -47,14 +60,6 @@ void list_poi(){
   }
   std::cout << "========================" << std::endl;
 }
-
-// Services to return the poi's name
-void get_all_poi_names(){
-    //return poi_array_name;
-}
-
-
-
 
 void goTo(int poi_number){
 
@@ -81,13 +86,15 @@ int main(int argc, char** argv)
 
      // Publishers
      goToPub = n.advertise<move_base_msgs::MoveBaseGoal>("/kamtoa/goal", 10);
-     ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+     marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
+
+     // Default Routine
      // Read the POIs from file
      ROS_INFO("Read the waypoint from file : waypoint.csv ");
-     read_waypoint_from_file("/waypoints/waypoint.csv",
+     FileReader::read_waypoint_from_file("/waypoints/waypoint.csv",
                               &poi_array , &poi_array_name);
 
-     // This Node Should Publish Markers
+
 
      while(ros::ok()){
 

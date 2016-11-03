@@ -1,0 +1,5 @@
+# Service used to command the mapSemantics
+# in order to get the poi from a specified file
+
+string path
+---

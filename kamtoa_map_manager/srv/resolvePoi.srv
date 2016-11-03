@@ -1,0 +1,5 @@
+# Service used to command the mapSemantics
+
+uint8 id
+---
+move_base_msgs/MoveBaseGoal resolveGoal

@@ -12,6 +12,8 @@
  #include <cstdlib>
  #include <termios.h>
 
+namespace FileReader{
+
 void read_waypoint_from_file(std::string filename ,
     std::vector<move_base_msgs::MoveBaseGoal> *poi_array ,
     std::vector<std::string> *poi_array_name )
@@ -74,4 +76,6 @@ void read_waypoint_from_file(std::string filename ,
        poi_array->push_back(newPoint);
        if(word_it == tokenized.end())break;
     }
+ }
+
  }

@@ -1,0 +1,5 @@
+# Empty message as request
+# to get the All of the poi as a list
+
+---
+poi[] poi_list

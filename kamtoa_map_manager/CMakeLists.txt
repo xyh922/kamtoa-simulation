@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   tf
   visualization_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -49,18 +50,19 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+  FILES
+  poi.msg
+)
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  listPoi.srv
+  loadPoi.srv
+  resolvePoi.srv
+  gotoPoi.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -69,11 +71,11 @@ find_package(catkin REQUIRED COMPONENTS
 #   Action2.action
 # )
 
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   move_base_msgs#   nav_msgs#   visualization_msgs
-# )
+# Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  kamtoa_map_manager std_msgs  geometry_msgs   move_base_msgs   nav_msgs   visualization_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -106,8 +108,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
+
 #  LIBRARIES kamtoa_map_manager
-#  CATKIN_DEPENDS actionlib geometry_msgs move_base_msgs nav_msgs roscpp roslib tf visualization_msgs
+   CATKIN_DEPENDS actionlib geometry_msgs move_base_msgs nav_msgs roscpp roslib tf visualization_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -150,6 +153,11 @@ target_link_libraries(pointTransporter ${catkin_LIBRARIES})
 
 add_executable(mapSemantics src/mapSemantics.cpp)
 target_link_libraries(mapSemantics ${catkin_LIBRARIES})
+
+add_executable(poiManager src/poiManager.cpp)
+add_dependencies(poiManager kamtoa_map_manager_gencpp)
+target_link_libraries(poiManager ${catkin_LIBRARIES})
+
 
 #############
 ## Install ##
@@ -212,7 +220,7 @@ set(QT_LIBRARIES Qt5::Widgets)
 add_definitions(-DQT_NO_KEYWORDS)
 set(SRC_FILES src/map_poi_manager_widget.cpp)
 
-## Linking 
+## Linking
 add_library(map_poi_manager_widget ${SRC_FILES})
 target_link_libraries(map_poi_manager_widget  ${QT_LIBRARIES} ${catkin_LIBRARIES})
 
