@@ -158,6 +158,9 @@ add_executable(poiManager src/poiManager.cpp)
 add_dependencies(poiManager kamtoa_map_manager_gencpp)
 target_link_libraries(poiManager ${catkin_LIBRARIES})
 
+add_executable(gridtest src/map_accessor.cpp)
+target_link_libraries(gridtest ${catkin_LIBRARIES})
+
 
 #############
 ## Install ##
