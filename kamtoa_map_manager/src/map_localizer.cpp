@@ -41,6 +41,36 @@ void mouse_callback_draw(int event, int x, int y, int flags, void* userdata)
      } 
 }
 
+std::string roomname(int id){
+    switch(id){
+        case 10 : 
+        return "Entrance / Dinner desk";
+        case 20 : 
+        return "Living Room / TV";
+        case 30 : 
+        return "Kitchen Area";
+        case 40 : 
+        return "Hallway Area";
+        case 50 : 
+        return "Mini Bedroom";
+        case 60 : 
+        return "Bedroom 1";
+        case 70 : 
+        return "Bedroom 2";
+        case 80 : 
+        return "Mini Toilet";
+        case 90 : 
+        return "Main Toilet";
+        case 0 : 
+        return "WALL";
+        case 205 : 
+        return "UNKNOWN";
+        case 254 :
+        return "UNDEFINED";
+
+    }
+}
+
 int main(int argc, char** argv){
     // Init node
     ros::init(argc, argv, "Grid_localizer_Node");
@@ -101,7 +131,9 @@ int main(int argc, char** argv){
 
         cv::imshow("draw",drawing);
         cv::waitKey(5);
-        ROS_INFO("GRID CALCULATION (%d,%d) =  %d",col,row,reader.at<uchar>(col,row));
+        int room_value = (int) reader.at<uchar>(col,row);
+        ROS_INFO("GRID(%d,%d) =  %d = %s",col,row,room_value,roomname(room_value).c_str());
+
         ros::spinOnce();
         rate.sleep();
     }
