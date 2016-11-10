@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   visualization_msgs
   message_generation
+  rviz
 )
 
 find_package(OpenCV 3 REQUIRED)
@@ -113,7 +114,7 @@ catkin_package(
   INCLUDE_DIRS include
 
 #  LIBRARIES kamtoa_map_manager
-   CATKIN_DEPENDS actionlib geometry_msgs move_base_msgs nav_msgs roscpp roslib tf visualization_msgs message_runtime
+   CATKIN_DEPENDS actionlib geometry_msgs move_base_msgs nav_msgs roscpp roslib tf visualization_msgs rviz message_runtime
 #  DEPENDS system_lib
 )
 
@@ -225,20 +226,25 @@ target_link_libraries(opencvtest ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 ## This plugin includes Qt widgets, so we must include Qt like so:
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 message(STATUS "@@@@@Using Qt5 based on the rviz_QT_VERSION: ${rviz_QT_VERSION}")
+
 find_package(Qt5 ${rviz_QT_VERSION} REQUIRED Core Widgets)
+qt5_wrap_cpp(QT_MOC include/kamtoa_map_manager/poi_manager_panel.hpp)
 set(QT_LIBRARIES Qt5::Widgets)
 add_definitions(-DQT_NO_KEYWORDS)
-set(SRC_FILES src/map_poi_manager_widget.cpp)
+
+set(SRC_FILES src/poi_manager_panel.cpp ${QT_MOC})
 
 ## Linking
-add_library(map_poi_manager_widget ${SRC_FILES})
-target_link_libraries(map_poi_manager_widget  ${QT_LIBRARIES} ${catkin_LIBRARIES})
+add_library(poi_manager_panel ${SRC_FILES})
+target_link_libraries(poi_manager_panel  ${QT_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${catkin_LIBRARIES})
 
 ## Installing
-install(TARGETS
-  map_poi_manager_widget
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+# install(TARGETS
+#   poi_manager_panel
+#   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# )

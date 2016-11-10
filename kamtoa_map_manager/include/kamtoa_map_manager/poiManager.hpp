@@ -21,6 +21,7 @@
 #include <iostream>
 #include <string>
 
+// Visualization Marker to RVIZ
 #include <visualization_msgs/Marker.h>
 // Custom POI Message files template to be sent.
 #include <kamtoa_map_manager/poi.h>
@@ -103,7 +104,6 @@ bool POIManager::poi_callback(
     }
 
     return true;
-
 }
 
 bool POIManager::load_poi_callback(
@@ -120,12 +120,12 @@ bool POIManager::load_poi_callback(
 
 void POIManager::load_poi_from_file(std::string path){
 
-  //[Reuseabillity] Clear value inside the vectors
-  this->poi_array.clear();
-  this->poi_array_name.clear();
+    // [Reuseabillity] Clear value inside the vectors
+    this->poi_array.clear();
+    this->poi_array_name.clear();
 
-  //FileReader
-  FileReader::read_waypoint_from_file(path, &(this->poi_array) , &(this->poi_array_name));
+    // FileReader
+    FileReader::read_waypoint_from_file(path, &(this->poi_array) , &(this->poi_array_name));
 }
 
 
@@ -168,5 +168,4 @@ bool POIManager::goto_poi_callback(kamtoa_map_manager::gotoPoi::Request &req,
     goalPub.publish(msg);
 
     return true;
-
 }

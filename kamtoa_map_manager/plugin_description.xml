@@ -1,0 +1,11 @@
+<library path="libpoi_manager_panel">
+
+  <class name="kamtoa_map_manager/POIManager Panel !"
+    type="kamtoa_map_manager::POIPanel"
+     base_class_type="rviz::Panel">
+    <description>
+      A panel
+    </description>
+  </class>
+
+</library>
