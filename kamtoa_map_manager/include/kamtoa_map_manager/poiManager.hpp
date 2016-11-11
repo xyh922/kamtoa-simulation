@@ -103,6 +103,8 @@ bool POIManager::poi_callback(
         res.poi_list.push_back(test_poi);
     }
 
+    res.file_path = poi_path;
+
     return true;
 }
 
@@ -126,6 +128,8 @@ void POIManager::load_poi_from_file(std::string path){
 
     // FileReader
     FileReader::read_waypoint_from_file(path, &(this->poi_array) , &(this->poi_array_name));
+    // Set Current path
+    poi_path = path;
 }
 
 

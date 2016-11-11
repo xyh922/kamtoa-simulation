@@ -19,6 +19,7 @@
   1. poi.msg - a single poi
 *******************************/
 
+
 #include "kamtoa_map_manager/poiManager.hpp"
 #include <vector>
 #include <iostream>

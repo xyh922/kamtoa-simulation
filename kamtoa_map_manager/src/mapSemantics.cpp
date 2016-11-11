@@ -13,14 +13,15 @@
   @Provided Services
   1. List All POI
     - return poi[]
-  2. [TODO:]Resolve POI (by index)
-    - return move_base_goal ?
+  2. Resolve POI (by index)
+    - return move_base_goal
 
   @Messages
   1. poi.msg - a single poi
 
 *******************************/
 
+// DEPRECATED - this is for Console app testing
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <std_srvs/Empty.h>
@@ -45,7 +46,7 @@ ros::Publisher goToPub;
 ros::Publisher marker_pub;
 
 // Provide Service to Give the users Location List
-// [TODO: Implement this function as an services]
+
 
 
 void list_poi(){

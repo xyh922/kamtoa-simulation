@@ -24,6 +24,7 @@
 #include <QDoubleSpinBox>
 #include <QFileDialog>
 #include <QListWidget>
+
 namespace kamtoa_map_manager{
 
     class POIPanel: public rviz::Panel {
@@ -34,33 +35,41 @@ namespace kamtoa_map_manager{
             virtual void load(const rviz::Config &config);
             virtual void save(rviz::Config config) const;
 
-        // Implementatiob of Q_SLOTS
+        // Implementation of Q_SLOTS
         public Q_SLOTS:
-            // Outmost poi service (for dropdown selection callback)
-            void goToPoi(int poi_id_);
+            // These function handle the outGoing event from plugin
+            void goToPoi();
             void stopTraverse();
 
         protected Q_SLOTS:
-            // Read the topic name from topmost textbox
+            // These function handle the event callback from GUI
             void getPOIList();
             void handlePOISelection();
+            void handleReloading();
 
         // Member variables
         protected:
             // One-line Textbox
             ros::ServiceClient  loadMapClient;
             ros::ServiceClient  gotoPoiClient;
-            // Service slave
+            // ListPOI Service slave
             kamtoa_map_manager::listPoi srv;
-            // Node handle
+            // GoToPOI Service slave
+            kamtoa_map_manager::gotoPoi srv_gotopoi;
+            // ROS Node handle
             ros::NodeHandle     nh_;
+            // QT Widget
             QListWidget         *listWidget;
+            QLabel              *label; // label for selected poi
+            QLabel              *path_label; // label for selected path
+            // array to hold poi_list
             std::vector<kamtoa_map_manager::poi>   poi_list;
             int                 poi_id;
+            std::string         path_string;
 
         private:
+          // Initialize function here
             void setupPOIList();
-
-
+            void setupUI();
     };
 }

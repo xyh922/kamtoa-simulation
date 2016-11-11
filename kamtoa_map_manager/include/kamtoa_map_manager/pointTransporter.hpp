@@ -63,16 +63,16 @@ PointTransporter::PointTransporter(void){
 
     // Get parameters from parameter server
     nh_.param("upper_level_topic"     ,upperLevelTopic,  upperLevelTopic   );
-    nh_.param("action_topid_namespace",actionTopicNamespace  ,  actionTopicNamespace   );
+    nh_.param("action_topic_namespace",actionTopicNamespace  ,  actionTopicNamespace   );
 
     // Initiate the actionlib client
-    actionClient    = new MoveBaseClient(actionTopicNamespace , true);
+    actionClient       = new MoveBaseClient(actionTopicNamespace , true);
 
     // Initiate Publisher and Subscriber
     upperLevelGoalSub  = nh_.subscribe<move_base_msgs::MoveBaseGoal>(upperLevelTopic, 10,
                                          &PointTransporter::onReceiveGoalCallback, this);
     // Marker Visualizer (RVIZ) Publisher
-    goalMarkerPub = nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal" , 10);
+    goalMarkerPub      = nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal" , 10);
 }
 
 

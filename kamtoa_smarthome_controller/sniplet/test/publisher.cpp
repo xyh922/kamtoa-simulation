@@ -247,7 +247,7 @@ int main (int argc, char** argv)
 // }
 //
 // /////////////////////////////////////////////////
-// // \TODO: This was copied from ModelMaker. Figure out a better way to
+// // : This was copied from ModelMaker. Figure out a better way to
 // // prevent code duplication.
 // void LightMaker::OnMouseMove(const common::MouseEvent &_event)
 // {
