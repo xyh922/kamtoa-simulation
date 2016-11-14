@@ -46,6 +46,7 @@ namespace kamtoa_map_manager{
             void getPOIList();
             void handlePOISelection();
             void handleReloading();
+            void handleStop();
 
         // Member variables
         protected:
@@ -58,6 +59,8 @@ namespace kamtoa_map_manager{
             kamtoa_map_manager::gotoPoi srv_gotopoi;
             // ROS Node handle
             ros::NodeHandle     nh_;
+            // Cancel Goal Publisher for GUI
+            ros::Publisher      cancelGoalPub;
             // QT Widget
             QListWidget         *listWidget;
             QLabel              *label; // label for selected poi

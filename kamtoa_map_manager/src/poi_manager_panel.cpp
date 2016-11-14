@@ -11,8 +11,7 @@
 
 #include <iostream>
 #include <iterator>
-
-
+#include <std_msgs/Empty.h>
 #include "kamtoa_map_manager/poi_manager_panel.hpp"
 #include <pluginlib/class_list_macros.h>
 
@@ -23,10 +22,16 @@ namespace kamtoa_map_manager{
         : rviz::Panel(parent)
         , poi_id(-1)
         {
+            // Service to link with the poiManager Node
             loadMapClient = nh_.serviceClient<kamtoa_map_manager::listPoi>("/get_poi_list");
             gotoPoiClient = nh_.serviceClient<kamtoa_map_manager::gotoPoi>("/goto_poi");
+
+            // Stop Traversing Publisher
+            cancelGoalPub = nh_.advertise<std_msgs::Empty>("/kamtoa/cancel",1);
+
             // Setup UI
             setupUI();
+
             // Load the POI List from ROS Service
             setupPOIList();
 
@@ -79,6 +84,11 @@ namespace kamtoa_map_manager{
           connect( reloadButton,
               SIGNAL(clicked()),
               this, SLOT( handleReloading()));
+
+          connect( stopButton,
+              SIGNAL(clicked()),
+              this, SLOT( handleStop()));
+
         }
 
         void POIPanel::load( const rviz::Config& config )
@@ -156,8 +166,12 @@ namespace kamtoa_map_manager{
             }
         }
 
+        void POIPanel::handleStop(){
+            stopTraverse();
+        }
+
         void POIPanel::stopTraverse(){
-            
+            cancelGoalPub.publish(*new std_msgs::Empty());
         }
 }
 PLUGINLIB_EXPORT_CLASS(kamtoa_map_manager::POIPanel,rviz::Panel);

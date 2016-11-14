@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!-- ROS Launch file for POI , Zone Localizer , Zone Visualizer -->
+<launch>
+
+  <!-- Launch POINT TO POINT TRANSPORTER -->
+  <!-- =>Receive Goal point(move_base_goal) , Stop Traversing -->
+  <node name="PointToPointTransporter" pkg="kamtoa_map_manager"
+    type="pointTransporter" args=""/>
+
+  <!-- Launch POI Manager -->
+  <node name="POI_Manager" pkg="kamtoa_map_manager"
+    type="poiManager" args=""/>
+
+  <!-- Launch Zone Localizer -->
+  <node name="Zone_Localizer" pkg="kamtoa_map_manager"
+    type="localizer" args=""/>
+
+</launch>

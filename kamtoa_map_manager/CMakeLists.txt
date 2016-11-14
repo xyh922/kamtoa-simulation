@@ -155,15 +155,15 @@ include_directories(
 add_executable(pointTransporter src/pointTransporter.cpp)
 target_link_libraries(pointTransporter ${catkin_LIBRARIES})
 
-add_executable(mapSemantics src/mapSemantics.cpp)
-target_link_libraries(mapSemantics ${catkin_LIBRARIES})
+# add_executable(mapSemantics src/mapSemantics.cpp)
+# target_link_libraries(mapSemantics ${catkin_LIBRARIES})
 
 add_executable(poiManager src/poiManager.cpp)
 add_dependencies(poiManager kamtoa_map_manager_gencpp)
 target_link_libraries(poiManager ${catkin_LIBRARIES})
 
-add_executable(gridtest src/map_accessor.cpp)
-target_link_libraries(gridtest ${catkin_LIBRARIES})
+# add_executable(gridtest src/map_accessor.cpp)
+# target_link_libraries(gridtest ${catkin_LIBRARIES})
 
 add_executable(localizer src/map_localizer.cpp)
 target_link_libraries(localizer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})

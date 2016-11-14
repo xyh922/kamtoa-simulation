@@ -10,11 +10,13 @@
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <std_srvs/Empty.h>
+#include <std_msgs/Empty.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <tf/transform_listener.h>
 #include <actionlib/client/simple_action_client.h>
+#include <actionlib_msgs/GoalID.h>
 #include <move_base_msgs/MoveBaseAction.h>
 
 // MoveBase Actionlib typedef
@@ -29,9 +31,12 @@ class PointTransporter
     private:
     ros::NodeHandle   nh_;                   // Nodehandle
     ros::Subscriber   upperLevelGoalSub;     // Subscriber to UpperLevel
+    ros::Subscriber   stopGoalSub;           // StopGoal Subscriber
     ros::Publisher    goalMarkerPub;         // RViz Goal Marker
+    ros::Publisher    moveBaseStopPub;       // move_base canceGoal Pub
     std::string       upperLevelTopic;       // Upper level topic name
     std::string       actionTopicNamespace;  // move_base goal topic
+    std::string       stopGoalTopic;         // stopGoal Topic (move_base/cancel wrapper)
     MoveBaseClient    *actionClient;         // Client to contact with move_base actionlib
     move_base_msgs::MoveBaseGoal  marked_current_pos;
     move_base_msgs::MoveBaseGoal  marked_goal;
@@ -52,6 +57,11 @@ class PointTransporter
     // Feedback on Goal is finished.
     void goalActiveCallback();
 
+    // Action when receive stop message
+    void stopGoalCallback(
+      const std_msgs::EmptyConstPtr &msg
+    );
+
 };
 
 
@@ -60,10 +70,13 @@ PointTransporter::PointTransporter(void){
     // Default values
     upperLevelTopic          = "/kamtoa/goal";
     actionTopicNamespace     = "move_base";
+    stopGoalTopic            = "/kamtoa/cancel";
 
     // Get parameters from parameter server
     nh_.param("upper_level_topic"     ,upperLevelTopic,  upperLevelTopic   );
     nh_.param("action_topic_namespace",actionTopicNamespace  ,  actionTopicNamespace   );
+    nh_.param("stop_goal_topic"     ,stopGoalTopic,  stopGoalTopic   );
+
 
     // Initiate the actionlib client
     actionClient       = new MoveBaseClient(actionTopicNamespace , true);
@@ -73,6 +86,14 @@ PointTransporter::PointTransporter(void){
                                          &PointTransporter::onReceiveGoalCallback, this);
     // Marker Visualizer (RVIZ) Publisher
     goalMarkerPub      = nh_.advertise<geometry_msgs::PoseStamped>("/move_base_simple/goal" , 10);
+
+    // Move base Cancel Goal ActionLib Publisher
+    moveBaseStopPub    = nh_.advertise<actionlib_msgs::GoalID>("/move_base/cancel",1);
+
+    // Subscriber for Goal Cancelling command
+    stopGoalSub        = nh_.subscribe<std_msgs::Empty>(stopGoalTopic,1,
+                                        &PointTransporter::stopGoalCallback, this);
+
 }
 
 
@@ -87,6 +108,17 @@ PointTransporter::~PointTransporter(void){
 
 
 
+void PointTransporter::stopGoalCallback(
+    const std_msgs::EmptyConstPtr &msg)
+{
+    ROS_INFO("STOP GOAL received -> PUBLISH move_base/cancel");
+    // Do things when we press STOP BUTTON!
+    // TODO: Set the CMD_VEL_MUX to FOCUS TO 0,0,0 m/s
+    // until the cancel goal returns good state
+    moveBaseStopPub.publish(*new actionlib_msgs::GoalID());
+
+}
+
 void PointTransporter::onReceiveGoalCallback(
     const move_base_msgs::MoveBaseGoalConstPtr  &receivedGoal)
 {
@@ -94,6 +126,7 @@ void PointTransporter::onReceiveGoalCallback(
     ROS_INFO("Got the new Goal (x,y,yaw) from Upper Layer");
 
     // [TODO:] Set the speed to zero and set the heading to the free area
+    // Adjust Heading
 
     // Start the navigation process
     move_base_msgs::MoveBaseGoal goal;
