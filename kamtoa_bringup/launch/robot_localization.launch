@@ -1,8 +1,67 @@
 <?xml version="1.0"?>
+<!--
+    Launch file for Robot Odometry Localization Improvement
+    Company : Obodroid Corporation Limited
+    Author : Theppasith N. <theppasith@gmail.com>
+    Date : 16 Nov 2016
+    Info : [in-out] /odometry/filtered : for extend kalmanized value
+-->
 <launch>
-    <param name="map_frame" value="map"/>
-    <param name="odom_frame" value="odom"/>
-    <param name="base_link_frame" value="base_link"/>
-    <param name="world_frame" value="odom"/>
 
+    <node pkg="robot_localization" type="ekf_localization_node" name="odom_localization" clear_params="true" output="screen">
+      <param name="frequency" value="20"/>
+      <param name="sensor_timeout" value="0.1"/>
+      <param name="two_d_mode" value="true"/>
+
+      <param name="map_frame" value="map"/>
+      <param name="odom_frame" value="odom"/>
+      <param name="base_link_frame" value="base_footprint"/>
+      <param name="world_frame" value="odom"/>
+
+      <param name="transform_time_offset" value="0.0"/>
+
+      <param name="odom0" value="/odom"/>
+      <param name="imu0" value="/imu_data"/>
+
+      <rosparam param="odom0_config">[true,   true, true,
+                                      true,  true, true,
+                                      true,  true, true,
+                                      true,  true, true,
+                                      true,  true, true]</rosparam>
+
+      <rosparam param="imu0_config">[false, false, false,
+                                     false,  false,  true,
+                                     false, false, false,
+                                     false,  false,  false,
+                                     false,  false,  false]</rosparam>
+
+
+      <param name="odom0_differential" value="false"/>
+      <param name="imu0_differential" value="false"/>
+
+      <param name="odom0_relative" value="false"/>
+      <param name="imu0_relative" value="true"/>
+
+      <param name="imu0_remove_gravitational_acceleration" value="true"/>
+      <param name="print_diagnostics" value="true"/>
+
+
+      <!-- ======== ADVANCED PARAMETERS ======== -->
+      <param name="odom0_queue_size" value="2"/>
+      <param name="imu0_queue_size" value="10"/>
+
+      <!-- <param name="odom0_pose_rejection_threshold" value="5"/> -->
+      <!-- <param name="odom0_twist_rejection_threshold" value="1"/> -->
+
+      <!-- <param name="imu0_pose_rejection_threshold" value="0.3"/> -->
+      <!-- <param name="imu0_twist_rejection_threshold" value="0.1"/> -->
+
+      <!-- <param name="imu0_linear_acceleration_rejection_threshold" value="0.1"/> -->
+
+      <!-- ======== DEBUGGING PARAMETERS ======== -->
+      <param name="debug"           value="false"/>
+      <param name="debug_out_file"  value="debug_ekf_localization.txt"/>
+
+      <remap from="/tf" to="/tf_ignored"/>
+    </node>
 </launch>
