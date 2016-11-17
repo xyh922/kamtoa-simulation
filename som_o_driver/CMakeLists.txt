@@ -4,10 +4,19 @@ project(som_o_driver)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+  genmsg
+  geometry_msgs
+  joy
+  nav_msgs
+  roscpp
+  serial
+  std_msgs
+  tf
+)
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -63,7 +72,7 @@ find_package(catkin REQUIRED)
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
+#   geometry_msgs#   nav_msgs#   std_msgs
 # )
 
 ################################################
@@ -96,9 +105,9 @@ find_package(catkin REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES som_o_driver
-#  CATKIN_DEPENDS other_catkin_pkg
+ INCLUDE_DIRS include
+ LIBRARIES som_o
+ CATKIN_DEPENDS roscpp serial std_msgs joy
 #  DEPENDS system_lib
 )
 
@@ -109,6 +118,10 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
 
 ## Declare a C++ library
 # add_library(som_o_driver
@@ -121,16 +134,17 @@ catkin_package(
 # add_dependencies(som_o_driver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(som_o_driver_node src/som_o_driver_node.cpp)
+add_executable(som_o_driver_node src/som_o_driver.cpp src/controller.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(som_o_driver_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(som_o_driver_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(som_o_driver_node
+  ${catkin_LIBRARIES}
+)
+
 
 #############
 ## Install ##

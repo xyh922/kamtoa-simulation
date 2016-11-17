@@ -39,3 +39,7 @@ inflation_layer:
 
 static_layer:
   enabled:              true
+
+prohibition_areas:
+ # your first prohibited area is only a point
+ - [1, 1]

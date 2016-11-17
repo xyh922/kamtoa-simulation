@@ -1,0 +1,131 @@
+Controller::Controller (const char *port, int baud);
+        port_name_ = port_;
+        baud_ = baud;
+}
+
+void Controller::connect() {
+    if (!serial_) serial_ = new serial::Serial();
+    serial::Timeout to(serial::Timeout::simpleTimeout(1000));
+    serial_->setTimeout(to);
+    serial_->setPort(port_name_);
+    serial_->setBaudrate(baud_);
+
+    for (int tries = 0; tries < 5; tries++) {
+      try {
+        serial_->open();
+      } catch (serial::IOException) {
+        std::cout << "Unable to open port " << std::endl;
+      }
+
+      if (serial_->isOpen()) {
+        std::cout << "Successfully Connected to Driver Board" <<std::endl;
+        connected_ = true;
+        return;
+      } else {
+        connected_ = false;
+        ROS_INFO("Bad Connection with serial port Error %s",port_name_);
+      }
+    }
+    ROS_INFO("Driver Board is not responding.");
+  }
+
+
+
+
+  // Receive Linear and Angular Velocity and Turn into Motor Effort [-255,255]
+  void control_loop_cmd_vel_new(){
+
+    // Constant Params
+      const double maximum_linear = 0.60;
+      const double maximum_angular = 1.78;
+      double width_robot = 0.4; //40 CM from Wheel to Wheel
+      double wheelRadius = 0.095; //9.5 CM Wheel Center to Circumference
+      double wheel_separation_multiplier = 1.0;
+      double wheel_separation = width_robot * wheel_separation_multiplier; //Wheel Separation
+
+    // Scale Linear and Angular Velocity onto [-1,1]
+      double linear_x_scaled = linear_x / maximum_linear ;
+      double angular_z_scaled = angular_z / maximum_angular;
+
+    // Compute wheels velocities: [DIFF DRIVE MODEL]
+        double vel_left  = (linear_x_scaled - angular_z_scaled * wheel_separation / 2.0);
+        double vel_right = (linear_x_scaled + angular_z_scaled * wheel_separation / 2.0);
+
+      if( fabs(vel_left) > 1.0 )
+      {
+        vel_right /= fabs(vel_left);
+        vel_left /= fabs(vel_left);
+      }
+      if( fabs(vel_right) > 1.0 )
+      {
+        vel_left /= fabs(vel_right);
+        vel_right /= fabs(vel_right);
+      }
+    // Assign Power to each wheels
+      vl = vel_left ;
+      vr = vel_right ;
+
+    // Scaler
+    int command_vl = (vl) * 500;
+    int command_vr = (vr) * 500;
+
+    // Direction Bits
+    left_dir = (vl < 0)? 2:1;
+    right_dir = (vr < 0)? 2:1;
+
+    std::cout << "Velocity  : " << command_vl << " , " << command_vr << std::endl;
+
+    // Absolute the Command message since the direction base on the direction bit
+    // only the magnitude needed
+    command_vl = (command_vl < 0 )? -command_vl:command_vl;
+    command_vr = (command_vr < 0 )? -command_vr:command_vr;
+
+    // Send Drive Command
+    //controller->driveDirect(command_vl,left_dir,command_vr,right_dir);
+    //controller->send_read_encoder();
+    //ticks = controller->read_encoder();
+  }
+
+
+
+
+  cmd_buffer[0]   = (unsigned char)0x3A;
+  // Fixed Protocol
+  cmd_buffer[1]   = (unsigned char)0x11;
+  cmd_buffer[2]   = (unsigned char)0x10;
+  cmd_buffer[3]   = (unsigned char)0x00;
+  cmd_buffer[4]   = (unsigned char)0x18;
+  cmd_buffer[5]   = (unsigned char)0x00;
+  cmd_buffer[6]   = (unsigned char)0x02;
+  cmd_buffer[7]   = (unsigned char)0x04;
+
+  // Velocity Low Order Field
+  cmd_buffer[8]   = (unsigned char)0x00;
+  cmd_buffer[9]   = (unsigned char)0xC8;
+  // Velocity High Order Field
+  cmd_buffer[10]  = (unsigned char)0x00;
+  cmd_buffer[11]  = (unsigned char)0x00;
+
+  // Checksum
+  //cmd_buffer[12]  = (unsigned char)calculateChecksum(cmd_buffer, 11);
+  cmd_buffer[12]  = (unsigned char)0xF9;
+
+  // Carriage Return
+  cmd_buffer[13]  = (unsigned char)0x0D;
+  // Line Feed
+  cmd_buffer[14]  = (unsigned char)0x0A;
+
+
+
+  char Controller::calculateChecksum(unsigned char *buffer , unsigned int buffer_size){
+      int16_t sum =0;
+      // Sum All Packet
+      for(unsigned int i = 1 ; i <= buffer_size ; i++ ){
+          sum += (int)buffer[i];
+      }
+      // Inverting Bits
+          sum = ~sum;
+      // Plus 1 -> 2's Compliment
+          sum +=1;
+      return ((char)(sum & 0xFF)^0xFF);
+  }
