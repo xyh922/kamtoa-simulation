@@ -12,9 +12,11 @@
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string.hpp>
 #include <unistd.h>
 #include <iostream>
 #include <sstream>
+#include <bitset>
 
 #include <geometry_msgs/Vector3.h>
 
@@ -22,41 +24,7 @@
 #define DRIVE_CMD_RES_SIZE 17
 #define ENDING_OFFSET 4
 
-//Debugging purpose
-struct HexCharStruct
-{
-  unsigned char c;
-  HexCharStruct(unsigned char _c) : c(_c) { }
-};
-
-inline std::ostream& operator<<(std::ostream& o, const HexCharStruct& hs)
-{
-  return (o << std::hex << (int)hs.c);
-}
-
-inline HexCharStruct hex(unsigned char _c)
-{
-  return HexCharStruct(_c);
-}
-
 namespace som_o{
-
-    std::vector<unsigned char> stringToUnsignedCharArray(std::string input){
-        // DO ESCAPE :
-        int len = input.length();
-        std::vector<unsigned char> hexVector;
-        for(int i=1; i< len-4; i+=2)
-        {
-            std::string byte = input.substr(i,2);
-            char chr = (char) (int)strtol(byte.c_str(), NULL, 16);
-            hexVector.push_back(chr);
-        }
-        return hexVector;
-    }
-
-    std::string UnsignedCharArrayToString(unsigned char *input , int size){
-
-    }
 
     Controller::Controller(char const *port , int baud){
         port_name_ = port;
@@ -82,19 +50,12 @@ namespace som_o{
           ptr++;
           if(ptr >= BUFFERSIZE)return -1;
       }
-
       // Found Valid Packet !
       // Create a Copy of it to check validity
-      unsigned char received_packet[DRIVE_CMD_RES_SIZE-ENDING_OFFSET];
-      for(int i = 0 ; i < DRIVE_CMD_RES_SIZE-ENDING_OFFSET ; i++){
+      unsigned char received_packet[DRIVE_CMD_RES_SIZE];
+      for(int i = 0 ; i < DRIVE_CMD_RES_SIZE; i++){
           received_packet[i] = buff[ptr+i];
       }
-      std::string received_string((char*) received_packet);
-      std::vector<unsigned char> hexReceived;
-      hexReceived = stringToUnsignedCharArray(received_string);
-
-      //std::cout << calculateChecksum(hexReceived,6) <<std::endl;
-
     }
 
     void Controller::connect(){
@@ -119,48 +80,84 @@ namespace som_o{
       ROS_INFO("Driver Board is not responding.");
     }
 
-    void Controller::write_velocity(int speed){
+    void Controller::sendCommand(int cnt)
+    {
+    	char tmp[200];
+    	int tmp_cnt = 0;
+    	tmp[tmp_cnt++] = ':';
 
-        // Header
-        std::string header =  "11100018000204";
+    	int sum = 0;
+    	for(int i = 0; i < cnt; i++)
+    	{
+    		sum += cmd[i];
+    		tmp_cnt+= sprintf(tmp+tmp_cnt, "%02X", cmd[i]);
+    	}
+    	tmp_cnt+= sprintf(tmp+tmp_cnt, "%02X", (0x100 - sum) & 0xff);
+    	tmp[tmp_cnt++] = (unsigned char)0x0D;
+    	tmp[tmp_cnt++] = (unsigned char)0x0A;
 
-        // Low byte (set velocity) & High byte (set direction)
-        std::string low_byte = "00C8"; // SpeedToStringHex(speed)
-        std::string high_byte = "0000";
+    	std::cout << "setVelCmd (" << tmp_cnt << ") : " << tmp << std::endl;
 
-        std::string velocity = low_byte + high_byte;
-
-        // CheckSum Calculating(header+low_byte+high_byte)
-        std::string checksum = "F9";
-
-        std::string command = ":" + header + velocity + checksum ;
-        unsigned char cmd_buffer[DRIVE_CMD_SIZE];
-        strcpy((char*)cmd_buffer,command.c_str());
-
-        // Insert Carriage Return and Line Ending
-        cmd_buffer[DRIVE_CMD_SIZE-2]  = (unsigned char)0x0D;
-        cmd_buffer[DRIVE_CMD_SIZE-1]  = (unsigned char)0x0A;
-
-        // Send Command
-        serial_->write(cmd_buffer,DRIVE_CMD_SIZE);
+      // Send Command
+      serial_->write((unsigned char*)tmp,tmp_cnt);
     }
 
+
+    int Controller::setVelCmd(int vel)
+    {
+    	int cnt = 0;
+    	cmd[cnt++] = 0x11;
+    	cmd[cnt++] = 0x10;
+    	cmd[cnt++] = 0x00;
+    	cmd[cnt++] = 0x18;
+    	cmd[cnt++] = 0x00;
+    	cmd[cnt++] = 0x02;
+    	cmd[cnt++] = 0x04;
+
+    	cmd[cnt++] = (vel & 0xffff) >> 8;
+    	cmd[cnt++] = (vel & 0xffff) & 0xff;
+    	cmd[cnt++] = (vel >> 16) >> 8;
+    	cmd[cnt++] = (vel >> 16) & 0xff;
+
+    	return cnt;
+    }
 
     void Controller::read(){
         serial_->read(buff,BUFFERSIZE);
     }
 
-    int16_t Controller::calculateChecksum(std::vector<unsigned char> buffer, int iterate){
-        int16_t sum = 0;
+    std::string Controller::calculateChecksum(std::vector<unsigned char> buffer, int iterate){
+        int8_t sum = 0;
         // Sum All Packet
+        std::cout << "========" <<std::endl;
         for(unsigned int i = 0 ; i < iterate ; i++ ){
-            sum += (int)buffer[i];
+            //std::cout << hex(buffer[i]) <<std::endl;
+            sum += (int8_t)buffer[i];
         }
         // Inverting Bits
             sum = ~sum;
         // Plus 1 -> 2's Compliment
             sum +=1;
 
-        return sum;
+            int8_t first = (sum >> 4)& 0b00001111;
+            int8_t second = sum & 0b00001111;
+            int intval = first;
+            char hexval[5];
+            sprintf(hexval,"%0x",intval);
+            std::stringstream ss;
+            std::string s1;
+            ss << hexval[0];
+            ss>> s1;
+            intval = second;
+            sprintf(hexval,"%0x",intval);
+            std::stringstream ss2;
+            std::string s2;
+            ss2 << hexval[0];
+            ss2>> s2;
+            std::string checkk = s1+s2;
+            boost::to_upper(checkk);
+            std::cout << checkk <<std::endl;
+
+        return checkk;
     }
 }

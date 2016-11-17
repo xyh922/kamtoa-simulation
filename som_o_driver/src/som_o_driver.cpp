@@ -61,8 +61,7 @@ int main(int argc, char **argv){
     controller = new som_o::Controller(port.c_str(),baud);
 
     // Spinner which poll for callback
-    ros::AsyncSpinner spinner(100);
-    spinner.start();
+
     bool initialize = false;
 
     while (ros::ok()) {
@@ -72,9 +71,9 @@ int main(int argc, char **argv){
       }
       if (controller->is_connected()) {
         // Single time Initializer
-        controller->write_velocity(speed);
-        controller->read_vel_command();
-
+        controller->sendCommand(controller->setVelCmd(200));
+        controller->read();
+        ros::spinOnce();
       } else {
         ROS_DEBUG("Problem connecting to serial device.");
         ROS_ERROR_STREAM_ONCE("Problem connecting to port " << port << ". Trying again every 1 second.");
@@ -82,7 +81,7 @@ int main(int argc, char **argv){
       }
     }
     //End Loop
-    spinner.stop();
+    //spinner.stop();
     //controller->send_stop();
     return 0;
 

@@ -10,7 +10,7 @@
 #include <serial/serial.h>
 #include <ros/ros.h>
 
-#define BUFFERSIZE 50
+#define BUFFERSIZE 40
 #define CR   0x0D
 #define LF   0x0A
 
@@ -32,26 +32,32 @@ namespace som_o{
           ros::NodeHandle   nh_;
           uint8_t           buff[BUFFERSIZE]; // Buffer for receiving bytes
 
+          // Buffer for command
+          unsigned char     cmd[200];
+
           // Read and Write (Serial)
-          void read();
+
           void write(std::string);
 
       public:
           Controller (const char *port, int baud);
           ~Controller();
 
+          void read();  
           // Create connection to board
           void connect();
 
           // Getters
           bool is_connected() { return connected_; }
 
-          // Prepare Packet and Sent using write()
-          void write_velocity(int speed);
-          std::string speedToVelocity(int speed);
+          // Prepare packet in commend sender buffer
+          int setVelCmd(int speed);
+          void sendCommand(int cnt);
+          // Write any command to serial
+
           int read_vel_command();
 
           // Calculate Checksum
-          int16_t calculateChecksum(std::vector<unsigned char> buffer , int iterate);
+          std::string calculateChecksum(std::vector<unsigned char> buffer , int iterate);
   };
 }
