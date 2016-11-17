@@ -1,9 +1,8 @@
 <!--
     ROS navigation stack with velocity smoother
+    Target : Simulation Som-O 20CM Base
 -->
 <launch>
-  <!-- <include file="$(find kamtoa_navigation)/launch/velocity_smoother.launch.xml"/> to higher level -->
-
   <arg name="name" default=""/>
   <arg name="odom_frame_id"   default="odom"/>
   <arg name="base_frame_id"   default="base_link"/>
@@ -12,13 +11,17 @@
   <arg name="laser_topic" default="scan" />
   <arg name="robot" default="som_o" />
 
-
+  <!-- Move Base Node [Navigation Stack] -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <!-- Pre-defined Specific Parameters for global and local -->
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/only_global_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/only_local_params.yaml" command="load" ns="local_costmap" />
+
+    <!-- Local and Global Param (required the pre-defined params) -->
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/global_costmap_params.yaml" command="load" />
 
+    <!-- USE DWA LOCAL PLANNER FOR TESTING FIRST  -->
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/planner/dwa_local_planner_params.yaml" command="load" />
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/move_base_params.yaml" command="load" />
 
