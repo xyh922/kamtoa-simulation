@@ -5,33 +5,69 @@
  *******************************/
 
 #include "som_o_driver/controller.h"
- #include <string>
- #include <iostream>
- #include <ros/ros.h>
- #include <termios.h>
+#include <string>
+#include <iostream>
+#include <ros/ros.h>
+#include <termios.h>
 
- // ROS Data Structure
- #include <geometry_msgs/Twist.h>
- #include <geometry_msgs/Vector3.h>
- #include <tf/transform_broadcaster.h>
- #include <nav_msgs/Odometry.h>
+// ROS Data Structure
+#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Vector3.h>
+#include <tf/transform_broadcaster.h>
+#include <nav_msgs/Odometry.h>
 
 
-som_o::Controller *controller;
+som_o::Controller   *controller;
 double              linear_x, angular_z,vl,vr;
-int                 speed,left_dir , right_dir , encoder_request_button;
-
+int                 leftSpeed,rightSpeed,speed;
 
 
 void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
-
    linear_x = msg->linear.x;
    angular_z = msg->angular.z;
-
    if(linear_x == -0.00)linear_x = 0;
    if(angular_z == -0.00)angular_z = 0;
 
-   speed = angular_z * 400;
+   double vel_left  = (linear_x - angular_z);
+   double vel_right = (linear_x + angular_z);
+
+   if( fabs(vel_left) > 1.0 )
+    {
+      vel_right /= fabs(vel_left);
+      vel_left /= fabs(vel_left);
+    }
+
+    if( fabs(vel_right) > 1.0 )
+    {
+      vel_left /= fabs(vel_right);
+      vel_right /= fabs(vel_right);
+    }
+
+    // Assign Power to each wheels
+    leftSpeed  = vel_left * 200 ;
+    leftSpeed *= -1;
+    rightSpeed = vel_right * 200 ;
+
+
+}
+
+
+void main_loop(){
+    // READ
+    //controller->sendCommand(controller->setEncRead());
+
+    // UPDATE ROS Data
+
+    // WRITE
+    controller->sendCommand(controller->setVelCmdL(leftSpeed, 'l'));
+    controller->readVelCmd();
+
+     controller->sendCommand(controller->setVelCmdR(rightSpeed, 'r'));
+     controller->readVelCmd();
+    //usleep(100);
+
+
+
 }
 
 
@@ -45,14 +81,16 @@ int main(int argc, char **argv){
     // Serial parameter default settings
     std::string     port    =   "/dev/ttyUSB0";
     int32_t         baud    =   115200;
+    double          loop_rate = 20.0;
 
     // Get Paramter from ROS Parameter Server (if Exist)
     nh.param<std::string>("port", port, port);
     nh.param<int32_t>("baud_rate",baud ,baud);
+    nh.param<double>("loop_rate",loop_rate ,loop_rate);
 
     // Prompt User After Settings are completed
-    ROS_INFO("[SOM-O-Driver] Create connection to Port : %s" , port.c_str());
-    ROS_INFO("[SOM-O-Driver] with Baud Rate : %d" , baud);
+    ROS_INFO("[Driver] Create connection to Port : %s" , port.c_str());
+    ROS_INFO("[Driver] with Baud Rate : %d" , baud);
 
     // Subscribe to Joystick Command
     ros::Subscriber sub = nh.subscribe("/cmd_vel",1,cmd_vel_callback);
@@ -60,9 +98,8 @@ int main(int argc, char **argv){
     // Serial Controller Initiated !
     controller = new som_o::Controller(port.c_str(),baud);
 
-    // Spinner which poll for callback
-
-    bool initialize = false;
+    // Loop update Rate
+    ros::Rate rate(loop_rate);
 
     while (ros::ok()) {
       ROS_DEBUG("Attempting connection to %s at %i baud.", port.c_str(), baud);
@@ -70,20 +107,15 @@ int main(int argc, char **argv){
         controller->connect();
       }
       if (controller->is_connected()) {
-        // Single time Initializer
-        controller->sendCommand(controller->setVelCmd(200));
-        controller->read();
-        ros::spinOnce();
+        // Board is connect - do the main loop
+          main_loop();
       } else {
         ROS_DEBUG("Problem connecting to serial device.");
         ROS_ERROR_STREAM_ONCE("Problem connecting to port " << port << ". Trying again every 1 second.");
         sleep(1);
       }
+      ros::spinOnce();
+      rate.sleep();
     }
-    //End Loop
-    //spinner.stop();
-    //controller->send_stop();
     return 0;
-
-
 }

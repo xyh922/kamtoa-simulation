@@ -10,7 +10,8 @@
 #include <serial/serial.h>
 #include <ros/ros.h>
 
-#define BUFFERSIZE 40
+#define BUFFERSIZE 50
+#define COMMAND_SIZE 200
 #define CR   0x0D
 #define LF   0x0A
 
@@ -25,39 +26,30 @@ namespace som_o{
 
   class Controller{
       private:
-          const char       *port_name_;   // Port name for connection
           serial::Serial   *serial_;          // Serial port from Serial Lib
-          int               baud_;        // Baud Rate for serial connection
-          bool              connected_;   // Flag for Connection Status
-          ros::NodeHandle   nh_;
+          const char       *port_name_;       // Port name for connection
+          int               baud_;            // Baud Rate for serial connection
+          bool              connected_;       // Flag for Connection Status
+          ros::NodeHandle   nh_;              // ROS Node Handle
           uint8_t           buff[BUFFERSIZE]; // Buffer for receiving bytes
-
-          // Buffer for command
-          unsigned char     cmd[200];
-
-          // Read and Write (Serial)
-
-          void write(std::string);
+          unsigned char     cmd[COMMAND_SIZE];// Buffer for command
 
       public:
+          // Constructor
           Controller (const char *port, int baud);
           ~Controller();
+          // Basic Serial Function
+          void  read();
+          void  connect();
+          void  sendCommand(int cnt);
 
-          void read();  
-          // Create connection to board
-          void connect();
-
-          // Getters
-          bool is_connected() { return connected_; }
+          // Status Getters
+          bool  is_connected() { return connected_; }
 
           // Prepare packet in commend sender buffer
-          int setVelCmd(int speed);
-          void sendCommand(int cnt);
-          // Write any command to serial
+          int   setVelCmdR(int speed, char side);
+          int   setVelCmdL(int speed, char side);
+          int   readVelCmd();
 
-          int read_vel_command();
-
-          // Calculate Checksum
-          std::string calculateChecksum(std::vector<unsigned char> buffer , int iterate);
   };
 }

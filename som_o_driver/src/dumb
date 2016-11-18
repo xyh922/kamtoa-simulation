@@ -129,3 +129,57 @@ void Controller::connect() {
           sum +=1;
       return ((char)(sum & 0xFF)^0xFF);
   }
+
+
+
+
+      // // CONCEPTUAL DESIGN -> Buggy
+      // int Controller::readVelCmd(){
+      // // Set timeout and Read 1 byte until we find (:)
+      //
+      //     boost::posix_time::ptime startTime = boost::posix_time::microsec_clock::local_time();
+      //     while((boost::posix_time::microsec_clock::local_time() - startTime)
+      //     < boost::posix_time::milliseconds(READ_TIMEOUT_MILLISEC))
+      //     {
+      //       // Read 1 byte until header(:)
+      //       this->serial_->read(buff,1);
+      //       // Found Header
+      //       if(buff[0] == ':'){
+      //           // Copy All of it
+      //           int avail_byte = this->serial_->available();
+      //           std::cout << "ReadVelCmd : (" << avail_byte << ") : " ;
+      //           if( avail_byte == 17 ){
+      //               int n = this->serial_->read(buff, avail_byte);
+      //               printf("%s",buff);
+      //               std::cout << std::endl;
+      //           }else{
+      //               this->serial_->read(buff,BUFFERSIZE);
+      //           }
+      //       }else{
+      //         return -1;
+      //       }
+      //     }
+      //     this->serial_->flush();
+      // }
+
+
+      //
+      // int Controller::read_vel_command(){
+      //   serial_->read(buff,BUFFERSIZE);
+      //   size_t ptr = 0;
+      //   while(!(   buff[ptr+0] == ':' &&
+      //              buff[ptr+1] == '1' &&
+      //              buff[ptr+2] == '1' &&
+      //              buff[ptr+3] == '1' &&
+      //              buff[ptr+4] == '0'))
+      //   {
+      //       ptr++;
+      //       if(ptr >= BUFFERSIZE)return -1;
+      //   }
+      //   // Found Valid Packet !
+      //   // Create a Copy of it to check validity
+      //   unsigned char received_packet[DRIVE_CMD_RES_SIZE];
+      //   for(int i = 0 ; i < DRIVE_CMD_RES_SIZE; i++){
+      //       received_packet[i] = buff[ptr+i];
+      //   }
+      // }
