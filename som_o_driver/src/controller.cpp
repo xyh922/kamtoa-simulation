@@ -41,6 +41,7 @@ namespace som_o
 
     Controller::~Controller()
     {
+        this->stop();
         serial_->close();
     }
 
@@ -73,6 +74,15 @@ namespace som_o
             }
         }
         ROS_INFO("Driver Board is not responding.");
+    }
+
+    void Controller::stop(){
+        this->sendCommand(this->setVelCmdL(0));
+        this->readVelCmd();
+
+        usleep(5*1000);
+        this->sendCommand(this->setVelCmdR(0));
+        this->readVelCmd();
     }
 
     void Controller::sendCommand(int cnt)

@@ -44,6 +44,8 @@ namespace som_o{
           void  connect();
           void  sendCommand(int cnt);
 
+          void  stop();
+
           // Status Getters
           bool  is_connected() { return connected_; }
 
