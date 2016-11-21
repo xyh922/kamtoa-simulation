@@ -38,7 +38,7 @@ namespace som_o{
     }
 
     Controller::~Controller(){
-      serial_->close();
+        serial_->close();
     }
 
 
@@ -47,7 +47,7 @@ namespace som_o{
 
       for (int tries = 0; tries < 5; tries++) {
         try {
-          this->serial_ = new serial::Serial(port_name_, baud_, serial::Timeout::simpleTimeout(50)); //30
+          this->serial_ = new serial::Serial(port_name_, baud_, serial::Timeout::simpleTimeout(20)); //30
         } catch (serial::IOException) {
           ROS_INFO("[Driver] Unable to Open Port :  %s",port_name_);
         }
@@ -82,12 +82,11 @@ namespace som_o{
     	}
     	tmp_cnt+= sprintf(tmp+tmp_cnt, "%02X", (0x100 - sum) & 0xff);
 
-      std::cout << "setVelCmd (" << tmp_cnt << ") : " << tmp << std::endl;
+      //std::cout << "setVelCmd (" << tmp_cnt << ") = " << tmp << std::endl;
 
       // Two Ending bytes
     	tmp[tmp_cnt++] = (unsigned char)0x0D;
     	tmp[tmp_cnt++] = (unsigned char)0x0A;
-
 
       // Send Command
       this->serial_->write((unsigned char*)tmp,tmp_cnt);  //std::cout << "setVelCmd (" << tmp_cnt << ") : " << tmp << std::endl;
@@ -132,14 +131,22 @@ namespace som_o{
     }
 
     int Controller::readVelCmd(){
-          int n = this->serial_->read(buff,20);
-          std::cout << "Recieving : (" << n << ") : " ;
-          for(int i = 0 ; i < n ; i++){
-            printf("%02x" , buff[i]);
+          // Check that the Buffer Can Stand for input ?
+          size_t available = this->serial_->available();
+          if (available > BUFFERSIZE)
+          {
+            ROS_INFO(", now flushing in an attempt to catch up.");
+            this->serial_->flushInput();
+          }
+
+          int n = this->serial_->read(buff,17);
+          std::cout << "Recieving (" << n << ") = " ;
+          for(int i = 0 ; i < n-2 ; i++){ // n-2 for ignore line carriage
+            printf("%c" , (int)buff[i]);
           }
           std::cout << std::endl;
-          // TRY - Discard the following packet
-          this->serial_->flush();
+
+          this->serial_->flush(); //Discard following bytes
     }
 
 

@@ -10,7 +10,7 @@
 #include <serial/serial.h>
 #include <ros/ros.h>
 
-#define BUFFERSIZE 50
+#define BUFFERSIZE 64
 #define COMMAND_SIZE 200
 #define CR   0x0D
 #define LF   0x0A
@@ -50,6 +50,13 @@ namespace som_o{
           int   setVelCmdR(int speed, char side);
           int   setVelCmdL(int speed, char side);
           int   readVelCmd();
+
+          int   setEncRead();
+          int   readEnc();
+          int   setVelRead();
+          int   readVel();
+          int   setEncVelRead();
+          int   readEncVel();
 
   };
 }

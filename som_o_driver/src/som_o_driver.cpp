@@ -44,9 +44,9 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
     }
 
     // Assign Power to each wheels
-    leftSpeed  = vel_left * 200 ;
+    leftSpeed  = vel_left * 450 ;
     leftSpeed *= -1;
-    rightSpeed = vel_right * 200 ;
+    rightSpeed = vel_right * 450 ;
 
 
 }
@@ -59,12 +59,14 @@ void main_loop(){
     // UPDATE ROS Data
 
     // WRITE
+    //std::cout << "==L==" <<std::endl;
     controller->sendCommand(controller->setVelCmdL(leftSpeed, 'l'));
     controller->readVelCmd();
-
-     controller->sendCommand(controller->setVelCmdR(rightSpeed, 'r'));
-     controller->readVelCmd();
-    //usleep(100);
+    //std::cout << "==R==" <<std::endl;
+    usleep(5*1000);
+    controller->sendCommand(controller->setVelCmdR(rightSpeed, 'r'));
+    controller->readVelCmd();
+    //std::cout << "=============" <<std::endl;
 
 
 
@@ -81,7 +83,7 @@ int main(int argc, char **argv){
     // Serial parameter default settings
     std::string     port    =   "/dev/ttyUSB0";
     int32_t         baud    =   115200;
-    double          loop_rate = 20.0;
+    double          loop_rate = 100.0; //20
 
     // Get Paramter from ROS Parameter Server (if Exist)
     nh.param<std::string>("port", port, port);
