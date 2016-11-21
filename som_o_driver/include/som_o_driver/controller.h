@@ -33,7 +33,8 @@ namespace som_o{
           ros::NodeHandle   nh_;              // ROS Node Handle
           uint8_t           buff[BUFFERSIZE]; // Buffer for receiving bytes
           unsigned char     cmd[COMMAND_SIZE];// Buffer for command
-
+          int               enc_r;            // Encoder Ticks - right wheel 
+          int               enc_l;            // Encoder Ticks - left wheel
       public:
           // Constructor
           Controller (const char *port, int baud);
@@ -47,8 +48,8 @@ namespace som_o{
           bool  is_connected() { return connected_; }
 
           // Prepare packet in commend sender buffer
-          int   setVelCmdR(int speed, char side);
-          int   setVelCmdL(int speed, char side);
+          int   setVelCmdR(int speed);
+          int   setVelCmdL(int speed);
           int   readVelCmd();
 
           int   setEncRead();

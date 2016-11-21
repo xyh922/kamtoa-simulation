@@ -12,7 +12,7 @@
     <param name="button_deadman_switch" value="2" type="int"/>
 
     <param name="scale_linear" value="1.0" type="double"/>
-    <param name="scale_angular" value="1.0" type="double"/>
+    <param name="scale_angular" value="0.6" type="double"/>
 
     <node  pkg="kamtoa_teleop" type="kamtoa_joystick" name="kamtoa_joystick" output="screen" />
 </launch>

@@ -51,25 +51,31 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
 
 }
 
+void update(){
+    // Generate ROS Data over here
+    // By Reading the Controller's Data
+    // controller->getEncL (getters) , controller->enc_l( pub var) 
+    // And PUBLISH !!!
+
+
+}
+
 
 void main_loop(){
     // READ
-    //controller->sendCommand(controller->setEncRead());
-
+    controller->sendCommand(controller->setEncVelRead());
+    controller->read();
     // UPDATE ROS Data
-
+    update();
     // WRITE
     //std::cout << "==L==" <<std::endl;
-    controller->sendCommand(controller->setVelCmdL(leftSpeed, 'l'));
+    controller->sendCommand(controller->setVelCmdL(leftSpeed));
     controller->readVelCmd();
     //std::cout << "==R==" <<std::endl;
     usleep(5*1000);
-    controller->sendCommand(controller->setVelCmdR(rightSpeed, 'r'));
+    controller->sendCommand(controller->setVelCmdR(rightSpeed));
     controller->readVelCmd();
     //std::cout << "=============" <<std::endl;
-
-
-
 }
 
 
@@ -83,7 +89,7 @@ int main(int argc, char **argv){
     // Serial parameter default settings
     std::string     port    =   "/dev/ttyUSB0";
     int32_t         baud    =   115200;
-    double          loop_rate = 100.0; //20
+    double          loop_rate = 40.0; //20
 
     // Get Paramter from ROS Parameter Server (if Exist)
     nh.param<std::string>("port", port, port);
