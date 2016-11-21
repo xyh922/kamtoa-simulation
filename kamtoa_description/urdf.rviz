@@ -5,11 +5,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /LaserScan1
         - /TF1/Frames1
         - /TF1/Tree1
-        - /Odometry1
-      Splitter Ratio: 0.630813956
+      Splitter Ratio: 0.625
     Tree Height: 233
   - Class: rviz/Selection
     Name: Selection
@@ -186,22 +184,22 @@ Visualization Manager:
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
-      Color: 0; 255; 0
+      Color: 255; 255; 0
       Enabled: true
-      Head Diameter: 0.300000012
-      Head Length: 0.200000003
+      Head Diameter: 0.150000006
+      Head Length: 0.300000012
       Length: 0.300000012
       Line Style: Billboards
-      Line Width: 0.0700000003
+      Line Width: 0.0799999982
       Name: Local Path
       Offset:
         X: 0
         Y: 0
-        Z: 0
-      Pose Style: None
+        Z: 0.100000001
+      Pose Style: Arrows
       Radius: 0.0299999993
-      Shaft Diameter: 0.100000001
-      Shaft Length: 0.100000001
+      Shaft Diameter: 0.0500000007
+      Shaft Length: 0.300000012
       Topic: /move_base/DWAPlannerROS/local_plan
       Unreliable: false
       Value: true
@@ -306,18 +304,6 @@ Visualization Manager:
       Update Interval: 0
       Value: true
     - Class: rviz/Image
-      Enabled: false
-      Image Topic: /multicamera/left/image_raw
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Image
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: false
-    - Class: rviz/Image
       Enabled: true
       Image Topic: /multicamera/left/image_raw
       Max Value: 1
@@ -329,6 +315,18 @@ Visualization Manager:
       Transport Hint: raw
       Unreliable: false
       Value: true
+    - Class: rviz/Image
+      Enabled: false
+      Image Topic: /multicamera/left/image_raw
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
     - Angle Tolerance: 0.100000001
       Class: rviz/Odometry
       Color: 255; 25; 0
@@ -363,24 +361,24 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 10.2741919
+      Distance: 8.30396366
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -3.58391953
-        Y: -1.30407953
-        Z: 6.96535015
-      Focal Shape Fixed Size: true
+        X: -2.38532758
+        Y: -0.691002369
+        Z: 2.17529297
+      Focal Shape Fixed Size: false
       Focal Shape Size: 0.0500000007
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 1.56979632
+      Pitch: 1.52039754
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.0103991125
+      Yaw: 0.0653986856
     Saved: ~
 Window Geometry:
   Displays:
