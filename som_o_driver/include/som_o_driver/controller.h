@@ -40,24 +40,24 @@ namespace som_o{
           Controller (const char *port, int baud);
           ~Controller();
           // Basic Serial Function
-          void  read();
-          void  connect();
-          void  sendCommand(int cnt);
-
+          void  read();                       // Read All Packet onto buffer[BUFFERSIZE]
+          void  connect();                    // Connect to Driver board via Serial
+          void  sendCommand(int cnt);         // Issue any command to the board
+          // Stop Robot (Send 0 )
           void  stop();
-
           // Status Getters
           bool  is_connected() { return connected_; }
-
           // Prepare packet in commend sender buffer
           int   setVelCmdR(int speed);
           int   setVelCmdL(int speed);
           int   readVelCmd();
-
+          // Encoder Read
           int   setEncRead();
           int   readEnc();
+          // Velocity Read
           int   setVelRead();
           int   readVel();
+          // Encoder and Velocity Read
           int   setEncVelRead();
           int   readEncVel();
 

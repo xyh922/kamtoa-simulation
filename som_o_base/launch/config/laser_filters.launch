@@ -1,0 +1,6 @@
+<!-- Launch file for Laser filtering nodes -->
+<launch>
+  <!-- Laser filter node run here -->
+  <node pkg="som_o_base" type="laser_angular_filter" name="laser_filter">
+  </node>
+</launch>

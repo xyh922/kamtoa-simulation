@@ -1,6 +1,7 @@
 /******************************
  *  Node For SOM-O Motor Driver Board !
- *  Author : Theppasith Nisitsukcharoen
+ *  Hiveground Co.,Ltd
+ *  Author : Theppasith Nisitsukcharoen , Sukhum Sattaratnamai
  *  Date : 17-Nov-2016
  *******************************/
 
@@ -19,7 +20,7 @@
 
 som_o::Controller   *controller;
 double              linear_x, angular_z,vl,vr;
-int                 leftSpeed,rightSpeed,speed;
+int                 leftSpeed,rightSpeed,speed,max_effort;
 
 
 void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
@@ -44,11 +45,8 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
     }
 
     // Assign Power to each wheels
-    leftSpeed  = vel_left * 450 ;
-    leftSpeed *= -1;
-    rightSpeed = vel_right * 450 ;
-
-
+    leftSpeed  = -1 * vel_left  * max_effort ;
+    rightSpeed =      vel_right * max_effort ;
 }
 
 void update(){
@@ -56,29 +54,26 @@ void update(){
     // By Reading the Controller's Data
     // controller->getEncL (getters) , controller->enc_l( pub var) 
     // And PUBLISH !!!
-
-
 }
-
 
 void main_loop(){
     // READ
     controller->sendCommand(controller->setEncVelRead());
     controller->read();
+
     // UPDATE ROS Data
     update();
+
     // WRITE
-    //std::cout << "==L==" <<std::endl;
     controller->sendCommand(controller->setVelCmdL(leftSpeed));
     controller->readVelCmd();
-    //std::cout << "==R==" <<std::endl;
+
     usleep(5*1000);
+
     controller->sendCommand(controller->setVelCmdR(rightSpeed));
     controller->readVelCmd();
-    //std::cout << "=============" <<std::endl;
+
 }
-
-
 
 int main(int argc, char **argv){
     // Node Entry
@@ -90,11 +85,15 @@ int main(int argc, char **argv){
     std::string     port    =   "/dev/ttyUSB0";
     int32_t         baud    =   115200;
     double          loop_rate = 40.0; //20
+    
+    // Default Effort for the driver Board [ 0 - 500 ]
+    max_effort= 220;
 
     // Get Paramter from ROS Parameter Server (if Exist)
     nh.param<std::string>("port", port, port);
     nh.param<int32_t>("baud_rate",baud ,baud);
     nh.param<double>("loop_rate",loop_rate ,loop_rate);
+    nh.param<int>("max_effort",max_effort,max_effort);
 
     // Prompt User After Settings are completed
     ROS_INFO("[Driver] Create connection to Port : %s" , port.c_str());
@@ -117,6 +116,7 @@ int main(int argc, char **argv){
       if (controller->is_connected()) {
         // Board is connect - do the main loop
           main_loop();
+          
       } else {
         ROS_DEBUG("Problem connecting to serial device.");
         ROS_ERROR_STREAM_ONCE("Problem connecting to port " << port << ". Trying again every 1 second.");

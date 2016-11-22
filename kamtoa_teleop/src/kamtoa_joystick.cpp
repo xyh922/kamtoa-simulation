@@ -19,7 +19,7 @@ class KamtoaJoystick
 
     std::string            twist_pub_topic_name_,joystick_sub_topic_name_;
     bool              stop_state;
-    int               linear_   , angular_ , deadman_;
+    int               linear_   , angular_ , deadman_ , goalCancel_;
     double            l_scale_  , a_scale_;
     bool              off_teleop;
 };
@@ -28,7 +28,8 @@ class KamtoaJoystick
 KamtoaJoystick::KamtoaJoystick() :
         linear_(1),
         angular_(2),
-        deadman_(3)
+        deadman_(3),
+        goalCancel_(7)
 {
     twist_pub_topic_name_ = "cmd_vel";
     joystick_sub_topic_name_ = "joy";
@@ -38,6 +39,7 @@ KamtoaJoystick::KamtoaJoystick() :
     nh_.param("scale_angular",  a_scale_, a_scale_  );
     nh_.param("scale_linear",   l_scale_, l_scale_  );
     nh_.param("twist_pub_topic", twist_pub_topic_name_);
+    nh_.param("goal_cancel_button", goalCancel_,goalCancel_);
     nh_.param("joystick_sub_topic", joystick_sub_topic_name_);
 
     // Teleop Boolean Switch
@@ -53,8 +55,8 @@ KamtoaJoystick::KamtoaJoystick() :
 
 void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
-    //Goal Nav Cancle Button
-    int goal_cancle_button;
+    //Goal Nav Cancel Button
+    int goal_cancel_button;
 
     //Geometry Joystick Control
     geometry_msgs::Twist twist;
@@ -66,7 +68,13 @@ void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
     twist.linear.x = l_scale_*joy->axes[linear_];
 
     deadman_triggered = joy->axes[deadman_];
-    goal_cancle_button = joy->buttons[4];
+    goal_cancel_button = joy->buttons[goalCancel_];
+
+    if(goalCancel_ == 1){
+        twist_pub_.publish(*new geometry_msgs::Twist());        //Publish 0,0,0 (stop)
+        auto_stop_pub_.publish(*new actionlib_msgs::GoalID());  //Publish Goal Cancel Message
+        off_teleop = true;
+    }
 
     if(deadman_triggered == -1) //Deadman Triggered Activated
     {
@@ -79,6 +87,7 @@ void KamtoaJoystick::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
         auto_stop_pub_.publish(*new actionlib_msgs::GoalID());  //Publish Goal Cancel Message
         off_teleop = true;                                      //Put the Teleop Off
     }
+
 }
 
 
