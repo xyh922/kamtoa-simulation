@@ -13,7 +13,10 @@
 
     <param name="scale_linear" value="1.0" type="double"/>
     <param name="scale_angular" value="1.0" type="double"/>
+    <param name="twist_pub_topic" type="string" value="cmd_vel"/>
 
     <!-- JOY TO COMMAND VEL -->
-    <node  pkg="kamtoa_teleop" type="kamtoa_joystick" name="kamtoa_joystick" output="screen" />
+    <node  pkg="kamtoa_teleop" type="kamtoa_joystick" name="kamtoa_joystick" output="screen" >
+            
+    </node>
 </launch>

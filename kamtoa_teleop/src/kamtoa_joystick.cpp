@@ -38,7 +38,7 @@ KamtoaJoystick::KamtoaJoystick() :
     nh_.param("axis_angular",   angular_, angular_  );
     nh_.param("scale_angular",  a_scale_, a_scale_  );
     nh_.param("scale_linear",   l_scale_, l_scale_  );
-    nh_.param("twist_pub_topic", twist_pub_topic_name_);
+    nh_.param("twist_pub_topic", twist_pub_topic_name_ , twist_pub_topic_name_);
     nh_.param("goal_cancel_button", goalCancel_,goalCancel_);
     nh_.param("joystick_sub_topic", joystick_sub_topic_name_);
 

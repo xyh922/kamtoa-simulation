@@ -50,6 +50,7 @@ class VelocityProfiler
      bool              activate;
      // Velocity Params
      double            acc;
+     double            an_acc;
 
 
 };
@@ -63,6 +64,7 @@ VelocityProfiler::VelocityProfiler()
      startAngle               = 170;
      endAngle                 = 190;
      acc                      = 0;
+     an_acc                   = 0;
 
      ros::NodeHandle   nh_("velocity_profiler_node");
 
@@ -81,6 +83,7 @@ VelocityProfiler::VelocityProfiler()
 
      // Acceleration
      nh_.param("acc",  acc , acc);
+     nh_.param("an_acc",  an_acc , an_acc);
 
      //Publisher and Subscriber
      twist_pub_       = nh_.advertise<geometry_msgs::Twist>(twist_pub_topic_name_, 1);
@@ -112,17 +115,23 @@ void VelocityProfiler::setVelocityInRange(){
      double minVel = current_linear_vel - acc*delta;
      double maxVel = current_linear_vel + acc*delta;
 
+     double minAngularVel = current_angular_vel - an_acc * delta;
+     double maxAngularVel = current_angular_vel + an_acc * delta;
+
      current_linear_vel = (set_point_linear_vel < minVel) ? minVel : (set_point_linear_vel > maxVel)? maxVel : set_point_linear_vel;
+
+     current_angular_vel = (set_point_angular_vel < minAngularVel) ? minAngularVel : (set_point_angular_vel > maxAngularVel)? maxAngularVel : set_point_angular_vel;
 
      // Pack the Payload to be sent soon
      current_twist.linear.x = current_linear_vel;
-     current_twist.angular.z = set_point_angular_vel;
+     current_twist.angular.z = current_angular_vel;
 
 }
 
 void VelocityProfiler::publishTwist()
 {
       ROS_INFO ("Published : %f ", current_twist.linear.x);
+      ROS_INFO ("Published  W : %f ", current_twist.angular.z);
       setpoint_pub_.publish(set_point_twist);
       twist_pub_.publish(current_twist);
 }
@@ -145,7 +154,7 @@ void VelocityProfiler::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
       if(deadman_triggered && !manual_deadman){
           // Set the setpoint
           set_point_twist.linear.x =  l_scale_*joy->axes[linear_]; // 0.4
-          set_point_twist.angular.z = 0;
+          set_point_twist.angular.z = a_scale_*joy->axes[angular_];
           activate = true;
       }
       else if (deadman_triggered != -1 && !manual_deadman){
