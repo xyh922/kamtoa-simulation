@@ -3,43 +3,56 @@
 #include <iostream>
 using namespace std;
 
+// index 0 => X-
+
 ros::Publisher filtered_scan_pub;
 ros::Subscriber input_scan_sub;
 sensor_msgs::LaserScan filtered_scan;
-double lower_angle_ = -3.0;
-double upper_angle_ = 3.0;
-
+double lower_angle_ = -3.15;
+double pole_left = -1.57;
+double pole_right = 1.57;
+double upper_angle_ = 3.15;
 
 bool my_update(const sensor_msgs::LaserScan& input_scan)
 {
-  
   filtered_scan.ranges.resize(input_scan.ranges.size());
   filtered_scan.intensities.resize(input_scan.intensities.size());
-
-  double start_angle = input_scan.angle_min;
+  double start_angle   = input_scan.angle_min;
   double current_angle = input_scan.angle_min;
   ros::Time start_time = input_scan.header.stamp;
   unsigned int count = 0;
+  lower_angle_ = input_scan.angle_min;
+  upper_angle_ = input_scan.angle_max;
 
   //loop through the scan and truncate the beginning and the end of the scan as necessary
   for (unsigned int i = 0; i < input_scan.ranges.size(); ++i){
     //wait until we get to our desired starting angle
-    if(start_angle < lower_angle_) {
+    //Mark Invalid !
+    if(start_angle < lower_angle_)
+    {
       start_angle += input_scan.angle_increment;
       current_angle += input_scan.angle_increment;
       start_time += ros::Duration(input_scan.time_increment);
     }
-    else {
+    else 
+    {
+    // Invalid Data = INF  
+      if(current_angle < pole_right && current_angle > pole_left){
+          filtered_scan.ranges[count] = std::numeric_limits<float>::infinity();
+      }
+      else
+      {
+        // Valid Data
       filtered_scan.ranges[count] = input_scan.ranges[i];
-
+      }
       //make sure  that we don't update intensity data if its not available
       if (input_scan.intensities.size() > i)
         filtered_scan.intensities[count] = input_scan.intensities[i];
-        count++;
-        //check if we need to break out of the loop, basically if the next increment will put us over the threshold
-        if (current_angle + input_scan.angle_increment > upper_angle_) {
-          break;
-        }
+      count++;
+      //check if we need to break out of the loop, basically if the next increment will put us over the threshold
+      if (current_angle + input_scan.angle_increment > upper_angle_) {
+        break;
+      }
       current_angle += input_scan.angle_increment;
     }
   }

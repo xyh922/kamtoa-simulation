@@ -167,7 +167,7 @@ namespace som_o
 
     }
 
-     int Controller::setVelRead()
+    int Controller::setVelRead()
     {
         int cnt = 0;
         cmd[cnt++] = 0x11;
@@ -185,7 +185,7 @@ namespace som_o
 
     }
 
-     int Controller::setEncVelRead()
+    int Controller::setEncVelRead()
     {
         int cnt = 0;
         cmd[cnt++] = 0x11;
