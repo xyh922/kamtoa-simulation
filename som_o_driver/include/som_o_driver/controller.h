@@ -33,8 +33,11 @@ namespace som_o{
           ros::NodeHandle   nh_;              // ROS Node Handle
           uint8_t           buff[BUFFERSIZE]; // Buffer for receiving bytes
           unsigned char     cmd[COMMAND_SIZE];// Buffer for command
-          int               enc_r;            // Encoder Ticks - right wheel 
-          int               enc_l;            // Encoder Ticks - left wheel
+          int32_t           pos_r;            // Encoder Ticks - right wheel 
+          int32_t           pos_l;            // Encoder Ticks - left wheel
+          int32_t           vel_r;            // Velocity - right wheel 
+          int32_t           vel_l;            // Velocity - left wheel
+
       public:
           // Constructor
           Controller (const char *port, int baud);
@@ -45,21 +48,30 @@ namespace som_o{
           void  sendCommand(int cnt);         // Issue any command to the board
           // Stop Robot (Send 0 )
           void  stop();
-          // Status Getters
-          bool  is_connected() { return connected_; }
           // Prepare packet in commend sender buffer
           int   setVelCmdR(int speed);
           int   setVelCmdL(int speed);
           int   readVelCmd();
           // Encoder Read
-          int   setEncRead();
-          int   readEnc();
+          int   setEncRead(char side);
+          int   readEnc_L();
+          int   readEnc_R();
           // Velocity Read
-          int   setVelRead();
-          int   readVel();
+          int   setVelRead(char side);
+          int   readVel_L();
+          int   readVel_R();
           // Encoder and Velocity Read
-          int   setEncVelRead();
-          int   readEncVel();
+          int   setEncVelRead(char side);
+          int   readEncVel_L();
+          int   readEncVel_R();
+          // Buffer Checksum Validation by index 
+          bool  buff_is_valid(int size);
+          // Getters
+          bool  is_connected() { return connected_; }
+          int   getPosR(){return pos_r;}
+          int   getPosL(){return pos_l;}
+          int   getVelR(){return vel_r;}
+          int   getVelL(){return vel_l;}
 
   };
 }

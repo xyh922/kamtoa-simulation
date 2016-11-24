@@ -58,8 +58,10 @@ void update(){
 
 void main_loop(){
     // READ
-    controller->sendCommand(controller->setEncVelRead());
-    controller->read();
+    controller->sendCommand(controller->setEncVelRead('L'));
+    controller->readEncVel_L();
+    controller->sendCommand(controller->setEncVelRead('R'));
+    controller->readEncVel_R();
 
     // UPDATE ROS Data
     update();

@@ -41,6 +41,7 @@ namespace som_o
 
     Controller::~Controller()
     {
+        ROS_INFO("STOP CONTROLLER : ISSUE 0,0");
         this->stop();
         serial_->close();
     }
@@ -76,6 +77,23 @@ namespace som_o
         }
         ROS_INFO("Driver Board is not responding.");
     }
+
+    bool Controller::buff_is_valid(int size){
+        // Transform buff to hex by 2 char 
+        int cnt = 0;
+        char rec[200];
+        int sum = 0;
+        for(int i = 1 ; i < size - 2 ; i+=2){
+            rec[cnt]    = (buff[i] <= '9' ? buff[i] - '0' : toupper(buff[i]) - 'A' + 10) << 4;
+            rec[cnt]   |= buff[i+1] <= '9' ? buff[i+1] - '0' : toupper(buff[i+1]) - 'A' + 10;
+            sum += rec[cnt];
+            cnt++;
+        }
+        sum = sum & 0x00ff;
+        //std::cout << "SM = " << sum <<std::endl;
+        return sum==0;
+    }
+
 
     void Controller::stop(){
         this->sendCommand(this->setVelCmdL(0));
@@ -150,7 +168,7 @@ namespace som_o
         return cnt;
     }
 
-    int Controller::setEncRead()
+    int Controller::setEncRead(char side)
     {
         int cnt = 0;
         cmd[cnt++] = 0x11;
@@ -163,12 +181,8 @@ namespace som_o
         return cnt;
     }
 
-    int Controller::readEnc()
-    {
 
-    }
-
-    int Controller::setVelRead()
+    int Controller::setVelRead(char side)
     {
         int cnt = 0;
         cmd[cnt++] = 0x11;
@@ -181,15 +195,122 @@ namespace som_o
         return cnt;
     }
 
-    int Controller::readVel()
+    int Controller::readVel_L()
     {
+        int n = this->serial_->read(buff, 20);
+        if( buff[0] == ':' && buff_is_valid(n)){
+            vel_l = 0;
+            vel_l   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+            vel_l   |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
 
+            vel_l   |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+            vel_l   |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+
+            vel_l   |= (buff[7]  <= '9' ? buff[7]  - '0' : toupper(buff[7])  - 'A' + 10) << 12;
+            vel_l   |= (buff[8]  <= '9' ? buff[8]  - '0' : toupper(buff[8])  - 'A' + 10) << 8;
+
+            vel_l   |= (buff[9]  <= '9' ? buff[9]  - '0' : toupper(buff[9])  - 'A' + 10) << 4;
+            vel_l   |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+
+            std::cout << "[L-Velocity] = " << vel_l <<std::endl;
+            this->serial_->flush();
+        }
+        else
+        {
+            std::cout << "[L-Velocity]Invalid Receive Discard !" <<std::endl;
+            this->serial_->flush();
+        }
+    }
+    int Controller::readVel_R()
+    {
+        int n = this->serial_->read(buff, 20);
+        if( buff[0] == ':' && buff_is_valid(n)){
+            vel_r = 0;
+            vel_r   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+            vel_r   |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
+
+            vel_r   |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+            vel_r   |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+
+            vel_r   |= (buff[7]  <= '9' ? buff[7]  - '0' : toupper(buff[7])  - 'A' + 10) << 12;
+            vel_r   |= (buff[8]  <= '9' ? buff[8]  - '0' : toupper(buff[8])  - 'A' + 10) << 8;
+
+            vel_r   |= (buff[9]  <= '9' ? buff[9]  - '0' : toupper(buff[9])  - 'A' + 10) << 4;
+            vel_r   |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+
+            std::cout << "[R-Velocity] = " << vel_r <<std::endl;
+            this->serial_->flush();
+        }
+        else
+        {
+            std::cout << "[R-Velocity]Invalid Receive Discard !" <<std::endl;
+            this->serial_->flush();
+        }
     }
 
-    int Controller::setEncVelRead()
+
+    int Controller::readEnc_L()
+    {
+        int n = this->serial_->read(buff, 20);
+        if( buff[0] == ':' && buff_is_valid(n)){
+            pos_l = 0;
+            pos_l   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+            pos_l   |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
+
+            pos_l   |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+            pos_l   |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+
+            pos_l   |= (buff[7]  <= '9' ? buff[7]  - '0' : toupper(buff[7])  - 'A' + 10) << 12;
+            pos_l   |= (buff[8]  <= '9' ? buff[8]  - '0' : toupper(buff[8])  - 'A' + 10) << 8;
+
+            pos_l   |= (buff[9]  <= '9' ? buff[9]  - '0' : toupper(buff[9])  - 'A' + 10) << 4;
+            pos_l   |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+
+            std::cout << "[L-Position] = " << pos_l <<std::endl;
+            this->serial_->flush();
+        }
+        else
+        {
+            std::cout << "[L-Position]Invalid Receive Discard !" <<std::endl;
+            this->serial_->flush();
+        }
+    }
+
+    int Controller::readEnc_R()
+    {
+        int n = this->serial_->read(buff, 20);
+        if( buff[0] == ':' && buff_is_valid(n)){
+            pos_r = 0;
+            pos_r   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+            pos_r   |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
+
+            pos_r   |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+            pos_r   |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+
+            pos_r   |= (buff[7]  <= '9' ? buff[7]  - '0' : toupper(buff[7])  - 'A' + 10) << 12;
+            pos_r   |= (buff[8]  <= '9' ? buff[8]  - '0' : toupper(buff[8])  - 'A' + 10) << 8;
+
+            pos_r   |= (buff[9]  <= '9' ? buff[9]  - '0' : toupper(buff[9])  - 'A' + 10) << 4;
+            pos_r   |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+
+            std::cout << "[R-Position] = " << pos_l <<std::endl;
+            this->serial_->flush();
+        }
+        else
+        {
+            std::cout << "[R-Position]Invalid Receive Discard !" <<std::endl;
+            this->serial_->flush();
+        }
+    }
+
+
+    int Controller::setEncVelRead(char side)
     {
         int cnt = 0;
-        cmd[cnt++] = 0x11;
+
+        if(side == 'l' || side == 'L')cmd[cnt++] = 0x11;
+        else if(side =='r' || side == 'R')cmd[cnt++] = 0x12;
+
         cmd[cnt++] = 0x04;
         cmd[cnt++] = 0x00;
         cmd[cnt++] = 0x00;
@@ -199,9 +320,90 @@ namespace som_o
         return cnt;
     }
 
-    int Controller::readEncVel()
+    int Controller::readEncVel_L()
     {
+        int n = this->serial_->read(buff, 32);
+        std::cout << "Recieving L (" << n << ") = ";
+        if( buff[0] == ':' && buff_is_valid(n)){
+            pos_l = 0;
+            pos_l   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+            pos_l   |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
 
+            pos_l   |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+            pos_l   |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+
+            pos_l   |= (buff[7]   <= '9' ? buff[7]   - '0' : toupper(buff[7])   - 'A' + 10) << 12;
+            pos_l   |= (buff[8]   <= '9' ? buff[8]   - '0' : toupper(buff[8])   - 'A' + 10) << 8;
+
+            pos_l   |= (buff[9]   <= '9' ? buff[9]   - '0' : toupper(buff[9])   - 'A' + 10) << 4;
+            pos_l   |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+            
+            vel_l = 0;
+            vel_l   |= (buff[19]  <= '9' ? buff[19]  - '0' : toupper(buff[19])  - 'A' + 10) << 28;
+            vel_l   |= (buff[20]  <= '9' ? buff[20]  - '0' : toupper(buff[20])  - 'A' + 10) << 24;
+
+            vel_l   |= (buff[21]  <= '9' ? buff[21]  - '0' : toupper(buff[21])  - 'A' + 10) << 20;
+            vel_l   |= (buff[22]  <= '9' ? buff[22]  - '0' : toupper(buff[22])  - 'A' + 10) << 16;
+
+            vel_l   |= (buff[15]  <= '9' ? buff[15]  - '0' : toupper(buff[15])  - 'A' + 10) << 12;
+            vel_l   |= (buff[16]  <= '9' ? buff[16]  - '0' : toupper(buff[16])  - 'A' + 10) << 8;
+
+            vel_l   |= (buff[17]  <= '9' ? buff[17]  - '0' : toupper(buff[17])  - 'A' + 10) << 4;
+            vel_l   |= (buff[18]  <= '9' ? buff[18]  - '0' : toupper(buff[18])  - 'A' + 10) << 0;
+
+            printf("%d , %d ", pos_l , vel_l);
+            std::cout << std::endl;
+            this->serial_->flush();
+        }
+        else
+        {
+            std::cout << "[L Velo-Pos]Invalid Receive Discard !" <<std::endl;
+            this->serial_->flush();
+        }
+        
+    }
+
+    int Controller::readEncVel_R()
+     {
+       int n = this->serial_->read(buff, 32);
+       std::cout << "Recieving R (" << n << ") = ";
+        if(buff[0] == ':' && buff_is_valid(n)){
+            pos_r = 0;
+            pos_r    |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+            pos_r    |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
+            
+            pos_r    |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+            pos_r    |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+            
+            pos_r    |= (buff[7]   <= '9' ? buff[7]   - '0' : toupper(buff[7])   - 'A' + 10) << 12;
+            pos_r    |= (buff[8]   <= '9' ? buff[8]   - '0' : toupper(buff[8])   - 'A' + 10) << 8;
+
+            pos_r    |= (buff[9]   <= '9' ? buff[9]   - '0' : toupper(buff[9])   - 'A' + 10) << 4;
+            pos_r    |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+            
+            vel_r = 0;
+            vel_r    |= (buff[19]  <= '9' ? buff[19]  - '0' : toupper(buff[19])  - 'A' + 10) << 28;
+            vel_r    |= (buff[20]  <= '9' ? buff[20]  - '0' : toupper(buff[20])  - 'A' + 10) << 24;
+
+            vel_r    |= (buff[21]  <= '9' ? buff[21]  - '0' : toupper(buff[21])  - 'A' + 10) << 20;
+            vel_r    |= (buff[22]  <= '9' ? buff[22]  - '0' : toupper(buff[22])  - 'A' + 10) << 16;
+
+            vel_r    |= (buff[15]  <= '9' ? buff[15]  - '0' : toupper(buff[15])  - 'A' + 10) << 12;
+            vel_r    |= (buff[16]  <= '9' ? buff[16]  - '0' : toupper(buff[16])  - 'A' + 10) << 8;
+
+            vel_r    |= (buff[17]  <= '9' ? buff[17]  - '0' : toupper(buff[17])  - 'A' + 10) << 4;
+            vel_r    |= (buff[18]  <= '9' ? buff[18]  - '0' : toupper(buff[18])  - 'A' + 10) << 0;
+
+            printf("%d , %d ", pos_r , vel_r);
+            std::cout << std::endl;
+            this->serial_->flush();
+        }
+        else
+        {
+            std::cout << "[R Velo-Pos]Invalid Receive Discard !" <<std::endl;
+            this->serial_->flush();
+        }
+        
     }
 
     int Controller::readVelCmd()
@@ -216,15 +418,13 @@ namespace som_o
         }
         // Read Package
         int n = this->serial_->read(buff, 17);
-            std::cout << "Recieving (" << n << ") = ";
-            for (int i = 0; i < n - 2; i++)
-            { // n-2 for ignore line carriage
-                printf("%c", (int)buff[i]);
-            }
-            std::cout << std::endl;
-            this->serial_->flush(); //Discard following bytes
-        
-       
+        // std::cout << "Recieving (" << n << ") = ";
+        // for (int i = 0; i < n - 2; i++)
+        // { // n-2 for ignore line carriage
+        //     printf("%c", (int)buff[i]);
+        // }
+        // std::cout << std::endl;
+        this->serial_->flush(); //Discard following bytes      
     }
 
     void Controller::read()
