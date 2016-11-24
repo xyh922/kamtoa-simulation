@@ -54,7 +54,8 @@ namespace som_o
         {
             try
             {
-                this->serial_ = new serial::Serial(port_name_, baud_, serial::Timeout::simpleTimeout(20)); //30
+                this->serial_ = new serial::Serial(port_name_, baud_, 
+                serial::Timeout::simpleTimeout(10)); //30
             }
             catch (serial::IOException)
             {
@@ -215,13 +216,15 @@ namespace som_o
         }
         // Read Package
         int n = this->serial_->read(buff, 17);
-        std::cout << "Recieving (" << n << ") = ";
-        for (int i = 0; i < n - 2; i++)
-        { // n-2 for ignore line carriage
-            printf("%c", (int)buff[i]);
-        }
-        std::cout << std::endl;
-        this->serial_->flush(); //Discard following bytes
+            std::cout << "Recieving (" << n << ") = ";
+            for (int i = 0; i < n - 2; i++)
+            { // n-2 for ignore line carriage
+                printf("%c", (int)buff[i]);
+            }
+            std::cout << std::endl;
+            this->serial_->flush(); //Discard following bytes
+        
+       
     }
 
     void Controller::read()

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
     <node pkg="som_o_driver" type="som_o_driver_node" name="DriverSomO" output="screen">
-        <param name="max_effort" type="int" value="300"/>
+        <param name="max_effort" type="int" value="275"/>
     </node>
 </launch>

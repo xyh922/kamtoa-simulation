@@ -67,9 +67,7 @@ void main_loop(){
     // WRITE
     controller->sendCommand(controller->setVelCmdL(leftSpeed));
     controller->readVelCmd();
-
-    usleep(5*1000);
-
+   
     controller->sendCommand(controller->setVelCmdR(rightSpeed));
     controller->readVelCmd();
 
@@ -84,7 +82,7 @@ int main(int argc, char **argv){
     // Serial parameter default settings
     std::string     port    =   "/dev/ttyUSB0";
     int32_t         baud    =   115200;
-    double          loop_rate = 40.0; //20
+    double          loop_rate = 100.0; //20
     
     // Default Effort for the driver Board [ 0 - 500 ]
     max_effort= 220;
