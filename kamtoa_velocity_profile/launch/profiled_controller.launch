@@ -3,6 +3,7 @@
     <!-- joy node -->
     <node respawn="true" pkg="joy" type="joy_node" name="ros_joy_node">
         <param name="dev" type="string" value="/dev/input/js0"/>
+         <param name="deadzone" value="0.12"/> 
     </node>
 
     <!-- Velocity Profiler -->
@@ -12,8 +13,8 @@
         <param name="button_deadman_switch" value="2" type="int"/>
         <param name="scale_linear" value="1" type="double"/>
         <param name="scale_angular" value="0.8" type="double"/>
-        <param name="acc" value="2" type="double"/>
-        <param name="an_acc" value="2.5" type="double"/>
+        <param name="acc" value="1.6" type="double"/>
+        <param name="an_acc" value="1.0" type="double"/>
         <param name="twist_pub_topic" value="/cmd_vel" type="string"/>
     </node>
 

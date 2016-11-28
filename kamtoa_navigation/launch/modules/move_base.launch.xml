@@ -21,10 +21,11 @@
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/costmap/global_costmap_params.yaml" command="load" />
 
-    <!-- USE DWA LOCAL PLANNER FOR TESTING FIRST  -->
+    <!-- Local Planner  -->
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/planner/dwa_local_planner_params.yaml" command="load" />
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/move_base_params.yaml" command="load" />
 
+    <!-- Global Planner-->
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/planner/global_planner_params.yaml" command="load" />
     <rosparam file="$(find kamtoa_navigation)/param/$(arg robot)/planner/navfn_global_planner_params.yaml" command="load" />
 
