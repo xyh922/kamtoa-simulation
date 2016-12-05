@@ -45,8 +45,8 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
     }
 
     // Assign Power to each wheels
-    leftSpeed  = -1 * vel_left  * max_effort ;
-    rightSpeed =      vel_right * max_effort ;
+    leftSpeed  = 1 * vel_left  * max_effort ;
+    rightSpeed = -1 * vel_right * max_effort ;
 }
 
 void update(){
@@ -87,7 +87,7 @@ int main(int argc, char **argv){
     double          loop_rate = 100.0; //20
     
     // Default Effort for the driver Board [ 0 - 500 ]
-    max_effort= 220;
+    max_effort= 20000;
 
     // Get Paramter from ROS Parameter Server (if Exist)
     nh.param<std::string>("port", port, port);

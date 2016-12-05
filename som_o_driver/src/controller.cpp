@@ -198,6 +198,7 @@ namespace som_o
     int Controller::readVel_L()
     {
         int n = this->serial_->read(buff, 20);
+        std::cout << n ;
         if( buff[0] == ':' && buff_is_valid(n)){
             vel_l = 0;
             vel_l   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
@@ -224,6 +225,7 @@ namespace som_o
     int Controller::readVel_R()
     {
         int n = this->serial_->read(buff, 20);
+        std::cout << n ;
         if( buff[0] == ':' && buff_is_valid(n)){
             vel_r = 0;
             vel_r   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
@@ -324,6 +326,7 @@ namespace som_o
     {
         int n = this->serial_->read(buff, 32);
         std::cout << "Recieving L (" << n << ") = ";
+        printf("%c" , buff); 
         if( buff[0] == ':' && buff_is_valid(n)){
             pos_l = 0;
             pos_l   |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
@@ -351,7 +354,7 @@ namespace som_o
             vel_l   |= (buff[17]  <= '9' ? buff[17]  - '0' : toupper(buff[17])  - 'A' + 10) << 4;
             vel_l   |= (buff[18]  <= '9' ? buff[18]  - '0' : toupper(buff[18])  - 'A' + 10) << 0;
 
-            printf("%d , %d ", pos_l , vel_l);
+            //printf("%d , %d ", pos_l , vel_l);
             std::cout << std::endl;
             this->serial_->flush();
         }
@@ -365,8 +368,9 @@ namespace som_o
 
     int Controller::readEncVel_R()
      {
-       int n = this->serial_->read(buff, 32);
+       int n = this->serial_->read(buff, 64);
        std::cout << "Recieving R (" << n << ") = ";
+        printf("%c" , buff); 
         if(buff[0] == ':' && buff_is_valid(n)){
             pos_r = 0;
             pos_r    |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
@@ -394,7 +398,7 @@ namespace som_o
             vel_r    |= (buff[17]  <= '9' ? buff[17]  - '0' : toupper(buff[17])  - 'A' + 10) << 4;
             vel_r    |= (buff[18]  <= '9' ? buff[18]  - '0' : toupper(buff[18])  - 'A' + 10) << 0;
 
-            printf("%d , %d ", pos_r , vel_r);
+            //printf("%d , %d ", pos_r , vel_r);
             std::cout << std::endl;
             this->serial_->flush();
         }
