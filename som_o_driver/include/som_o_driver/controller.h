@@ -68,8 +68,8 @@ namespace som_o{
           bool  buff_is_valid(int size);
           // Getters
           bool  is_connected() { return connected_; }
-          int   getPosR(){return pos_r;}
-          int   getPosL(){return pos_l;}
+          int   getTickR(){return pos_r;}
+          int   getTickL(){return pos_l;}
           int   getVelR(){return vel_r;}
           int   getVelL(){return vel_l;}
 
