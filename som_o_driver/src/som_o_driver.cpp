@@ -20,7 +20,7 @@
 // Robot default profile
 #define CENTER_TO_WHEEL  0.082  //82  MM
 #define WHEEL_RADIUS     0.04   //40  MM 
-#define MAX_WHEEL_SPEED  0.5    //0.5 m/s
+#define MAX_WHEEL_SPEED  0.68    //0.5 m/s
 #define TICK_METER       262236 
 
 // Global robot profile
@@ -39,7 +39,7 @@ int       last_tick_r;
 int       tick_l,vel_l;
 int       tick_r,vel_r;
 ros::Publisher odom_pub;
-tf::TransformBroadcaster odom_broadcaster;
+
 
 // Serial Controller
 som_o::Controller   *controller;
@@ -56,12 +56,12 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
    angular_z  = msg->angular.z;
    
    // Fix negative zero generated from joy node 
-   linear_x   = ((abs(linear_x) < 0.0005)? 0.000: linear_x);
-   angular_z  = ((abs(angular_z) < 0.0005)? 0.000: angular_z);
+   linear_x   = ((fabs(linear_x) < 0.0005)? 0.000: linear_x);
+   angular_z  = ((fabs(angular_z) < 0.0005)? 0.000: angular_z);
 
    // Assign speed to the particular wheel 
-   double left_wheel_vel  = (linear_x - angular_z*CENTER_TO_WHEEL)/2;
-   double right_wheel_vel = (linear_x + angular_z*CENTER_TO_WHEEL)/2;
+   double left_wheel_vel  = (linear_x - angular_z*CENTER_TO_WHEEL/2)/WHEEL_RADIUS;
+   double right_wheel_vel = (linear_x + angular_z*CENTER_TO_WHEEL/2)/WHEEL_RADIUS;
 
    // Speed binding to effort (0-100%)
    double vel_left  = left_wheel_vel / MAX_WHEEL_SPEED ;
@@ -86,13 +86,18 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
 }
 
 void update(){
+    static tf::TransformBroadcaster odom_broadcaster;
+
+    // Get current timestamp
+    current_time = ros::Time::now();
+
     // Generate ROS Data 
     // By Reading the Controller's Data
-    int left_tick  = controller->getTickL();
-    int right_tick = controller->getTickR();
+    int left_tick  =      controller->getTickL();
+    int right_tick = -1 * controller->getTickR();
 
-    vel_l = controller->getVelL();
-    vel_r = controller->getVelR();
+    vel_l =     controller->getVelL();
+    vel_r = -1 *controller->getVelR();
 
     double dt       = (current_time - last_time).toSec();
 
@@ -170,6 +175,7 @@ void update(){
     /// publish the message
     odom_pub.publish(odom);  
 
+    last_time = current_time;
 
 }
 
