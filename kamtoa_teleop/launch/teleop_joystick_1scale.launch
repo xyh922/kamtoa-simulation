@@ -2,7 +2,7 @@
 <launch>
     <!-- joy node -->
     <node respawn="true" pkg="joy" type="joy_node" name="ros_joy_node">
-        <param name="dev" type="string" value="/dev/input/js1"/>
+        <param name="dev" type="string" value="/dev/input/js0"/>
         <param name="deadzone" value="0.12"/> 
     </node>
 
@@ -12,7 +12,7 @@
     <param name="button_deadman_switch" value="2" type="int"/>
 
     <param name="scale_linear" value="0.68" type="double"/>
-    <param name="scale_angular" value="1.57" type="double"/>
+    <param name="scale_angular" value="1.54" type="double"/>
     <param name="twist_pub_topic" type="string" value="cmd_vel"/>
 
     <!-- JOY TO COMMAND VEL -->

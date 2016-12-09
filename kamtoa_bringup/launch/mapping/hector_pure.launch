@@ -6,7 +6,7 @@
 	<node pkg="hector_mapping" type="hector_mapping" name="hector_height_mapping" output="screen">
 			<param name="scan_topic" value="scan" />
 			<param name="base_frame" value="base_footprint" />
-			<param name="odom_frame" value="base_footprint" />
+			<param name="odom_frame" value="odom" />
 
 			<param name="output_timing" value="false"/>
 			<param name="advertise_map_service" value="true"/>
@@ -18,8 +18,8 @@
 			<param name="map_pub_period" value="0.5"/>
 			<param name="update_factor_free" value="0.45"/>
 
-			<param name="map_update_distance_thresh" value="0.02"/>
-			<param name="map_update_angle_thresh" value="0.4"/> 
+			<param name="map_update_distance_thresh" value="0.2"/>
+			<param name="map_update_angle_thresh" value="0.6"/> 
 			<!--d= 0.02 w=0.1-->
 
 			<param name="map_resolution" value="0.05"/>

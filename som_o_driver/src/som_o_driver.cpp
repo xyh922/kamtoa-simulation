@@ -20,8 +20,9 @@
 // Robot default profile
 #define CENTER_TO_WHEEL  0.082  //82  MM
 #define WHEEL_RADIUS     0.04   //40  MM 
-#define MAX_WHEEL_SPEED  0.68    //0.5 m/s
+#define MAX_WHEEL_SPEED  0.68   //0.5 m/s
 #define TICK_METER       262236 
+#define WHEEL_SEPERATION 0.164  // 164 MM
 
 // Global robot profile
 double center_to_wheel , wheel_radius , max_wheel_speed ;
@@ -60,8 +61,8 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
    angular_z  = ((fabs(angular_z) < 0.0005)? 0.000: angular_z);
 
    // Assign speed to the particular wheel 
-   double left_wheel_vel  = (linear_x - angular_z*CENTER_TO_WHEEL/2)/WHEEL_RADIUS;
-   double right_wheel_vel = (linear_x + angular_z*CENTER_TO_WHEEL/2)/WHEEL_RADIUS;
+   double left_wheel_vel  = (linear_x - angular_z*CENTER_TO_WHEEL)/WHEEL_RADIUS;
+   double right_wheel_vel = (linear_x + angular_z*CENTER_TO_WHEEL)/WHEEL_RADIUS;
 
    // Speed binding to effort (0-100%)
    double vel_left  = left_wheel_vel / MAX_WHEEL_SPEED ;
@@ -115,7 +116,7 @@ void update(){
 
     // Calculate actual distance traveled 
     double actualDistance   = (deltaRight_meter + deltaLeft_meter)/2;
-    double theta            = (deltaRight_meter - deltaLeft_meter)/(CENTER_TO_WHEEL*2);
+    double theta            = (deltaRight_meter - deltaLeft_meter)/(WHEEL_SEPERATION);
 
     // [ODOM] Calculate Velocities
     linear = actualDistance / dt;
@@ -229,10 +230,10 @@ int main(int argc, char **argv){
     ROS_INFO("[Driver] with Baud Rate : %d" , baud);
 
     // Subscribe to Joystick Command
-    ros::Subscriber sub = nh.subscribe("/cmd_vel",1,cmd_vel_callback);
+    ros::Subscriber sub = nh.subscribe<geometry_msgs::Twist>("/cmd_vel",1,cmd_vel_callback);
 
     // Odometry Publisher
-    odom_pub = nh.advertise<nav_msgs::Odometry>("odom", 100);
+    odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 100);
 
     // Serial Controller Initiated !
     controller = new som_o::Controller(port.c_str(),baud);
