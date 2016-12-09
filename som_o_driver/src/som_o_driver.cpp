@@ -67,8 +67,6 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
    double vel_left  = (float)left_wheel_vel/max_wheel_rpm  ;
    double vel_right = (float)right_wheel_vel/max_wheel_rpm ;
 
-	std::cout << max_wheel_rpm <<"vel : (" << vel_left << "," << vel_right << ")" << std::endl; 
-
    // Speed bounding 
    if( fabs(vel_left) > 1.0 )
     {
