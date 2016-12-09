@@ -18,14 +18,13 @@
 #include <nav_msgs/Odometry.h>
 
 // Robot default profile
-#define CENTER_TO_WHEEL  0.082  //82  MM
-#define WHEEL_RADIUS     0.04   //40  MM 
-#define MAX_WHEEL_SPEED  0.68   //0.5 m/s
+#define CENTER_TO_WHEEL  0.082f  //82  MM
+#define WHEEL_RADIUS     0.04f   //40  MM 
 #define TICK_METER       262236 
-#define WHEEL_SEPERATION 0.164  // 164 MM
+#define WHEEL_SEPERATION 0.164f  // 164 MM
 
 // Global robot profile
-double center_to_wheel , wheel_radius , max_wheel_speed ;
+double center_to_wheel , wheel_radius , max_wheel_rpm ;
 
 // Robot data 
 double    pos_x = 0 ;
@@ -61,12 +60,14 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
    angular_z  = ((fabs(angular_z) < 0.0005)? 0.000: angular_z);
 
    // Assign speed to the particular wheel 
-   double left_wheel_vel  = (linear_x - angular_z*CENTER_TO_WHEEL)/WHEEL_RADIUS;
-   double right_wheel_vel = (linear_x + angular_z*CENTER_TO_WHEEL)/WHEEL_RADIUS;
-
+   double left_wheel_vel  = (linear_x - angular_z*WHEEL_SEPERATION/2)/WHEEL_RADIUS;
+   double right_wheel_vel = (linear_x + angular_z*WHEEL_SEPERATION/2)/WHEEL_RADIUS;
+	
    // Speed binding to effort (0-100%)
-   double vel_left  = left_wheel_vel / MAX_WHEEL_SPEED ;
-   double vel_right = right_wheel_vel / MAX_WHEEL_SPEED ;
+   double vel_left  = (float)left_wheel_vel/max_wheel_rpm  ;
+   double vel_right = (float)right_wheel_vel/max_wheel_rpm ;
+
+	std::cout << max_wheel_rpm <<"vel : (" << vel_left << "," << vel_right << ")" << std::endl; 
 
    // Speed bounding 
    if( fabs(vel_left) > 1.0 )
@@ -223,7 +224,8 @@ int main(int argc, char **argv){
     // Get Robot Parameter from ROS Parameter Server (if Exist)
     nh.param<double>("wheel_saparation",center_to_wheel ,CENTER_TO_WHEEL);
     nh.param<double>("wheel_radius",wheel_radius ,WHEEL_RADIUS);
-    nh.param<double>("wheel_max_speed",max_wheel_speed ,MAX_WHEEL_SPEED);
+
+    max_wheel_rpm = (float)max_effort / 1000.0f ;
 
     // Prompt User After Settings are completed
     ROS_INFO("[Driver] Create connection to Port : %s" , port.c_str());
