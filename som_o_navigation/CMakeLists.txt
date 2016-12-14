@@ -1,18 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(som_o_teleop)
+project(som_o_navigation)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  controller_manager
-  geometry_msgs
-  joint_state_controller
-  joy
+  actionlib
+  move_base_msgs
+  visualization_msgs
   roscpp
-  rospy
-  sensor_msgs
-  std_msgs
+  roslib
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -72,7 +70,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   geometry_msgs#   sensor_msgs#   std_msgs
+#   std_msgs  # Or other packages containing msgs
 # )
 
 ################################################
@@ -105,9 +103,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES som_o_teleop
-#  CATKIN_DEPENDS controller_manager geometry_msgs joint_state_controller joy roscpp rospy sensor_msgs std_msgs
+  INCLUDE_DIRS
+#  LIBRARIES som_o_navigation
+#  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
 
@@ -119,31 +117,32 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
 )
-
 ## Declare a C++ library
-# add_library(som_o_teleop
-#   src/${PROJECT_NAME}/som_o_teleop.cpp
+# add_library(som_o_navigation
+#   src/${PROJECT_NAME}/som_o_navigation.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(som_o_teleop ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(som_o_navigation ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(som_o_teleop_node src/som_o_teleop_node.cpp)
-add_executable(som_o_joystick src/som_o_joystick.cpp)
+# add_executable(som_o_navigation_node src/som_o_navigation_node.cpp)
+
+
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(som_o_teleop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(som_o_navigation_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(som_o_teleop_node
+# target_link_libraries(som_o_navigation_node
 #   ${catkin_LIBRARIES}
 # )
-target_link_libraries(som_o_joystick ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
@@ -154,33 +153,23 @@ target_link_libraries(som_o_joystick ${catkin_LIBRARIES})
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 # install(PROGRAMS
-#   scripts/som_o_keyboard.py
+#   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-# catkin_install_python(PROGRAMS
-#    scripts/som_o_keyboard.py
-#    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
-
-install(PROGRAMS
-  scripts/som_o_keyboard.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
 ## Mark executables and/or libraries for installation
-# install(TARGETS som_o_teleop som_o_teleop_node
+# install(TARGETS som_o_navigation som_o_navigation_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+ install(DIRECTORY include/${PROJECT_NAME}/
+   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+   PATTERN ".svn" EXCLUDE
+ )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
@@ -194,7 +183,7 @@ install(PROGRAMS
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_som_o_teleop.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_som_o_navigation.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

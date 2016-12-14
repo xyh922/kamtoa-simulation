@@ -78,8 +78,8 @@ POIManager::POIManager(void)
     goalPub = nh_.advertise<move_base_msgs::MoveBaseGoal>(goal_topic, 10);
 
     // Initialize the poi loading
-    // ROOT DIRECTORY : kamtoa_navigation package
-    ROS_INFO("[POI Manager] Load POI based on root package : kamtoa_navigation ");
+    // ROOT DIRECTORY : som_o_navigation package
+    ROS_INFO("[POI Manager] Load POI based on root package : som_o_navigation ");
     load_poi_from_file("/waypoints/waypoint.csv");
 
 }

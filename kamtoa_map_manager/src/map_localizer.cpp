@@ -135,7 +135,7 @@ int main(int argc, char** argv){
 
     // Load Map Localization
 
-    std::string path = ros::package::getPath("kamtoa_navigation")+"/maps/"+"fin.pgm";
+    std::string path = ros::package::getPath("som_o_navigation")+"/maps/"+"fin.pgm";
     reader = cv::imread(path,CV_LOAD_IMAGE_UNCHANGED);
     reader2 = cv::imread(path,CV_LOAD_IMAGE_COLOR);
     imageMap = cv::Mat(reader.rows,reader.cols,CV_8UC1);

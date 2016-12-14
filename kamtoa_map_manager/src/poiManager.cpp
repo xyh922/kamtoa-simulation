@@ -10,7 +10,7 @@
   @Provided Services
   1. List All POI
     - return poi[]
-  2. Load POI From Root path : kamtoa_navigation Package
+  2. Load POI From Root path : som_o_navigation Package
   3. Resolve POI (by index)
     - return move_base_goal ?
   4. GoTo POI by poi's index_id

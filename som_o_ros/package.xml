@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>som_o_ros</name>
+  <version>0.0.0</version>
+  <description>SOM-O ROS PACKAGE</description>
+  <maintainer email="theppasith@gmail.com">Theppasith Nisitsukcharoen</maintainer>
+  <license>TODO</license>
+  
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>som_o_base</run_depend>
+  <run_depend>som_o_bringup</run_depend>
+  <run_depend>som_o_description</run_depend>
+  <run_depend>som_o_driver</run_depend>
+  <run_depend>som_o_gazebo</run_depend>
+  <run_depend>som_o_navigation</run_depend>
+  <run_depend>som_o_teleop</run_depend>
+
+  <export>
+    <metapackage />
+  </export>
+</package>

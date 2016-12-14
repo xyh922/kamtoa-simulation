@@ -131,6 +131,8 @@ include_directories(
 ## Declare a C++ executable
 # add_executable(som_o_base_node src/som_o_base_node.cpp)
 add_executable(laser_angular_filter src/laser_angular_filter.cpp)
+#add_executable(safety_commander src/safety_commander.cpp)
+
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(som_o_base_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -141,6 +143,8 @@ add_executable(laser_angular_filter src/laser_angular_filter.cpp)
 # )
 
 target_link_libraries(laser_angular_filter ${catkin_LIBRARIES})
+#target_link_libraries(safety_commander ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
@@ -188,3 +192,4 @@ target_link_libraries(laser_angular_filter ${catkin_LIBRARIES})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+

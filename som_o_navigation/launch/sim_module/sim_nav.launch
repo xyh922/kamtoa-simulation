@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<launch>
+<!-- Simulation -->
+<!-- Fully Autonomous Navigation Launch file -->
+  <arg name="robot" default="som_o_sim"/>
+  <!-- Map server -->
+  <arg name="map" default="whiz-ex"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find som_o_navigation)/maps/$(arg map).yaml"/>
+
+  <!-- Initial pose for the Localizer -->
+  <arg name="initial_pose_x" default="0.0"/>
+  <arg name="initial_pose_y" default="0.0"/>
+  <arg name="initial_pose_a" default="0.0"/>
+
+   <!-- Localizaer : AMCL -->
+  <include file="$(find som_o_navigation)/launch/sim_module/amcl.launch.xml">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+  </include>
+
+  <!-- Velocity Smoother -->
+  <include file="$(find som_o_navigation)/launch/sim_module/velocity_smoother.launch.xml"/>
+
+  <!-- Navigation Stack (move_base's path planner , costmaps & obstacles manager) -->
+  <include file="$(find som_o_navigation)/launch/sim_module/move_base.launch.xml">
+      <arg name="robot" value="$(arg robot)"/>
+  </include>
+
+</launch>

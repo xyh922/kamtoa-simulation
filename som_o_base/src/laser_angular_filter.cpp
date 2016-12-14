@@ -4,6 +4,24 @@
 using namespace std;
 
 // index 0 => X-
+/*
+  Model : RP-Lidar A2
+  start at 0 front 
+  go -3.15 to the left (counter-clockwise)
+          -3.15  0  +3.15
+            \    |    /
+             \   |   /
+              \  |  /
+               \ | /
+                \|/
+                 O
+              /     \
+             /       \
+            /         \
+           /  radian   \
+     -1.57            1.57           
+
+*/
 
 ros::Publisher filtered_scan_pub;
 ros::Subscriber input_scan_sub;

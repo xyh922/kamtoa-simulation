@@ -20,7 +20,7 @@ void read_waypoint_from_file(std::string filename ,
 {
 
     std::vector<std::string> tokenized;
-    std::string path = ros::package::getPath("kamtoa_navigation")+ filename;
+    std::string path = ros::package::getPath("som_o_navigation")+ filename;
     std::ifstream inFile(path.c_str());
 
 

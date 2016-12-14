@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<!-- Fully Autonomous Navigation Launch file-->
-<launch>
-
-  <!-- Map server -->
-  <arg name="map" default="sim_world"/>
-  <node name="map_server" pkg="map_server" type="map_server" args="$(find kamtoa_navigation)/maps/$(arg map).yaml"/>
-
-</launch>
