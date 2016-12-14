@@ -18,10 +18,10 @@
 #include <nav_msgs/Odometry.h>
 
 // Robot default profile
-#define CENTER_TO_WHEEL  (0.082f)  //82  MM
-#define WHEEL_RADIUS     (0.04f)   //40  MM 
-#define TICK_METER       (262236)  //
-#define WHEEL_SEPERATION (0.164f)  // 164 MM
+#define CENTER_TO_WHEEL  0.082f  //82  MM
+#define WHEEL_RADIUS     0.04f   //40  MM 
+#define TICK_METER       262236  //
+#define WHEEL_SEPERATION 0.164f  // 164 MM
 
 // Global robot profile
 double center_to_wheel , wheel_radius , max_wheel_rpm ;
@@ -65,8 +65,8 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
 	
    // Speed binding to effort (0-100%)
    // 1 rad/s = 9.5 rpm ~ 10 rpm 
-   double vel_left  = (float)left_wheel_vel / (max_wheel_rpm * 10);             // round/min
-   double vel_right = (float)right_wheel_vel/ (max_wheel_rpm * 10);             // round/min
+   double vel_left  = (float)left_wheel_vel / (max_wheel_rpm);             // round/min
+   double vel_right = (float)right_wheel_vel/ (max_wheel_rpm);             // round/min
 
    // Speed bounding 
    if( fabs(vel_left) > 1.0 )
@@ -84,6 +84,9 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
     // Assign Power to each wheels
     leftSpeed  = 1 * vel_left  * max_effort ;
     rightSpeed = -1 * vel_right * max_effort ;
+
+   //ROS_INFO("maxeff : %d Assign : %d , %d ",max_effort , leftSpeed ,rightSpeed );
+
 }
 
 void update(){
@@ -219,7 +222,9 @@ int main(int argc, char **argv){
     nh.param<int32_t>("baud_rate",baud ,baud);
     nh.param<double>("loop_rate",loop_rate ,loop_rate);
     nh.param<int>("max_effort",max_effort,max_effort);
-    max_wheel_rpm = (float)max_effort / 100.0f ;
+    
+    max_wheel_rpm = (float)max_effort / 1000.0f ;
+    //std::cout << "MAX WHEE : " << max_wheel_rpm <<std::endl;
 
     // Get Robot Parameter from ROS Parameter Server (if Exist)
     nh.param<double>("wheel_saparation",center_to_wheel ,CENTER_TO_WHEEL);
