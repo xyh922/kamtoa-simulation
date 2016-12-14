@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-    <!-- Transformation on Robot , Sensor Placement -->
-    <include file="$(find kamtoa_base)/launch/config/tf_static.launch"/>
-    <!-- RP-Lidar Node  -->
-    <include file="$(find kamtoa_base)/launch/config/rplidar.launch"/>
-    <!-- Laser filter Node  -->
-    <include file="$(find kamtoa_base)/launch/config/laser_filters.launch"/>
-</launch>

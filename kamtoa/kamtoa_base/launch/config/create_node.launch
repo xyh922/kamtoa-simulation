@@ -1,0 +1,12 @@
+<launch>
+    <!-- Initiate the iCreate Controller ! -->
+    <node pkg="create_node" type="turtlebot_node.py" name="iCreate_controller" output="screen">
+      	 <param name="port" type="string" value="/dev/ttyUSB0"/>
+	       <param name="publish_tf" value="true"/>
+         <param name="cmd_vel_timeout" type="int" value="10"/>
+    </node>
+
+     <node pkg="tf" type="static_transform_publisher" name="base_link_to_imu_broadcaster"
+     args="0.0 0.0 0.0 0 0 0 1 base_link gyro_link 100" />
+
+</launch>

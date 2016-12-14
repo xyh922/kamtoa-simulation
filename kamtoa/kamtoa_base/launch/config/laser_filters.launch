@@ -1,0 +1,7 @@
+<!-- Launch file for Laser filtering nodes -->
+<launch>
+  <!-- Laser filter node run here -->
+  <node pkg="laser_filters" type="scan_to_scan_filter_chain" name="laser_filter">
+    <rosparam command="load" file="$(find kamtoa_base)/params/laser_filter_config.yaml" />
+  </node>
+</launch>
