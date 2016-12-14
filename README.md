@@ -1,12 +1,10 @@
 # kamtoa-simulation
 # SOM-O Phase
 
-# Dillinger
-
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
-
 Kamtoa Simulation
 > Current developing phase : SOM-O (ส้มโอ)
+
+
 ### Structure 
 Core - structure is consisted of 
 
