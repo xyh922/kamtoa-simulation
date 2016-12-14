@@ -4,11 +4,11 @@
   <arg name="device" default=""/>
   <arg name="channels" default="1"/>
   <arg name="sample_rate" default="44100"/>
-  <arg name="robot_namespace" default="robot"/>
-  <arg name="ground_namespace" default="ground"/>
+  <arg name="sender_namespace" default="ground"/>
+  <arg name="receiver_namespace" default="robot"/>
 
-  <group ns="$(arg ground_namespace)">
-  <node name="robot_audio_capture" pkg="audio_capture" type="audio_capture" output="screen">
+  <group ns="$(arg sender_namespace)">
+  <node name="ground_audio_capture" pkg="audio_capture" type="audio_capture" output="screen">
     <param name="bitrate" value="128"/>
     <param name="device" value="$(arg device)"/>
     <param name="channels" value="$(arg channels)"/>
@@ -16,8 +16,8 @@
   </node>
   </group>
 
-  <group ns="$(arg robot_namespace)">
-  <node name="robot_audio_play" pkg="audio_play" type="audio_play" output="screen">
+  <group ns="$(arg receiver_namespace)">
+  <node name="ground_audio_play" pkg="audio_play" type="audio_play" output="screen">
     <param name="dst" value="alsasink"/>
   </node>
   </group>
