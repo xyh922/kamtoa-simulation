@@ -18,10 +18,10 @@
 #include <nav_msgs/Odometry.h>
 
 // Robot default profile
-#define CENTER_TO_WHEEL  0.082f  //82  MM
-#define WHEEL_RADIUS     0.04f   //40  MM 
-#define TICK_METER       262236 
-#define WHEEL_SEPERATION 0.164f  // 164 MM
+#define CENTER_TO_WHEEL  (0.082f)  //82  MM
+#define WHEEL_RADIUS     (0.04f)   //40  MM 
+#define TICK_METER       (262236)  //
+#define WHEEL_SEPERATION (0.164f)  // 164 MM
 
 // Global robot profile
 double center_to_wheel , wheel_radius , max_wheel_rpm ;
@@ -60,12 +60,13 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
    angular_z  = ((fabs(angular_z) < 0.0005)? 0.000: angular_z);
 
    // Assign speed to the particular wheel 
-   double left_wheel_vel  = (linear_x - angular_z*WHEEL_SEPERATION/2)/WHEEL_RADIUS;
-   double right_wheel_vel = (linear_x + angular_z*WHEEL_SEPERATION/2)/WHEEL_RADIUS;
+   double left_wheel_vel  = (linear_x - angular_z*WHEEL_SEPERATION/2)/WHEEL_RADIUS;  // rad /sec
+   double right_wheel_vel = (linear_x + angular_z*WHEEL_SEPERATION/2)/WHEEL_RADIUS;  // rad /sec
 	
    // Speed binding to effort (0-100%)
-   double vel_left  = (float)left_wheel_vel/max_wheel_rpm  ;
-   double vel_right = (float)right_wheel_vel/max_wheel_rpm ;
+   // 1 rad/s = 9.5 rpm ~ 10 rpm 
+   double vel_left  = (float)left_wheel_vel / (max_wheel_rpm * 10);             // round/min
+   double vel_right = (float)right_wheel_vel/ (max_wheel_rpm * 10);             // round/min
 
    // Speed bounding 
    if( fabs(vel_left) > 1.0 )
@@ -218,18 +219,19 @@ int main(int argc, char **argv){
     nh.param<int32_t>("baud_rate",baud ,baud);
     nh.param<double>("loop_rate",loop_rate ,loop_rate);
     nh.param<int>("max_effort",max_effort,max_effort);
+    max_wheel_rpm = (float)max_effort / 100.0f ;
 
     // Get Robot Parameter from ROS Parameter Server (if Exist)
     nh.param<double>("wheel_saparation",center_to_wheel ,CENTER_TO_WHEEL);
     nh.param<double>("wheel_radius",wheel_radius ,WHEEL_RADIUS);
 
-    max_wheel_rpm = (float)max_effort / 1000.0f ;
+    
 
     // Prompt User After Settings are completed
     ROS_INFO("[Driver] Create connection to Port : %s" , port.c_str());
     ROS_INFO("[Driver] with Baud Rate : %d" , baud);
 
-    // Subscribe to Joystick Command
+    // Subscribe to command velocity
     ros::Subscriber sub = nh.subscribe<geometry_msgs::Twist>("/cmd_vel",1,cmd_vel_callback);
 
     // Odometry Publisher
@@ -245,12 +247,14 @@ int main(int argc, char **argv){
       ROS_DEBUG("Attempting connection to %s at %i baud.", port.c_str(), baud);
       // Attempting to connect the driver board
       // Connect to Serial controller
-      if(!controller->is_connected()){
+      if(!controller->is_connected())
+      {
         controller->connect();
       }
 
       // Connected to Serial controller -> Do main routine.
-      if (controller->is_connected()) {
+      if (controller->is_connected()) 
+      {
           main_loop();
       }
       // Cannot connect -> Report 

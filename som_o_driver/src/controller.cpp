@@ -110,7 +110,7 @@ namespace som_o
         char tmp[200];
         int tmp_cnt = 0;
 
-        // Header
+        // Packet Header
         tmp[tmp_cnt++] = ':';
 
         // Calculate CHECKSUM [ Command : cmd[i] ]
