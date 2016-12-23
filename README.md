@@ -26,7 +26,7 @@ SOM-O requires
 * [ROS - Kinetic kame - Full Desktop install ](http://wiki.ros.org/kinetic/Installation/Ubuntu) To run
 * YOCS_VELOCITY_SMOOTHER 
 * MOVE_BASE
-* 
+
 
 ### Bringing - Up [Simulation]
 1. Run the simulation 
@@ -64,3 +64,7 @@ roslaunch som_o_navigation nav.launch map:="6_floor"
 ```sh
 roslaunch som_o_teleop teleop_joystick.launch 
 ```
+### Warning 
+- Set the permission of every sensors esp Camera
+- Set the hosts (/etc/hosts) to Enable Picture streaming through TCP
+- alsamixer -c 3 ,  amixer -c 3
