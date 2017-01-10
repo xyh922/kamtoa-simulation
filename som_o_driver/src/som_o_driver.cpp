@@ -1,5 +1,5 @@
 /******************************
- *  Node For SOM-O Motor Driver Board !
+ *  Node For SOM-O Motor Driver(Ganglia) Board !
  *  Hiveground Co.,Ltd
  *  Author : Theppasith Nisitsukcharoen , Sukhum Sattaratnamai
  *  Date : 17-Nov-2016

@@ -170,9 +170,8 @@ int main(int argc, char** argv){
     ros::Rate rate(10.0);
     while (ros::ok()){
         reader2.copyTo(drawing);
-
         try{
-            listener.lookupTransform("/map", "/base_footprint",
+            listener.lookupTransform("/base_footprint", "/map",
                                     ros::Time(0), transform);
         }
         catch (tf::TransformException ex){

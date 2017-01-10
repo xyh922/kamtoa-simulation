@@ -9,7 +9,8 @@
 
   <group ns="$(arg sender_namespace)">
   <node name="robot_audio_capture" pkg="audio_capture" type="audio_capture" output="screen">
-    <param name="bitrate" value="128"/>
+    <param name="bitrate" value="64"/>
+    <!--Old 128-->
     <param name="device" value="$(arg device)"/>
     <param name="channels" value="$(arg channels)"/>
     <param name="sample_rate" value="$(arg sample_rate)"/>

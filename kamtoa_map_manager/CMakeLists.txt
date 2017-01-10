@@ -165,8 +165,8 @@ target_link_libraries(poiManager ${catkin_LIBRARIES})
 # add_executable(gridtest src/map_accessor.cpp)
 # target_link_libraries(gridtest ${catkin_LIBRARIES})
 
-add_executable(localizer src/map_localizer.cpp)
-target_link_libraries(localizer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+add_executable(map_localizer src/map_localizer.cpp)
+target_link_libraries(map_localizer ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 add_executable(opencvtest src/opencvtest.cpp)
 target_link_libraries(opencvtest ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})

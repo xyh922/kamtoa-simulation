@@ -13,6 +13,6 @@
 
   <!-- Launch Zone Localizer -->
   <node name="Zone_Localizer" pkg="kamtoa_map_manager"
-    type="localizer" args=""/>
+    type="localizer" args="" output="screen"/>
 
 </launch>
