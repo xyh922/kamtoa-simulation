@@ -39,6 +39,7 @@ int       last_tick_r;
 int       tick_l,vel_l;
 int       tick_r,vel_r;
 ros::Publisher odom_pub;
+bool      publish_tf;
 
 
 // Serial Controller
@@ -156,7 +157,9 @@ void update(){
     odom_trans.transform.rotation = odom_quat;
 
     //send the transform
-    odom_broadcaster.sendTransform(odom_trans);
+    if(publish_tf){
+        odom_broadcaster.sendTransform(odom_trans);
+    }
 
     // ODOM
     /// next, we'll publish the odometry message over ROS
@@ -229,6 +232,8 @@ int main(int argc, char **argv){
     // Get Robot Parameter from ROS Parameter Server (if Exist)
     nh.param<double>("wheel_saparation",center_to_wheel ,CENTER_TO_WHEEL);
     nh.param<double>("wheel_radius",wheel_radius ,WHEEL_RADIUS);
+
+    nh.param<bool>("publish_tf",publish_tf,true);
 
     
 
