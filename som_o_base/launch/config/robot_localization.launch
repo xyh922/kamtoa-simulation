@@ -5,30 +5,30 @@
     <remap from="odometry/filtered" to="/robot_localization/odom_combined"/>
 
     <param name="odom_frame" value="odom_combined"/>
-    <param name="base_link_frame" value="base_footprint"/>    
+    <param name="base_link_frame" value="base_footprint"/>  
+    <param name="two_d_mode" value="true"/>  
 
     <!-- =============================================================================== -->    
     <!-- Configure odom0 (WHEEL ODOMETRY) -->
+    
     <param name="odom0" value="/odom" />
-    <rosparam param="odom0_config">[true,  true,  false,   <!-- x, y, z position -->
-                                    false, false, true,    <!-- roll, pitch, yaw angles-->
-                                    true,  true,  false,   <!-- x/y/z velocity -->
-                                    false, false, true]    <!-- roll/pitch/yaw velocity -->
+    <rosparam param="odom0_config">[true,  true,  true,   <!-- x, y, z position -->
+                                    true,  true, true,    <!-- roll, pitch, yaw angles-->
+                                    true,  true,  true,   <!-- x/y/z velocity -->
+                                    true, true, true,    <!-- roll/pitch/yaw velocity -->
+                                    false, false ,false ]   
     </rosparam>
-    <rosparam param="odom0_differential">[false,  false,  false,   <!-- x, y, z position -->
-                                          false,  false,  false]   <!-- roll, pitch, yaw angles-->
-    </rosparam>    
+
     <!-- =============================================================================== -->    
     <!-- Configure imu0 (MPU6050 - GY86)-->
     <param name="imu0" value="/imu/data_raw"/>
-    <rosparam param="imu0_config">[false, false, false,  <!-- x, y, z position -->
-                                   false, false, true,   <!-- roll, pitch, yaw angles-->
-                                   false, false, false,  <!-- x/y/z velocity -->
-                                   false, false, false]  <!-- roll/pitch/yaw velocity -->
+    <rosparam param="imu0_config">[false, false, false, <!-- x, y, z position -->
+                               true, true, true,      <!-- roll, pitch, yaw angles-->
+                               false, false, false,     <!-- x/y/z velocity -->
+                               true, true, true,      <!-- roll/pitch/yaw velocity -->
+                               false, false, false]      <!-- Ax/Ay/Az -->
     </rosparam>
-    <rosparam param="imu0_differential">[false, false, false,   <!-- x, y, z position -->
-                                         false, false, true]    <!-- roll, pitch, yaw angles -->
-    </rosparam>
+
     <!-- =============================================================================== -->    
   </node>
 
