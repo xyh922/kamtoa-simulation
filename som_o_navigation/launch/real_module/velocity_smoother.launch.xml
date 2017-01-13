@@ -12,7 +12,7 @@
     <arg name="smooth_cmd_vel_topic"  value="cmd_vel"/>
     <!-- Feedbacks -->
     <arg name="robot_cmd_vel_topic"   value="robot_cmd_vel"/>
-    <arg name="odom_topic"            value="odom"/>
+    <arg name="odom_topic"            value="/robot_localization/odom_combined"/>
 
     <!-- nodelet manager -->
     <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager"/>
