@@ -12,8 +12,10 @@
   <arg name="initial_pose_x" default="0.0"/>
   <arg name="initial_pose_y" default="0.0"/>
   <arg name="initial_pose_a" default="0.0"/>
+  
   <arg name="odometry_frame" default="odom_combined"/>
-   <!-- Localizaer : AMCL -->
+
+  <!-- Localizaer : AMCL -->
   <include file="$(find som_o_navigation)/launch/real_module/amcl.launch.xml">
     <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
@@ -26,8 +28,8 @@
 
   <!-- Navigation Stack (move_base's path planner , costmaps & obstacles manager) -->
   <include file="$(find som_o_navigation)/launch/real_module/move_base.launch.xml">
-      <arg name="robot" value="$(arg robot)"/>
-	<arg name="odom_frame_id" value="$(arg odometry_frame)" />
+    <arg name="robot" value="$(arg robot)"/>
+	  <arg name="odom_frame_id" value="$(arg odometry_frame)" />
   </include>
 
 </launch>
