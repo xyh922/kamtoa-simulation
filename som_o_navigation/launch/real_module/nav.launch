@@ -15,7 +15,7 @@
   
   <arg name="odometry_frame" default="odom_combined"/>
 
-  <!-- Localizaer : AMCL -->
+  <!-- Localizer : AMCL -->
   <include file="$(find som_o_navigation)/launch/real_module/amcl.launch.xml">
     <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>

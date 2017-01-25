@@ -410,6 +410,109 @@ namespace som_o
         
     }
 
+    int Controller::setEncVelCurRead(char side){
+        int cnt = 0;
+
+        if(side == 'l' || side == 'L')cmd[cnt++] = 0x11;
+        else if(side =='r' || side == 'R')cmd[cnt++] = 0x12;
+
+        cmd[cnt++] = 0x04;
+        cmd[cnt++] = 0x00;
+        cmd[cnt++] = 0x00;
+        cmd[cnt++] = 0x00;
+        cmd[cnt++] = 0x06;
+
+        return cnt;
+    }
+
+    int Controller::readEncVelCur_L(){
+        int n = this->serial_->read(buff, 64);
+        if(buff[0] == ':' && buff_is_valid(n)){
+            pos_l = 0;
+                pos_l    |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+                pos_l    |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
+            
+                pos_l    |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+                pos_l    |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+                
+                pos_l    |= (buff[7]   <= '9' ? buff[7]   - '0' : toupper(buff[7])   - 'A' + 10) << 12;
+                pos_l    |= (buff[8]   <= '9' ? buff[8]   - '0' : toupper(buff[8])   - 'A' + 10) << 8;
+
+                pos_l    |= (buff[9]   <= '9' ? buff[9]   - '0' : toupper(buff[9])   - 'A' + 10) << 4;
+                pos_l    |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+                
+            vel_l = 0;
+                vel_l    |= (buff[19]  <= '9' ? buff[19]  - '0' : toupper(buff[19])  - 'A' + 10) << 28;
+                vel_l    |= (buff[20]  <= '9' ? buff[20]  - '0' : toupper(buff[20])  - 'A' + 10) << 24;
+
+                vel_l    |= (buff[21]  <= '9' ? buff[21]  - '0' : toupper(buff[21])  - 'A' + 10) << 20;
+                vel_l    |= (buff[22]  <= '9' ? buff[22]  - '0' : toupper(buff[22])  - 'A' + 10) << 16;
+
+                vel_l    |= (buff[15]  <= '9' ? buff[15]  - '0' : toupper(buff[15])  - 'A' + 10) << 12;
+                vel_l    |= (buff[16]  <= '9' ? buff[16]  - '0' : toupper(buff[16])  - 'A' + 10) << 8;
+
+                vel_l    |= (buff[17]  <= '9' ? buff[17]  - '0' : toupper(buff[17])  - 'A' + 10) << 4;
+                vel_l    |= (buff[18]  <= '9' ? buff[18]  - '0' : toupper(buff[18])  - 'A' + 10) << 0;
+            cur_l = 0;
+                cur_l    |= (buff[27]  <= '9' ? buff[27]  - '0' : toupper(buff[27])  - 'A' + 10) << 28;
+                cur_l    |= (buff[28]  <= '9' ? buff[28]  - '0' : toupper(buff[28])  - 'A' + 10) << 24;
+
+                cur_l    |= (buff[29]  <= '9' ? buff[29]  - '0' : toupper(buff[29])  - 'A' + 10) << 20;
+                cur_l    |= (buff[30]  <= '9' ? buff[30]  - '0' : toupper(buff[30])  - 'A' + 10) << 16;
+
+                cur_l    |= (buff[23]  <= '9' ? buff[23]  - '0' : toupper(buff[23])  - 'A' + 10) << 12;
+                cur_l    |= (buff[24]  <= '9' ? buff[24]  - '0' : toupper(buff[24])  - 'A' + 10) << 8;
+
+                cur_l    |= (buff[25]  <= '9' ? buff[25]  - '0' : toupper(buff[25])  - 'A' + 10) << 4;
+                cur_l    |= (buff[26]  <= '9' ? buff[26]  - '0' : toupper(buff[26])  - 'A' + 10) << 0;
+        }
+        
+    }
+
+    int Controller::readEncVelCur_R(){
+        int n = this->serial_->read(buff, 64);
+        if(buff[0] == ':' && buff_is_valid(n)){
+            pos_r = 0;
+                pos_r    |= (buff[11]  <= '9' ? buff[11]  - '0' : toupper(buff[11])  - 'A' + 10) << 28;
+                pos_r    |= (buff[12]  <= '9' ? buff[12]  - '0' : toupper(buff[12])  - 'A' + 10) << 24;
+                
+                pos_r    |= (buff[13]  <= '9' ? buff[13]  - '0' : toupper(buff[13])  - 'A' + 10) << 20;
+                pos_r    |= (buff[14]  <= '9' ? buff[14]  - '0' : toupper(buff[14])  - 'A' + 10) << 16;
+                
+                pos_r    |= (buff[7]   <= '9' ? buff[7]   - '0' : toupper(buff[7])   - 'A' + 10) << 12;
+                pos_r    |= (buff[8]   <= '9' ? buff[8]   - '0' : toupper(buff[8])   - 'A' + 10) << 8;
+
+                pos_r    |= (buff[9]   <= '9' ? buff[9]   - '0' : toupper(buff[9])   - 'A' + 10) << 4;
+                pos_r    |= (buff[10]  <= '9' ? buff[10]  - '0' : toupper(buff[10])  - 'A' + 10) << 0;
+                
+            vel_r = 0;
+                vel_r    |= (buff[19]  <= '9' ? buff[19]  - '0' : toupper(buff[19])  - 'A' + 10) << 28;
+                vel_r    |= (buff[20]  <= '9' ? buff[20]  - '0' : toupper(buff[20])  - 'A' + 10) << 24;
+
+                vel_r    |= (buff[21]  <= '9' ? buff[21]  - '0' : toupper(buff[21])  - 'A' + 10) << 20;
+                vel_r    |= (buff[22]  <= '9' ? buff[22]  - '0' : toupper(buff[22])  - 'A' + 10) << 16;
+
+                vel_r    |= (buff[15]  <= '9' ? buff[15]  - '0' : toupper(buff[15])  - 'A' + 10) << 12;
+                vel_r    |= (buff[16]  <= '9' ? buff[16]  - '0' : toupper(buff[16])  - 'A' + 10) << 8;
+
+                vel_r    |= (buff[17]  <= '9' ? buff[17]  - '0' : toupper(buff[17])  - 'A' + 10) << 4;
+                vel_r    |= (buff[18]  <= '9' ? buff[18]  - '0' : toupper(buff[18])  - 'A' + 10) << 0;
+            cur_r = 0;
+                cur_r    |= (buff[27]  <= '9' ? buff[27]  - '0' : toupper(buff[27])  - 'A' + 10) << 28;
+                cur_r    |= (buff[28]  <= '9' ? buff[28]  - '0' : toupper(buff[28])  - 'A' + 10) << 24;
+
+                cur_r    |= (buff[29]  <= '9' ? buff[29]  - '0' : toupper(buff[29])  - 'A' + 10) << 20;
+                cur_r    |= (buff[30]  <= '9' ? buff[30]  - '0' : toupper(buff[30])  - 'A' + 10) << 16;
+
+                cur_r    |= (buff[23]  <= '9' ? buff[23]  - '0' : toupper(buff[23])  - 'A' + 10) << 12;
+                cur_r    |= (buff[24]  <= '9' ? buff[24]  - '0' : toupper(buff[24])  - 'A' + 10) << 8;
+
+                cur_r    |= (buff[25]  <= '9' ? buff[25]  - '0' : toupper(buff[25])  - 'A' + 10) << 4;
+                cur_r    |= (buff[26]  <= '9' ? buff[26]  - '0' : toupper(buff[26])  - 'A' + 10) << 0;
+        }
+    }
+
+
     int Controller::readVelCmd()
     {
         // Check the size of the incoming message

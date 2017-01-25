@@ -37,6 +37,8 @@ namespace som_o{
           int32_t           pos_l;            // Encoder Ticks - left wheel
           int32_t           vel_r;            // Velocity - right wheel 
           int32_t           vel_l;            // Velocity - left wheel
+          int32_t           cur_r;            // Current - right wheel 
+          int32_t           cur_l;            // Current - left wheel
 
       public:
           // Constructor
@@ -64,6 +66,10 @@ namespace som_o{
           int   setEncVelRead(char side);
           int   readEncVel_L();
           int   readEncVel_R();
+          // Encoder Velocity and Current Read 
+          int   setEncVelCurRead(char side);
+          int   readEncVelCur_L();
+          int   readEncVelCur_R();
           // Buffer Checksum Validation by index 
           bool  buff_is_valid(int size);
           // Getters

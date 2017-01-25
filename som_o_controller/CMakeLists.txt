@@ -1,23 +1,13 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(som_o_driver)
+project(som_o_controller)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS
-  message_generation
-  genmsg
-  geometry_msgs
-  joy
-  nav_msgs
-  roscpp
-  serial
-  std_msgs
-  tf
-)
+find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -41,7 +31,9 @@ find_package(Boost REQUIRED COMPONENTS system)
 ##     * add a run_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
-##     find_package(catkin REQUIRED COMPONENTS ...)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+)
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
 ##   * uncomment the add_*_files sections below as needed
@@ -50,10 +42,11 @@ find_package(Boost REQUIRED COMPONENTS system)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(FILES
-  raw_odometry.msg
-  current.msg
-)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -70,9 +63,10 @@ add_message_files(FILES
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(DEPENDENCIES
-  std_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs  # Or other packages containing msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -104,9 +98,9 @@ generate_messages(DEPENDENCIES
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS include
- LIBRARIES som_o
- CATKIN_DEPENDS roscpp serial std_msgs joy message_runtime
+#  INCLUDE_DIRS include
+#  LIBRARIES som_o_controller
+#  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
 
@@ -116,34 +110,31 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
 include_directories(
   include
-  ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-# add_library(som_o_driver
-#   src/${PROJECT_NAME}/som_o_driver.cpp
+# add_library(som_o_controller
+#   src/${PROJECT_NAME}/som_o_controller.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(som_o_driver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(som_o_controller ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(som_o_driver_node src/som_o_driver.cpp src/controller.cpp)
+# add_executable(som_o_controller_node src/som_o_controller_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(som_o_driver_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(som_o_controller_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(som_o_driver_node
-  ${catkin_LIBRARIES}
-)
-
+# target_link_libraries(som_o_controller_node
+#   ${catkin_LIBRARIES}
+# )
 
 #############
 ## Install ##
@@ -160,7 +151,7 @@ target_link_libraries(som_o_driver_node
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS som_o_driver som_o_driver_node
+# install(TARGETS som_o_controller som_o_controller_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -185,10 +176,30 @@ target_link_libraries(som_o_driver_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_som_o_driver.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_som_o_controller.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+
+## Declare a C++ executable
+add_executable(som_o_hardware
+  include/som_o_controller/som_o_hardware.cpp.h
+  src/som_o_hardware.cpp
+)
+add_dependencies(som_o_hardware ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(som_o_hardware
+  ${catkin_LIBRARIES}
+)
+
+## Declare a C++ executable
+add_executable(som_o_base
+  src/som_o_base.cpp
+)
+add_dependencies(som_o_base ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(som_o_base
+  ${catkin_LIBRARIES}
+)

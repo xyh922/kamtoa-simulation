@@ -1,0 +1,2 @@
+float32 current_r
+float32 current_l

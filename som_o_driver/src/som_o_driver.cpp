@@ -6,6 +6,7 @@
  *******************************/
 
 #include "som_o_driver/controller.h"
+#include "som_o_driver/current.h"
 #include <string>
 #include <iostream>
 #include <ros/ros.h>
@@ -39,6 +40,7 @@ int       last_tick_r;
 int       tick_l,vel_l;
 int       tick_r,vel_r;
 ros::Publisher odom_pub;
+ros::Publisher current_pub;
 bool      publish_tf;
 
 
@@ -69,7 +71,7 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
    double vel_left  = (float)left_wheel_vel / (max_wheel_rpm);             // round/min
    double vel_right = (float)right_wheel_vel/ (max_wheel_rpm);             // round/min
 
-   // Speed bounding 
+   // Speed bounding to percentage
    if( fabs(vel_left) > 1.0 )
     {
       vel_right /= fabs(vel_left);
@@ -83,11 +85,10 @@ void cmd_vel_callback(const geometry_msgs::Twist::ConstPtr& msg){
     }
 
     // Assign Power to each wheels
-    leftSpeed  = 1 * vel_left  * max_effort ;
-    rightSpeed = -1 * vel_right * max_effort ;
+    leftSpeed  = 1 * vel_left  * max_effort ;   // Globally assigned
+    rightSpeed = -1 * vel_right * max_effort ;  // Globally assigned
 
    //ROS_INFO("maxeff : %d Assign : %d , %d ",max_effort , leftSpeed ,rightSpeed );
-
 }
 
 void update(){
@@ -95,6 +96,8 @@ void update(){
 
     // Get current timestamp
     current_time = ros::Time::now();
+    som_o_driver::current current;
+    
 
     // Generate ROS Data 
     // By Reading the Controller's Data
@@ -145,7 +148,6 @@ void update(){
     /// since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
 
-    /// first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
     odom_trans.header.stamp = current_time;
     odom_trans.header.frame_id = "odom";
@@ -161,45 +163,48 @@ void update(){
         odom_broadcaster.sendTransform(odom_trans);
     }
 
-    // ODOM
-    /// next, we'll publish the odometry message over ROS
+    // Odometry Message 
     nav_msgs::Odometry odom;
+
     odom.header.stamp = current_time;
     odom.header.frame_id = "odom";
 
-    /// set the position
+    // set the position
     odom.pose.pose.position.x = pos_x;
     odom.pose.pose.position.y = pos_y;
     odom.pose.pose.position.z = 0.0;
     odom.pose.pose.orientation = odom_quat;
 
-    /// set the velocity
+    // set the velocity
     odom.child_frame_id = "base_footprint";
     odom.twist.twist.linear.x = linear;
     odom.twist.twist.linear.y = 0;
     odom.twist.twist.angular.z = angular;
 
-    /// publish the message
+    // publish the message
     odom_pub.publish(odom);  
 
+    // publish the Current to ROS 
+    current_pub.publish(current);
+
+    // Memorize this time to be used in next cycle
     last_time = current_time;
 
 }
 
 void main_loop(){
     // Read data from the controllers
-    controller->sendCommand(controller->setEncVelRead('L'));
-    controller->readEncVel_L();
-    controller->sendCommand(controller->setEncVelRead('R'));
-    controller->readEncVel_R();
+    controller->sendCommand(controller->setEncVelCurRead('L'));
+    controller->readEncVelCur_L();
+    controller->sendCommand(controller->setEncVelCurRead('R'));
+    controller->readEncVelCur_R();
 
     // Update ROS data (Publishing things)
     update();
 
-    // Write command received from Upper layer 
+    // Publish assigned velocities to motor driver board 
     controller->sendCommand(controller->setVelCmdL(leftSpeed));
     controller->readVelCmd();
-   
     controller->sendCommand(controller->setVelCmdR(rightSpeed));
     controller->readVelCmd();
 
@@ -227,15 +232,11 @@ int main(int argc, char **argv){
     nh.param<int>("max_effort",max_effort,max_effort);
     
     max_wheel_rpm = (float)max_effort / 1000.0f ;
-    //std::cout << "MAX WHEE : " << max_wheel_rpm <<std::endl;
 
     // Get Robot Parameter from ROS Parameter Server (if Exist)
     nh.param<double>("wheel_saparation",center_to_wheel ,CENTER_TO_WHEEL);
     nh.param<double>("wheel_radius",wheel_radius ,WHEEL_RADIUS);
-
-    nh.param<bool>("publish_tf",publish_tf,true);
-
-    
+    nh.param<bool>("publish_tf",publish_tf,true);    
 
     // Prompt User After Settings are completed
     ROS_INFO("[Driver] Create connection to Port : %s" , port.c_str());
@@ -247,6 +248,9 @@ int main(int argc, char **argv){
     // Odometry Publisher
     odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 100);
 
+    // Current Publisher
+    current_pub = nh.advertise<som_o_driver::current>("/current", 100);
+
     // Serial Controller Initiated !
     controller = new som_o::Controller(port.c_str(),baud);
 
@@ -255,8 +259,7 @@ int main(int argc, char **argv){
 
     while (ros::ok()) {
       ROS_DEBUG("Attempting connection to %s at %i baud.", port.c_str(), baud);
-      // Attempting to connect the driver board
-      // Connect to Serial controller
+      // Attempt to connect the driver board
       if(!controller->is_connected())
       {
         controller->connect();
