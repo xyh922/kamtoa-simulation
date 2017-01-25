@@ -78,6 +78,8 @@ namespace som_o{
           int   getTickL(){return pos_l;}
           int   getVelR(){return vel_r;}
           int   getVelL(){return vel_l;}
+          int   getCurR(){return cur_r;}
+          int   getCurL(){return cur_l;}
 
   };
 }

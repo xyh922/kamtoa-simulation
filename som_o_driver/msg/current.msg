@@ -1,2 +1,2 @@
-float32 current_r
-float32 current_l
+int32 current_r
+int32 current_l

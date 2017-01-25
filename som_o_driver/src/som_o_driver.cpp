@@ -97,6 +97,8 @@ void update(){
     // Get current timestamp
     current_time = ros::Time::now();
     som_o_driver::current current;
+    current.current_l = controller->getCurL();
+    current.current_r = controller->getCurR();
     
 
     // Generate ROS Data 

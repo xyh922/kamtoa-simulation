@@ -51,8 +51,9 @@ find_package(Boost REQUIRED COMPONENTS system)
 
 ## Generate messages in the 'msg' folder
 add_message_files(FILES
-  raw_odometry.msg
   current.msg
+  raw_odometry.msg
+ 
 )
 
 ## Generate services in the 'srv' folder
