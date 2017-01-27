@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 
   double control_frequency, diagnostic_frequency;
   private_nh.param<double>("control_frequency", control_frequency, 10.0);
-  private_nh.param<double>("diagnostic_frequency", diagnostic_frequency, 1.0);
 
   // Initialize robot hardware and link to controller manager
   husky_base::HuskyHardware husky(nh, private_nh, control_frequency);

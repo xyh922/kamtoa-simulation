@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+
+     <!-- Initiate the SOM_O Controller ! -->
+    <include file="$(find som_o_base)/launch/config/ganglia_motor_driver.launch"/>
+    <!-- Transformation on Robot , Sensor Placement -->
+    <include file="$(find som_o_base)/launch/config/tf_static.launch"/>
+    <!-- RP-Lidar Node  -->
+    <include file="$(find som_o_base)/launch/config/rplidar.launch"/>
+    <!-- Laser filter Node  -->
+    <include file="$(find som_o_base)/launch/config/laser_filters.launch"/>
+</launch>
