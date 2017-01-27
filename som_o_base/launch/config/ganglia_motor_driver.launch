@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <node pkg="obodroid_common" type="hgr_ganglia" name="hgr_ganglia_driver" output="screen">
+    <node pkg="hgr_ganglia" type="hgr_ganglia" name="hgr_ganglia_driver" output="screen">
         <param name="max_effort" type="int" value="10000"/>
         <param name="port" type="string" value="/dev/ttyUSB1"/>
         <param name="publish_tf" type="boolean" value="False"/>
