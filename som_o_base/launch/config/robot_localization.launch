@@ -8,8 +8,8 @@
     <param name="base_link_frame" value="base_footprint"/>  
     <param name="two_d_mode" value="true"/>  
     <param name="use_control" value="true"/>
-    <param param="control_config">[true,  false, false,
-                                  false, false, true]</param>
+    <rosparam param="control_config">[true,  false, false,
+                                  false, false, true]</rosparam>
 
     <!-- =============================================================================== -->    
     <!-- Configure odom0 (WHEEL ODOMETRY) -->
