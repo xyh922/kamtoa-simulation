@@ -4,7 +4,7 @@
 	<!-- Running the Base (iCreate + RPLidar + transformation configuration) -->
 	<include file="$(find som_o_base)/launch/ganglia_base.launch"/>
 	<!-- Open the Camera 1 -->
-	<include file="$(find som_o_base)/launch/camera/camera_robot.launch"/> 
+	<include file="$(find som_o_bringup)/launch/camera/camera_robot.launch"/> 
 	<!-- Open Mic for audio streaming -->
 	<!-- <include file="$(find audio_capture)/launch/capture.launch"/> -->
 </launch>
