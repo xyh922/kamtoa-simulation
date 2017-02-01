@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- IMU Gy-86 node  -->
+    <node pkg="obo_imu_gy_86" type="gy86_node" name="gy86_imu" required="true">
+        <param name="port" value="/dev/ttyACM0"/>
+        <!--Out Imu/Data to Imu/Data_Raw-->
+        <remap from="/imu/data" to="/imu/data_raw"/>
+    </node>
+    <!-- IMU FILTER MADGWICK NODE -->
+    <node pkg="imu_filter_madgwick" name="imu_filter_node" type="imu_filter_node" clear_params="true">
+        <!-- Subscribe Imu/Data_Raw-->
+        <!-- Publish IMU filtered on /Imu/Data -->
+        <param name="use_mag" value="true"/>
+        <param name="use_magnetic_field_msg" value="true"/>
+        <param name="publish_debug_topics" value="true"/>
+        <param name="stateless" value="false"/>
+        <param name="gain" value="0.0"/>
+    </node>
+
+</launch>
