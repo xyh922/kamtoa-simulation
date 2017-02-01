@@ -37,6 +37,8 @@
     <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
     <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
     <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+    
+    <!-- Override Param from YAML-->
     <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
 
     <!-- (OUTPUT) from move_base cmd_vel now mapped to velocity_smoother -->

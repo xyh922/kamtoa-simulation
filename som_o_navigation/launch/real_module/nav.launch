@@ -5,31 +5,33 @@
   <arg name="robot" default="som_o"/>
 
   <!-- Map server -->
-  <arg name="map" default="whiz-ex"/>
+  <arg name="map" default="6_floor"/>
   <node name="map_server" pkg="map_server" type="map_server" args="$(find som_o_navigation)/maps/$(arg map).yaml"/>
 
   <!-- Initial pose for the Localizer -->
   <arg name="initial_pose_x" default="0.0"/>
   <arg name="initial_pose_y" default="0.0"/>
   <arg name="initial_pose_a" default="0.0"/>
+  <arg name="odom_frame_id"  default="odom_combined"/>
+  <arg name="odom_topic"     default="/robot_localization/odom_combined"/>
   
-  <arg name="odometry_frame" default="odom_combined"/>
-
   <!-- Localizer : AMCL -->
   <include file="$(find som_o_navigation)/launch/real_module/amcl.launch.xml">
     <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
     <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
     <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
-    <arg name="odom_frame_id" value="$(arg odometry_frame)"/>
+    <arg name="odom_frame_id"  value="$(arg odom_frame_id)"/>
   </include>
 
   <!-- Velocity Smoother -->
-  <include file="$(find som_o_navigation)/launch/real_module/velocity_smoother.launch.xml"/>
+  <include file="$(find som_o_navigation)/launch/real_module/velocity_smoother.launch.xml">
+    <arg name="odom_topic" value="$(arg odom_topic)"/>
+  </include>
 
   <!-- Navigation Stack (move_base's path planner , costmaps & obstacles manager) -->
   <include file="$(find som_o_navigation)/launch/real_module/move_base.launch.xml">
     <arg name="robot" value="$(arg robot)"/>
-	  <arg name="odom_frame_id" value="$(arg odometry_frame)" />
+	  <arg name="odom_frame_id" value="$(arg odom_frame_id)" />
   </include>
 
 </launch>
