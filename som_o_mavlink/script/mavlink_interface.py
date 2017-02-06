@@ -12,104 +12,87 @@ import rospy
 from mavros_msgs.msg import Mavlink as MavlinkMsg
 from pymavlink.dialects.v10 import common as mavlink
 
+from mavlink_heartbeat import MavlinkHeartbeatGenerator
+from mavlink_telemetry import MavlinkTelemetry
+from mavlink_waypoint_manager import MavlinkWaypointManager
 ##############################################################################
 # Class
 ##############################################################################
 
-class GcsMavlink(object):
+class MavlinkCommunication(object):
     '''
     Interface class for communicating with MAV message from GCS_BRIDGE
     Input : ROS-MAV-MSG from GCS_BRIDGE
     '''
     def __init__(self):
-        rospy.loginfo("[interface] init GcsMavlink !!")
+        rospy.loginfo("[interface] init MavLink Main Communication !!")
         try:
             rospy.init_node("gcs_mavlink")
-        except Exception:
+        except:
             pass
 
         # Publisher MAV messages from GCS to ROS
         self.pub_mavlink = rospy.Publisher(
-            '/mavlink/from', MavlinkMsg, queue_size=1)
+            '/mavlink/to_gcs', MavlinkMsg, queue_size=1)
         # Subscribe ROS Message , packed and sent to GCS via MAV
-        rospy.Subscriber('/mavlink/to', MavlinkMsg, self.mav_callback)
-
+        rospy.Subscriber('/mavlink/from_gcs', MavlinkMsg, self.mav_callback)
+        # Publisher MAV Mission to Mission Manager
+        self.pub_mission = rospy.Publisher(
+            '/mavlink/mission', MavlinkMsg, queue_size=1)
+        # Publisher MAV Command to Command Manager
+        self.pub_command = rospy.Publisher(
+            '/mavlink/command', MavlinkMsg, queue_size=1)
         # dummy file
         dummyfile = {}
         # Link to MAV Software
         self.mav = mavlink.MAVLink(dummyfile, srcSystem=1, srcComponent=10)
-        # Map function
+        # override send function
         self.mav.send = self.mavsend
         # Params Set
         self.debug_read = True
         self.debug_blacklist = []
 
+
     def mav_callback(self, data, debug=False):
-        pass
-    #     '''Callback from ROS Side to send message to GCS'''
-    #     buff = mavros.convert_to_bytes(data)
-    #     mavmsg = self.mav.decode(buff)
-    #     mavmsg_type = mavmsg.get_type()
+        '''Callback from ROS Side receive message from GCS'''
+        buff = mavros.convert_to_bytes(data)
+        mavmsg = self.mav.decode(buff)
+        mavmsg_type = mavmsg.get_type()
 
-    #     # Send MAV message to each corresponding converter type
-    #     if mavmsg_type.startswith("MISSION_"):
-    #         # Require inheritance to gcs_waypoint class
-    #         print "mission_ received"
-    #         #self.mission_manager(mavmsg)
-    #     elif mavmsg_type.startswith("COMMAND_"):
-    #         # Require inheritance to gcs_bridge class
-    #         #self.command_manager(mavmsg)
-    #         print "command_ received"
+        # Send MAV message to each corresponding converter type
+        if mavmsg_type.startswith("MISSION_"):
+            # Require inheritance to gcs_waypoint class
+            print "mission_ received"
+            self.pub_mission.publish(data)#self.mission_manager(mavmsg)
 
-    #     if mavmsg_type not in self.debug_blacklist:
-    #         print "<<<"
-    #         print mavmsg
-    #         print
+        elif mavmsg_type.startswith("COMMAND_"):
+            # Require inheritance to gcs_bridge class
+            print "command_ received"
+            self.pub_command.publish(data)#self.command_manager(mavmsg)
+
+        if mavmsg_type not in self.debug_blacklist:
+            print "<<RECEIVING<<"
+            print mavmsg
+            print
 
     def mavsend(self, mavmsg, force_mavlink1=False):
         '''
         (Override send function of mavros)
-        Send GCS Command to ROS
+        Send ROS Command to GCS
         '''
-
-        print mavmsg
+        #print mavmsg
         buff = mavmsg.pack(self.mav)
         self.mav.seq = (self.mav.seq + 1) % 256
-
         rosmsg = mavros.convert_to_rosmsg(mavmsg)
-
-        # mavmsg_type = mavmsg.get_type()
-
-        # if mavmsg_type not in self.debug_blacklist:
-        #     print ">>>"
-        #     print mavmsg
-        #     print
         self.pub_mavlink.publish(rosmsg)
-
-    def heartbeat_send(self):
-        type = 2#mavlink.MAV_TYPE_GROUND_ROVER#MAV_TYPE_SUBMARINE
-        autopilot = mavlink.MAV_AUTOPILOT_GENERIC_WAYPOINTS_ONLY
-
-        base_mode = mavlink.MAV_MODE_FLAG_SAFETY_ARMED
-        base_mode |= mavlink.MAV_MODE_FLAG_GUIDED_ENABLED
-        base_mode |= mavlink.MAV_MODE_FLAG_AUTO_ENABLED
-
-        custom_mode = 0
-        system_status = mavlink.MAV_STATE_ACTIVE
-        mavlink_version = 3
-
-        self.mav.heartbeat_send(
-            type, autopilot, base_mode, custom_mode, system_status, mavlink_version)
 
 
 if __name__ == '__main__':
-    x = GcsMavlink()
+    mi = MavlinkCommunication()
+    # Set Home Position, Location calculation, Waypoint Manager
+    waypoint = MavlinkWaypointManager(mi)
+    heartbeat = MavlinkHeartbeatGenerator(mi)
+    # Data from Robot (require Waypoint Manager)
+    telemetry = MavlinkTelemetry(mi, waypoint)
 
-    rate = rospy.Rate(10) # 10Hz
-
-    while not rospy.is_shutdown():
-        
-        x.heartbeat_send()
-
-        rate.sleep()
     rospy.spin()

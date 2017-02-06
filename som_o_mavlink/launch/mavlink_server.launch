@@ -6,7 +6,7 @@
     </node>
 
     <node pkg="som_o_mavlink" type="mavlink_interface.py" name="mavlink_interface" output="screen">
-        <remap from="/mavlink/to" to="/mavlink/from_gcs"/>
-        <remap from="/mavlink/from" to="/mavlink/to_gcs"/>
+        <!--<remap from="/mavlink/to" to="/mavlink/from_gcs"/>-->
+        <!--<remap from="/mavlink/from" to="/mavlink/to_gcs"/>-->
     </node>
 </launch>
