@@ -179,11 +179,14 @@ class MavlinkTelemetry(object):
 
         self.mav.local_position_ned_send(
             self.time_boot_ms, self.x, self.y, self.z, self.vx, self.vy, self.vz)
+        #print str(self.x) + "," + str(self.y)
 
         self.mav.global_position_int_send(
             self.time_boot_ms,
-            self.lat * 1E7,
-            self.lon * 1E7,
+            self.x *1E7,#
+            self.y *1E7,#
+            #self.lat * 1E7,
+            #self.lon * 1E7,
             self.alt * 1000,
             self.relative_alt * 1000,
             self.vx * 100,
