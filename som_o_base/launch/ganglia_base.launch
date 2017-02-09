@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <arg name="ganglia_port" default="/dev/ganglia"/>
+    <arg name="ganglia_port" default="/dev/ganglia_A700OAXH"/>
     <arg name="rplidar_port" default="/dev/rplidar"/>
 
     <!-- Initiate the SOM_O Controller ! -->
