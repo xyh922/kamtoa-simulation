@@ -3,6 +3,7 @@
     <!-- IMU Gy-86 node  -->
     <node pkg="obo_imu_gy_86" type="gy86_node" name="gy86_imu" required="true">
         <param name="port" value="/dev/ttyACM0"/>
+        <param name="broadcast_tf" value="false"/>
         <!--Out Imu/Data to Imu/Data_Raw-->
         <!--<remap from="/imu/data" to="/imu/data_raw"/>-->
     </node>
