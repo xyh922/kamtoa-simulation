@@ -1,0 +1,8 @@
+KERNEL=="ttyUSB*",
+ATTRS{product}=="FT232R USB UART", 
+ATTRS{idProduct}=="6001", 
+ATTRS{idVendor}=="0403", 
+ATTRS{serial}=="A700OAXH",
+MODE="666", 
+GROUP="dialout",
+SYMLINK+="ganglia"

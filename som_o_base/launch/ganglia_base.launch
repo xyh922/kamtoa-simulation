@@ -1,11 +1,19 @@
 <?xml version="1.0"?>
 <launch>
+
+    <arg name="ganglia_port" default="/dev/ganglia"/>
+    <arg name="rplidar_port" default="/dev/rplidar"/>
+
     <!-- Initiate the SOM_O Controller ! -->
-    <include file="$(find som_o_base)/launch/config/ganglia_motor_driver.launch"/>
+    <include file="$(find som_o_base)/launch/config/ganglia_motor_driver.launch">
+        <arg name="ganglia_port" value="$(arg ganglia_port)"/>
+    </include>
     <!-- Transformation on Robot , Sensor Placement -->
     <include file="$(find som_o_base)/launch/config/tf_static.launch"/>
     <!-- RP-Lidar Node  -->
-    <include file="$(find som_o_base)/launch/config/rplidar.launch"/>
+    <include file="$(find som_o_base)/launch/config/rplidar.launch">
+        <arg name="rplidar_port" value="$(arg rplidar_port)"/>
+    </include>
     <!-- Laser filter Node  -->
     <include file="$(find som_o_base)/launch/config/laser_filters.launch"/>
     <!-- Gy-86 IMU and Magnetometer -->

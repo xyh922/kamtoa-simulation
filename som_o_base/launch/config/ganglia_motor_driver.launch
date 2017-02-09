@@ -1,8 +1,11 @@
 <?xml version="1.0"?>
+
 <launch>
+    <arg name="ganglia_port" default="/dev/ttyUSB0"/>
+    
     <node pkg="hgr_ganglia" type="hgr_ganglia" name="hgr_ganglia_driver" output="screen">
         <param name="max_effort" type="int" value="10000"/>
-        <param name="port" type="string" value="/dev/ttyUSB1"/>
+        <param name="port" type="string" value="$(arg ganglia_port)"/>
         <param name="publish_tf" type="boolean" value="False"/>
         <param name="wheel_saparation_multiplier" type="double" value="1.0"/>
     </node>
