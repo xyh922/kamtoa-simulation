@@ -11,10 +11,14 @@ from mavros import mavlink as mavros
 import rospy
 from mavros_msgs.msg import Mavlink as MavlinkMsg
 from pymavlink.dialects.v10 import common as mavlink
+from nav_msgs.msg import Odometry
 
-from mavlink_heartbeat import MavlinkHeartbeatGenerator
-from mavlink_telemetry import MavlinkTelemetry
-from mavlink_waypoint_manager import MavlinkWaypointManager
+# from mavlink_heartbeat import MavlinkHeartbeatGenerator
+# from mavlink_telemetry import MavlinkTelemetry
+from mavlink_mission_manager import MavlinkMissionManager
+from mavlink_waypoint import MavlinkWaypoint
+from mavlink_executor import MavlinkExecutor
+from mavlink_command_manager import MavlinkCommandManager
 ##############################################################################
 # Class
 ##############################################################################
@@ -25,7 +29,7 @@ class MavlinkCommunication(object):
     Input : ROS-MAV-MSG from GCS_BRIDGE
     '''
     def __init__(self):
-        rospy.loginfo("[interface] init MavLink Main Communication !!")
+        rospy.loginfo("[MAV] Mavlink Communication Interface Ready !")
         try:
             rospy.init_node("gcs_mavlink")
         except:
@@ -58,6 +62,7 @@ class MavlinkCommunication(object):
         buff = mavros.convert_to_bytes(data)
         mavmsg = self.mav.decode(buff)
         mavmsg_type = mavmsg.get_type()
+        mavdict = mavmsg.to_dict()
 
         # Send MAV message to each corresponding converter type
         if mavmsg_type.startswith("MISSION_"):
@@ -68,10 +73,11 @@ class MavlinkCommunication(object):
         elif mavmsg_type.startswith("COMMAND_"):
             # Require inheritance to gcs_bridge class
             print "command_ received"
+            print "command=== : " + str(mavmsg_type)
             self.pub_command.publish(data)#self.command_manager(mavmsg)
 
         if mavmsg_type not in self.debug_blacklist:
-            print "<<RECEIVING<<"
+            print "<<RECEIVING FROM GCS<<"
             print mavmsg
             print
 
@@ -86,13 +92,21 @@ class MavlinkCommunication(object):
         rosmsg = mavros.convert_to_rosmsg(mavmsg)
         self.pub_mavlink.publish(rosmsg)
 
+class MavlinkStatusManager(object):
+    def __init__(self):
+        self.state = Odometry()
 
 if __name__ == '__main__':
+    N = MavlinkStatusManager()
+    # Main MAV Communication handler
     mi = MavlinkCommunication()
+    # Centralized Waypoint Data
+    waypoint = MavlinkWaypoint()
+    # Mission Executor - Waypoint follower
+    executor = MavlinkExecutor(mi, waypoint,N)
     # Set Home Position, Location calculation, Waypoint Manager
-    waypoint = MavlinkWaypointManager(mi)
-    heartbeat = MavlinkHeartbeatGenerator(mi)
-    # Data from Robot (require Waypoint Manager)
-    telemetry = MavlinkTelemetry(mi, waypoint)
+    mission_manager = MavlinkMissionManager(mi, waypoint)
+    # Command receive and sending 
+    command_manager = MavlinkCommandManager(mi,N,waypoint,executor)
 
     rospy.spin()
