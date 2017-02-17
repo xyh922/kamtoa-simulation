@@ -103,9 +103,9 @@ class MavlinkExecutor(object):
         x, y, z = wp.location_diff(self.waypoints.home)
         #x, y, z = wp.location_diff(self.waypoints.home)
 
-        x /= 10000
-        y /= 10000
-        z /= 10000
+        x /= 10000 #
+        y /= 10000 #
+        z /= 10000 #
 
         rosmsg = PoseStamped()
 

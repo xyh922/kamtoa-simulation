@@ -54,7 +54,7 @@ class MavlinkRobotOdometry(object):
         self.status_manager.state = data
         self.odom = data
         position = self.odom.pose.pose.position
-        self.x, self.y, self.z = position.x, - position.y, position.z
+        self.x, self.y, self.z = position.x, - position.y, position.z #
         ang = euler_from_quaternion(data.pose.pose.orientation)
         self.roll, self.pitch, self.yaw = ang
         self.vx, self.vy, self.vz, self.rollspeed, self.pitchspeed, self.yawspeed = ttl(
