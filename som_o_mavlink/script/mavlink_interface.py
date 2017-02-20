@@ -67,10 +67,10 @@ class MavlinkCommunication(object):
         mavmsg = self.mav.decode(buff)
         mavmsg_type = mavmsg.get_type()
         mavdict = mavmsg.to_dict()
-        if('target_component' in mavdict.keys() and 'target_system' in mavdict.keys()) :
-            component_id_ = mavdict['target_component']
+        if('target_system' in mavdict.keys()) :
             system_id_ = mavdict['target_system']
-            if self.component_id == component_id_ and self.system_id == system_id_:
+            print  " " + str(system_id_)
+            if self.system_id == system_id_:
                 # Send MAV message to each corresponding converter type
                 if mavmsg_type.startswith("MISSION_"):
                     # Require inheritance to gcs_waypoint class
