@@ -34,6 +34,9 @@ class MavlinkCommunication(object):
             rospy.init_node("gcs_mavlink")
         except:
             pass
+        # get the component id and system id of this client
+        self.component_id = rospy.get_param('~component_id', "10")
+        self.system_id = rospy.get_param('~system_id', "1")
 
         # Publisher MAV messages from GCS to ROS
         self.pub_mavlink = rospy.Publisher(
@@ -49,7 +52,7 @@ class MavlinkCommunication(object):
         # dummy file
         dummyfile = {}
         # Link to MAV Software
-        self.mav = mavlink.MAVLink(dummyfile, srcSystem=1, srcComponent=10)
+        self.mav = mavlink.MAVLink(dummyfile, srcSystem= self.system_id , srcComponent=self.component_id)
         # override send function
         self.mav.send = self.mavsend
         # Params Set
@@ -59,27 +62,31 @@ class MavlinkCommunication(object):
 
     def mav_callback(self, data, debug=False):
         '''Callback from ROS Side receive message from GCS'''
+
         buff = mavros.convert_to_bytes(data)
         mavmsg = self.mav.decode(buff)
         mavmsg_type = mavmsg.get_type()
         mavdict = mavmsg.to_dict()
+        if('target_component' in mavdict.keys() and 'target_system' in mavdict.keys()) :
+            component_id_ = mavdict['target_component']
+            system_id_ = mavdict['target_system']
+            if self.component_id == component_id_ and self.system_id == system_id_:
+                # Send MAV message to each corresponding converter type
+                if mavmsg_type.startswith("MISSION_"):
+                    # Require inheritance to gcs_waypoint class
+                    print "mission_ received"
+                    self.pub_mission.publish(data)
 
-        # Send MAV message to each corresponding converter type
-        if mavmsg_type.startswith("MISSION_"):
-            # Require inheritance to gcs_waypoint class
-            print "mission_ received"
-            self.pub_mission.publish(data)#self.mission_manager(mavmsg)
+                elif mavmsg_type.startswith("COMMAND_"):
+                    # Require inheritance to gcs_bridge class
+                    print "command_ received"
+                    print "command=== : " + str(mavmsg_type)
+                    self.pub_command.publish(data)
 
-        elif mavmsg_type.startswith("COMMAND_"):
-            # Require inheritance to gcs_bridge class
-            print "command_ received"
-            print "command=== : " + str(mavmsg_type)
-            self.pub_command.publish(data)#self.command_manager(mavmsg)
-
-        if mavmsg_type not in self.debug_blacklist:
-            print "<<RECEIVING FROM GCS<<"
-            print mavmsg
-            print
+                if mavmsg_type not in self.debug_blacklist:
+                    print "<<RECEIVING FROM GCS<<"
+                    print mavmsg
+                    print
 
     def mavsend(self, mavmsg, force_mavlink1=False):
         '''
@@ -97,16 +104,16 @@ class MavlinkStatusManager(object):
         self.state = Odometry()
 
 if __name__ == '__main__':
-    N = MavlinkStatusManager()
+    status = MavlinkStatusManager()
     # Main MAV Communication handler
     mi = MavlinkCommunication()
     # Centralized Waypoint Data
     waypoint = MavlinkWaypoint()
     # Mission Executor - Waypoint follower
-    executor = MavlinkExecutor(mi, waypoint,N)
+    executor = MavlinkExecutor(mi, waypoint, status)
     # Set Home Position, Location calculation, Waypoint Manager
     mission_manager = MavlinkMissionManager(mi, waypoint)
     # Command receive and sending 
-    command_manager = MavlinkCommandManager(mi,N,waypoint,executor)
+    command_manager = MavlinkCommandManager(mi, status, waypoint, executor)
 
     rospy.spin()
