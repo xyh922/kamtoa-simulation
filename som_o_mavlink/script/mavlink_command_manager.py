@@ -63,3 +63,4 @@ class MavlinkCommandManager(object):
                     self.mav.command_ack_send(mavmsg.command, mavlink.MAV_RESULT_ACCEPTED)
                     print "trying to disarm"
                     self.robot_heart.base_mode = mavlink.MAV_MODE_AUTO_DISARMED
+                    self.robot_executor.mission_stop()

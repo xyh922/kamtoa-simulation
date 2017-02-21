@@ -77,13 +77,17 @@ class MavlinkExecutor(object):
 
         wp = self.mission_waypoints[seq]
         goal = self.get_ros_pose_msg(wp)
-        
+
         print "GOAL ===="
         print goal
         print ""
 
         self.pub_goal.publish(goal)
         self.mav.mission_current_send(self.mission_current_wp)
+
+    def mission_stop(self):
+        self.pub_goal_cal.publish(GoalID())
+
 
     def mission_start(self, waypoints=None):
         print "MISSION START !!!!! with waypoints : " + str(len(self.mission_waypoints))
