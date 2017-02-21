@@ -1,0 +1,8 @@
+<class_libraries>
+	<library path="lib/libgradient_layer_lib">
+	 <class type="costmap_2d::GradientLayer"  base_class_type="costmap_2d::Layer">
+	    <description>Inflates obstacles to speed collision checking and to make robot prefer to stay away from obstacles. Minimum cost more than 0</description>
+	 </class>
+	</library>
+</class_libraries>
+

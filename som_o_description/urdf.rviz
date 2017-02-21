@@ -5,6 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Path1
+        - /Global Costmap1
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.625
@@ -185,7 +187,7 @@ Visualization Manager:
       Buffer Length: 1
       Class: rviz/Path
       Color: 255; 255; 0
-      Enabled: true
+      Enabled: false
       Head Diameter: 0.150000006
       Head Length: 0.300000012
       Length: 0.300000012
@@ -202,14 +204,14 @@ Visualization Manager:
       Shaft Length: 0.300000012
       Topic: /move_base/DWAPlannerROS/local_plan
       Unreliable: false
-      Value: true
+      Value: false
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
       Color: 255; 0; 0
       Enabled: true
-      Head Diameter: 0.300000012
-      Head Length: 0.200000003
+      Head Diameter: 0
+      Head Length: 0
       Length: 0.300000012
       Line Style: Billboards
       Line Width: 0.0299999993
@@ -218,7 +220,7 @@ Visualization Manager:
         X: 0
         Y: 0
         Z: 0
-      Pose Style: None
+      Pose Style: Arrows
       Radius: 0.0299999993
       Shaft Diameter: 0.100000001
       Shaft Length: 0.100000001
@@ -245,13 +247,13 @@ Visualization Manager:
       Value: false
     - Alpha: 0.699999988
       Class: rviz/Map
-      Color Scheme: map
+      Color Scheme: costmap
       Draw Behind: true
-      Enabled: false
+      Enabled: true
       Name: Global Costmap
       Topic: /move_base/global_costmap/costmap
       Unreliable: false
-      Value: false
+      Value: true
     - Class: rviz/TF
       Enabled: true
       Frame Timeout: 15

@@ -26,6 +26,7 @@
     <rosparam file="$(find som_o_navigation)/param/$(arg robot)/move_base_params.yaml" command="load" />
 
     <!-- Global Planner-->
+	<!-- <param name="base_global_planner" value="RAstar_planner/RAstarPlannerROS"/>     <rosparam file="$(find som_o_navigation)/param/$(arg robot)/planner/global_planner_params.yaml" command="load" /> -->
     <rosparam file="$(find som_o_navigation)/param/$(arg robot)/planner/global_planner_params.yaml" command="load" />
     <rosparam file="$(find som_o_navigation)/param/$(arg robot)/planner/navfn_global_planner_params.yaml" command="load" />
 

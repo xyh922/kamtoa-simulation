@@ -1,0 +1,5 @@
+<library path="lib/libkamtoa_global_planner">
+ <class name="kamtoa_planner/KamtoaGlobalPlanner" type="kamtoa_planner::KamtoaGlobalPlanner" base_class_type="nav_core::BaseGlobalPlanner">
+   <description>This is kamtoa global planner plugin by obodroid project.</description>
+ </class>
+</library>
