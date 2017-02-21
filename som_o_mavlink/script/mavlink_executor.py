@@ -116,7 +116,7 @@ class MavlinkExecutor(object):
         rosmsg.pose.position.y = -y  # revert axis
 
         rosmsg.pose.position.z = z
-        print wp
+        # print wp
 
         direction = map(lambda x, y: x - y, to_list(rosmsg.pose.position),
                         to_list(self.status_manager.state.pose.pose.position))

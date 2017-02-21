@@ -42,7 +42,6 @@ class MavlinkRobotOdometry(object):
         self.lon = self.home.lng
         self.alt = self.home.alt
         self.relative_alt = 0
-        self.hdg = 0
         # Initial Telemetry
         self.rate = 20.0
         self.tele_setup()
@@ -59,11 +58,10 @@ class MavlinkRobotOdometry(object):
         self.roll, self.pitch, self.yaw = ang
         self.vx, self.vy, self.vz, self.rollspeed, self.pitchspeed, self.yawspeed = ttl(
             data.twist.twist)
-        self.yaw = self.yaw  #- radians(180)
+        self.yaw = self.yaw  #- radians(78) #offset
         self.yaw = (4 * pi - self.yaw) % (2 * pi)
         self.groundspeed = self.vx
         self.heading = degrees(self.yaw)
-        self.hdg = self.heading
         self.relative_alt = self.z
         self.climb = self.vz
 
@@ -103,24 +101,26 @@ class MavlinkRobotOdometry(object):
 
         self.mav.local_position_ned_send(
             self.time_boot_ms, self.x, self.y, self.z, self.vx, self.vy, self.vz)
-        #print str(self.x) + "," + str(self.y)
 
         self.mav.global_position_int_send(
             self.time_boot_ms,
-            self.x *1E7,#
-            self.y *1E7,#
-            #self.lat * 1E7,
-            #self.lon * 1E7,
+            (self.home.lat + 5*self.home.offset_from_meter_lat(self.x) )*1E7,##self.lat * 1E7,
+            (self.home.lng + 5*self.home.offset_from_meter_long(self.y) )*1E7,##self.lon * 1E7,          
             self.alt * 1000,
             self.relative_alt * 1000,
             self.vx * 100,
             self.vy * 100,
             self.vz * 100,
-            self.hdg * 100)
-
+            self.heading* 100)
         # TO DO :  255, 255, 255, 255, 255
-        self.mav.gps_raw_int_send(self.time_boot_ms * 1000, 3, self.lat *
-                                  1E7, self.lon * 1E7, self.alt * 1000, 255, 255, 255, 255, 255)
+        
+        self.mav.gps_raw_int_send(
+            self.time_boot_ms * 1000, 
+            3, 
+            self.lat*1E7, 
+            self.lon*1E7, 
+            self.alt * 1000, 
+            255, 255, 255, 255, 255)
 
 
     def send_init_information(self, event=None):

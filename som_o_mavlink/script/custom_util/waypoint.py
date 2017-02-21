@@ -54,6 +54,22 @@ class Waypoint(object):
                 z,
         )
 
+    def offset_from_meter_lat(self,x):
+        '''
+        Calculate Lat from X,Y with respect to Home Position
+        Assume x,y = 0,0 is Home Location
+        '''
+        lat_offset_from_x  = x / self.LOCATION_SCALING_FACTOR
+        return lat_offset_from_x
+
+    def offset_from_meter_long(self,y):
+        '''
+        Calculate Long from X,Y with respect to Home Position
+        Assume x,y = 0,0 is Home Location
+        '''
+        long_offset_from_y = y / self.LOCATION_SCALING_FACTOR
+        return long_offset_from_y
+
     @staticmethod
     def longitude_scale(loc):
         scale = cos(radians(loc.lat))
