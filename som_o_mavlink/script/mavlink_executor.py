@@ -107,9 +107,9 @@ class MavlinkExecutor(object):
         x, y, z = wp.location_diff(self.waypoints.home)
         #x, y, z = wp.location_diff(self.waypoints.home)
 
-        x /= 10000 #
-        y /= 10000 #
-        z /= 10000 #
+        x /= 5 #
+        y /= 5 #
+        z = 0 #
 
         rosmsg = PoseStamped()
 
@@ -119,7 +119,7 @@ class MavlinkExecutor(object):
         rosmsg.pose.position.x = x
         rosmsg.pose.position.y = -y  # revert axis
 
-        rosmsg.pose.position.z = z
+        rosmsg.pose.position.z = 0
         # print wp
 
         direction = map(lambda x, y: x - y, to_list(rosmsg.pose.position),
