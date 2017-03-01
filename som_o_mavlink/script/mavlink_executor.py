@@ -104,12 +104,9 @@ class MavlinkExecutor(object):
 
     def get_ros_pose_msg(self, wp):
 
-        x, y, z = wp.location_diff(self.waypoints.home)
-        #x, y, z = wp.location_diff(self.waypoints.home)
-
-        x /= 5 #
-        y /= 5 #
-        z = 0 #
+        x = wp.lat
+        y = wp.lng
+        z = 0
 
         rosmsg = PoseStamped()
 
@@ -117,7 +114,7 @@ class MavlinkExecutor(object):
         rosmsg.header.frame_id = "odom"
 
         rosmsg.pose.position.x = x
-        rosmsg.pose.position.y = -y  # revert axis
+        rosmsg.pose.position.y = y  # revert axis
 
         rosmsg.pose.position.z = 0
         # print wp

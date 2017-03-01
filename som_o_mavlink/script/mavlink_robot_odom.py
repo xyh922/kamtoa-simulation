@@ -104,8 +104,8 @@ class MavlinkRobotOdometry(object):
 
         self.mav.global_position_int_send(
             self.time_boot_ms,
-            (self.home.lat + 5*self.home.offset_from_meter_lat(self.x) )*1E7,##self.lat * 1E7,
-            (self.home.lng + 5*self.home.offset_from_meter_long(self.y) )*1E7,##self.lon * 1E7,          
+            self.x*1E7,#(self.home.lat + 5*self.home.offset_from_meter_lat(self.x) )*1E7,##self.lat * 1E7,
+            self.y*1E7,#(self.home.lng + 5*self.home.offset_from_meter_long(self.y) )*1E7,##self.lon * 1E7,          
             self.alt * 1000,
             self.relative_alt * 1000,
             self.vx * 100,
@@ -117,8 +117,8 @@ class MavlinkRobotOdometry(object):
         self.mav.gps_raw_int_send(
             self.time_boot_ms * 1000, 
             3, 
-            self.lat*1E7, 
-            self.lon*1E7, 
+            self.x*1E7, 
+            self.y*1E7, 
             self.alt * 1000, 
             255, 255, 255, 255, 255)
 
