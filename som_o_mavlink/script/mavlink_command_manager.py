@@ -28,7 +28,7 @@ class MavlinkCommandManager(object):
         self.status_manager = StatusManager
         # Robot Odometry to send odometry periodically
         self.robot_odom = MavlinkRobotOdometry(SingletonMavlinkInterface,WaypointContainer,StatusManager)
-        # Robot Heartbeat 
+        # Robot Heartbeat (Set Status Flag)
         self.robot_heart = MavlinkHeartbeatGenerator(SingletonMavlinkInterface)
         # Robot Mission Executor class pointer
         self.robot_executor = Executor
@@ -46,11 +46,11 @@ class MavlinkCommandManager(object):
         mavmsg = self.mav.decode(buff)
         mavmsg_type = mavmsg.get_type()
         if mavmsg_type == "COMMAND_LONG":
-            # Initial
+            # Initial Command
             if mavmsg.command == mavlink.MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES:
                 self.robot_odom.send_init_information()
+            #ARM/DISARM
             if mavmsg.command == mavlink.MAV_CMD_COMPONENT_ARM_DISARM:
-                #ARM/DISARM
                 if mavmsg.param1 == 1:
                     #  def command_ack_send(self, command, result, force_mavlink1=False):
                     self.mav.command_ack_send(mavmsg.command, mavlink.MAV_RESULT_ACCEPTED)

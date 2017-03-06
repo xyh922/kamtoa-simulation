@@ -60,14 +60,14 @@ class MavlinkExecutor(object):
 
     def mission_wp_reached(self, msg):
 
-        print msg.status
+        rospy.loginfo("[MAV] Waypoint reached : " + msg.status)
         if msg.status.status == 2:  # canceled
             return
 
         self.mav.mission_item_reached_send(self.mission_current_wp)
         has_next = self.mission_wp_next()  # do next mission
         if not has_next:
-            rospy.loginfo("Mission finish !!")
+            rospy.loginfo("[MAV] Mission finish !!")
 
     def mission_copy_from(self):
         print "Copy from " + str(len(self.waypoints.wp_waypoints))
@@ -78,9 +78,7 @@ class MavlinkExecutor(object):
         wp = self.mission_waypoints[seq]
         goal = self.get_ros_pose_msg(wp)
 
-        print "GOAL ===="
-        print goal
-        print ""
+        rospy.loginfo("[MAV] Going to goal : "+str(seq)+" : " + str(wp.lat) + "," + str(wp.lng)); 
 
         self.pub_goal.publish(goal)
         self.mav.mission_current_send(self.mission_current_wp)
@@ -90,7 +88,7 @@ class MavlinkExecutor(object):
 
 
     def mission_start(self, waypoints=None):
-        print "MISSION START !!!!! with waypoints : " + str(len(self.mission_waypoints))
+        rospy.loginfo("[MAV] ARMED - Mission start with waypoint counts : " + str(len(self.mission_waypoints)))
         if waypoints:
             self.mission_waypoint_set(waypoints)
 

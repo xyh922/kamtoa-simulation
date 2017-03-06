@@ -13,8 +13,6 @@ from mavros_msgs.msg import Mavlink as MavlinkMsg
 from pymavlink.dialects.v10 import common as mavlink
 from nav_msgs.msg import Odometry
 
-# from mavlink_heartbeat import MavlinkHeartbeatGenerator
-# from mavlink_telemetry import MavlinkTelemetry
 from mavlink_mission_manager import MavlinkMissionManager
 from mavlink_waypoint import MavlinkWaypoint
 from mavlink_executor import MavlinkExecutor
@@ -38,10 +36,10 @@ class MavlinkCommunication(object):
         self.component_id = rospy.get_param('~component_id', "10")
         self.system_id = rospy.get_param('~system_id', "1")
 
-        # Publisher MAV messages from GCS to ROS
+        # Publisher MAV messages to GCS 
         self.pub_mavlink = rospy.Publisher(
             '/mavlink/to_gcs', MavlinkMsg, queue_size=1)
-        # Subscribe ROS Message , packed and sent to GCS via MAV
+        # Subscribe ROS Message which received from GCS
         rospy.Subscriber('/mavlink/from_gcs', MavlinkMsg, self.mav_callback)
         # Publisher MAV Mission to Mission Manager
         self.pub_mission = rospy.Publisher(
@@ -51,7 +49,7 @@ class MavlinkCommunication(object):
             '/mavlink/command', MavlinkMsg, queue_size=1)
         # dummy file
         dummyfile = {}
-        # Link to MAV Software
+        # Create link to MAV Software
         self.mav = mavlink.MAVLink(dummyfile, srcSystem= self.system_id , srcComponent=self.component_id)
         # override send function
         self.mav.send = self.mavsend
