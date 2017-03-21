@@ -43,7 +43,7 @@ class MavlinkRobotOdometry(object):
         self.alt = self.home.alt
         self.relative_alt = 0
         # Initial Telemetry
-        self.rate = 20.0
+        self.rate = 10#20.0
         self.tele_setup()
 
     def odometry_callback(self, data, debug=False):

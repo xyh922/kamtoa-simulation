@@ -25,7 +25,8 @@ class MavlinkHeartbeatGenerator(object):
         # Default state
         self.state = mavlink.MAV_STATE_ACTIVE
         # Default MODE
-        self.base_mode = mavlink.MAV_MODE_AUTO_DISARMED #armed
+        #self.base_mode = mavlink.MAV_MODE_AUTO_DISARMED #armed
+        self.base_mode = mavlink.MAV_MODE_GUIDED_DISARMED
         # self.base_mode |= mavlink.MAV_MODE_FLAG_GUIDED_ENABLED
         # self.base_mode |= mavlink.MAV_MODE_FLAG_AUTO_ENABLED
 

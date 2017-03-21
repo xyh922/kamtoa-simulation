@@ -64,3 +64,6 @@ class MavlinkCommandManager(object):
                     print "trying to disarm"
                     self.robot_heart.base_mode = mavlink.MAV_MODE_AUTO_DISARMED
                     self.robot_executor.mission_stop()
+            #GETCURRENTWAYPOINT
+            #SETPOINT(TELEOP)
+            #OPENVIDSTREAM/CLOSEVIDSTREAM

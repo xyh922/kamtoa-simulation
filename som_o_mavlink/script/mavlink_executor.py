@@ -60,7 +60,7 @@ class MavlinkExecutor(object):
 
     def mission_wp_reached(self, msg):
 
-        rospy.loginfo("[MAV] Waypoint reached : " + msg.status)
+        rospy.loginfo("[MAV] Waypoint reached status ENUM : " + str(msg.status.status))
         if msg.status.status == 2:  # canceled
             return
 
