@@ -1,6 +1,6 @@
 <launch>
     <node pkg="som_o_mavlink" type="mavlink_interface.py" name="mavlink_interface" output="screen">
         <param name="component_id" value="190" />
-        <param name="system_id" value="2" />
+        <param name="system_id" value="1" />
     </node>
 </launch>

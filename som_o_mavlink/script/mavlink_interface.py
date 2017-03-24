@@ -39,7 +39,7 @@ class MavlinkCommunication(object):
 
         # Publisher MAV messages to GCS
         self.pub_mavlink = rospy.Publisher(
-            '/mavlink/to_gcs', MavlinkMsg, queue_size=1)
+            '/mavlink/to_gcs', MavlinkMsg, queue_size=10)
         # Subscribe ROS Message which received from GCS
         rospy.Subscriber('/mavlink/from_gcs', MavlinkMsg, self.mav_callback)
         # Publisher MAV Mission to Mission Manager
