@@ -1,0 +1,13 @@
+<launch>
+    <node pkg="mavros" type="gcs_bridge" name="bridge_to_GCS" output="screen">
+        <param name="gcs_url" value="udp://127.0.0.1:14550@127.0.0.1:14555" />
+	<!--<param name="gcs_url" value="udp://192.168.1.3:14550@192.168.1.121:14550" />-->
+        <remap from="/mavlink/to" to="/mavlink/from_gcs"/>
+        <remap from="/mavlink/from" to="/mavlink/to_gcs"/>
+    </node>
+
+    <node pkg="som_o_mavlink" type="mavlink_interface.py" name="mavlink_interface" output="screen">
+        <param name="component_id" value="190" />
+        <param name="system_id" value="2" />
+    </node>
+</launch>

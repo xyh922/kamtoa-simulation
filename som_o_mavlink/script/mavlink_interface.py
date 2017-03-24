@@ -69,10 +69,9 @@ class MavlinkCommunication(object):
         mavmsg = self.mav.decode(buff)
         mavmsg_type = mavmsg.get_type()
         mavdict = mavmsg.to_dict()
-
-        if 'target_system' in mavdict.keys() :
+        # Command and mission Message Receiving
+        if 'target_system' in mavdict.keys():
             system_id_ = mavdict['target_system']
-            print  " " + str(system_id_)
             # Match ID
             if self.system_id == system_id_:
                 # Send MAV message to each corresponding converter type
@@ -86,45 +85,24 @@ class MavlinkCommunication(object):
                     print "command_ received"
                     print "command=== : " + str(mavmsg_type)
                     self.pub_command.publish(data)
-                if mavmsg_type not in self.debug_blacklist:
-                    print "<<RECEIVING FROM GCS<<"
-                    print mavmsg
-                    print
+                
+        # Manual control Message receiving
         if 'target' in mavdict.keys():
             system_id_ = mavdict['target']
-            print  " " + str(system_id_)
             # Match ID
             if self.system_id == system_id_:
                 if mavmsg_type.startswith("MANUAL_CONTROL"):
                     # Reference common.py 3922 MANUAL_CONTROL
-                    linear = float(mavdict['x'])/1000
-                    angular = float(mavdict['r'])/1000
                     cmd = geometry_msgs.msg.Twist()
-                    cmd.linear.x = linear
-                    cmd.angular.z = angular
-                    print "Linear : " + str(linear) + "Angular : " + str(angular)
+                    cmd.linear.x = float(mavdict['x'])/1000
+                    cmd.angular.z = float(mavdict['r'])/1000
                     self.pub_cmd_vel.publish(cmd)
-                    # class MAVLink_manual_control_message(MAVLink_message):
-                    # '''
-                    # This message provides an API for manually controlling the
-                    # vehicle using standard joystick axes nomenclature, along with
-                    # a joystick-like input device. Unused axes can be disabled an
-                    # buttons are also transmit as boolean values of their
-                    # '''
-                    # id = MAVLINK_MSG_ID_MANUAL_CONTROL
-                    # name = 'MANUAL_CONTROL'
-                    # fieldnames = ['target', 'x', 'y', 'z', 'r', 'buttons'] DICT
-                    # ordered_fieldnames = [ 'x', 'y', 'z', 'r', 'buttons', 'target' ]
-                    # format = '<hhhhHB'
-                    # native_format = bytearray('<hhhhHB', 'ascii')
-                    # orders = [5, 0, 1, 2, 3, 4]
-                    # lengths = [1, 1, 1, 1, 1, 1]
-                    # array_lengths = [0, 0, 0, 0, 0, 0]
-                    # crc_extra = 243
-                if mavmsg_type not in self.debug_blacklist:
-                    print "<<RECEIVING FROM GCS<<"
-                    print mavmsg
-                    print
+
+        # Debugging Print
+        if mavmsg_type not in self.debug_blacklist:
+            print "<<RECEIVING FROM GCS<<"
+            print mavmsg
+            print
 
     def mavsend(self, mavmsg, force_mavlink1=False):
         '''
