@@ -11,8 +11,10 @@
 
 <launch>
     <!--Simulation -->
-    <param name ="use_sim_time" value="true" />
-
+    <param name="use_sim_time" value="true" />
+    <arg name="gui" default="true"/>
+    <!-- joint_state_publisher GUI -->
+    <param name="use_gui" value="$(arg gui)"/>
   <!-- Parameters by Console Arguments -->
   <arg name="size" default="20"/>
   <arg name="model_name" default="som_o_robot_$(arg size)cm"/>
@@ -22,13 +24,20 @@
   <!-- ROBOT Description file for RVIZ and Gazebo [Globally Set]-->
   <param name ="robot_description" command="$(find xacro)/xacro --inorder $(arg urdf_path)" />
 
+  <!-- No GUI Simulation (Simulation Server launching Mode) -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
   <!-- Initialize RVIZ for visualize sensing system -->
   <!-- use model from robot_description param-->
-  <include file="$(find som_o_description)/launch/rviz_gui.launch" />
+  <group if="$(arg gui)">
+    <include file="$(find som_o_description)/launch/rviz_gui.launch" />
+  </group>
 
   <!-- Initialize Gazebo World -->
   <include file="$(find som_o_gazebo)/launch/world.launch.xml">
       <arg name="world_name" value="$(arg world_name)"/>
+      <arg name="gui" value="$(arg gui)"/>
   </include>
 
   <!-- Spawn URDF in the gazebo world -->

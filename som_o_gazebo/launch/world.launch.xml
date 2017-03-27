@@ -17,11 +17,13 @@
     <!-- World name inherited from outer launch file calling -->
     <arg name="world_name" default="" />
 
+    <arg unless="$(arg gui)" name="server" value="gzserver"/>
+    <arg     if="$(arg gui)" name="server" value="gazebo"/>
+
   <!-- start gazebo with world -->
   <param name="/use_sim_time" value="true" />
-  <node name="gazebo" pkg="gazebo_ros" type="gazebo"
+  <node name="gazebo" pkg="gazebo_ros" type="$(arg server)"
     args="$(find som_o_gazebo)/world/$(arg world_name)"
     respawn="false" output="screen"/>
-
 
 </launch>
