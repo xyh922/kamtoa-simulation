@@ -46,7 +46,7 @@ class MavlinkRobotOdometry(object):
         self.rate = 20#20.0
         self.tele_setup()
 
-    def odometry_callback(self, data, debug=False):
+    def odometry_callback(self, data):
         '''
         Callback on Odometry receival
         '''
@@ -58,7 +58,7 @@ class MavlinkRobotOdometry(object):
         self.roll, self.pitch, self.yaw = ang
         self.vx, self.vy, self.vz, self.rollspeed, self.pitchspeed, self.yawspeed = ttl(
             data.twist.twist)
-        self.yaw = self.yaw  #- radians(78) #offset
+        self.yaw = self.yaw
         self.yaw = (4 * pi - self.yaw) % (2 * pi)
         self.groundspeed = self.vx
         self.heading = degrees(self.yaw)
@@ -73,10 +73,8 @@ class MavlinkRobotOdometry(object):
         rospy.loginfo("Tele Setup")
         self.boot_time = time()
 
-        rospy.logwarn("[MAV - Telemetry] Wait for Robot Connection")
-
+        rospy.logwarn("[MAV - Telemetry] Wait for Robot Odometry generator")
         rospy.wait_for_message('/odom', Odometry)
-        #rospy.wait_for_message('/syrena/gps/fix', NavSatFix)
 
         rospy.loginfo("[MAV - Telemetry] Robot connected !!")
         rospy.sleep(1)
@@ -86,7 +84,7 @@ class MavlinkRobotOdometry(object):
         rospy.Timer(rospy.Duration(1.0 / self.rate), self.send_information)
 
 
-    def send_information(self, event=None):
+    def send_information(self):
         '''
         Send information (POSE) to GCS
         '''
@@ -104,8 +102,10 @@ class MavlinkRobotOdometry(object):
 
         self.mav.global_position_int_send(
             self.time_boot_ms,
-            self.x*1E7,#(self.home.lat + 5*self.home.offset_from_meter_lat(self.x) )*1E7,##self.lat * 1E7,
-            self.y*1E7,#(self.home.lng + 5*self.home.offset_from_meter_long(self.y) )*1E7,##self.lon * 1E7,          
+            self.x*1E7,
+            #(self.home.lat + 5*self.home.offset_from_meter_lat(self.x) )*1E7,##self.lat * 1E7,
+            self.y*1E7,
+            #(self.home.lng + 5*self.home.offset_from_meter_long(self.y) )*1E7,##self.lon * 1E7,
             self.alt * 1000,
             self.relative_alt * 1000,
             self.vx * 100,
@@ -113,17 +113,16 @@ class MavlinkRobotOdometry(object):
             self.vz * 100,
             self.heading* 100)
         # TO DO :  255, 255, 255, 255, 255
-        
+
         self.mav.gps_raw_int_send(
-            self.time_boot_ms * 1000, 
-            3, 
-            self.x*1E7, 
-            self.y*1E7, 
-            self.alt * 1000, 
+            self.time_boot_ms * 1000,
+            3,
+            self.x*1E7,
+            self.y*1E7,
+            self.alt * 1000,
             255, 255, 255, 255, 255)
 
-
-    def send_init_information(self, event=None):
+    def send_init_information(self):
         '''
         Routine to send the initial information
         '''

@@ -54,7 +54,9 @@ class MavlinkCommunication(object):
         # dummy file
         dummyfile = {}
         # Create link to MAV Software
-        self.mav = mavlink.MAVLink(dummyfile, srcSystem= self.system_id , srcComponent=self.component_id)
+        self.mav = mavlink.MAVLink(dummyfile,
+                                   srcSystem=self.system_id,
+                                   srcComponent=self.component_id)
         # override send function
         self.mav.send = self.mavsend
         # Params Set
@@ -74,23 +76,25 @@ class MavlinkCommunication(object):
             system_id_ = mavdict['target_system']
             # Match ID
             if self.system_id == system_id_:
+                print "[MAV-INTF] Receive : " + str(mavmsg_type)
                 # Send MAV message to each corresponding converter type
                 if mavmsg_type.startswith("MISSION_"):
                     # Require inheritance to gcs_waypoint class
-                    print "mission_ received"
+                    # print "mission_ received"
                     self.pub_mission.publish(data)
 
                 elif mavmsg_type.startswith("COMMAND_"):
                     # Require inheritance to gcs_bridge class
-                    print "command_ received"
-                    print "command=== : " + str(mavmsg_type)
+                    # print "command_ received"
+                    # print "command=== : " + str(mavmsg_type)
                     self.pub_command.publish(data)
-                
+
         # Manual control Message receiving
         if 'target' in mavdict.keys():
             system_id_ = mavdict['target']
             # Match ID
             if self.system_id == system_id_:
+                print "[MAV-INTF] Receive : " + str(mavmsg_type)
                 if mavmsg_type.startswith("MANUAL_CONTROL"):
                     # Reference common.py 3922 MANUAL_CONTROL
                     cmd = geometry_msgs.msg.Twist()
@@ -99,10 +103,10 @@ class MavlinkCommunication(object):
                     self.pub_cmd_vel.publish(cmd)
 
         # Debugging Print
-        if mavmsg_type not in self.debug_blacklist:
-            print "<<RECEIVING FROM GCS<<"
-            print mavmsg
-            print
+        # if mavmsg_type not in self.debug_blacklist:
+        #     print "<<RECEIVING FROM GCS<<"
+        #     print mavmsg
+        #     print
 
     def mavsend(self, mavmsg, force_mavlink1=False):
         '''
