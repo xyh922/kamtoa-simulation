@@ -22,23 +22,23 @@ class MavlinkCommandManager(object):
     '''
     Manager for COMMAND_ Message
     '''
-    def __init__(self , SingletonMavlinkInterface, StatusManager, WaypointContainer , Executor):  
+    def __init__(self, SingletonMavlinkInterface, StatusManager, WaypointContainer, Executor):
         rospy.loginfo("[MAV] Command manager Initialized !")
         self.mav = SingletonMavlinkInterface.mav
         self.status_manager = StatusManager
         # Robot Odometry to send odometry periodically
-        self.robot_odom = MavlinkRobotOdometry(SingletonMavlinkInterface,WaypointContainer,StatusManager)
+        self.robot_odom = MavlinkRobotOdometry(SingletonMavlinkInterface,
+                                               WaypointContainer, StatusManager)
         # Robot Heartbeat (Set Status Flag)
         self.robot_heart = MavlinkHeartbeatGenerator(SingletonMavlinkInterface)
         # Robot Mission Executor class pointer
         self.robot_executor = Executor
         # Waypoints
         self.robot_waypoints = WaypointContainer
-
         # Subscribe to command received
         rospy.Subscriber('/mavlink/command', MavlinkMsg, self.command_callback)
 
-    def command_callback(self, data, debug=False):
+    def command_callback(self, data):
         '''
         Receive command
         '''
@@ -52,18 +52,26 @@ class MavlinkCommandManager(object):
             #ARM/DISARM
             if mavmsg.command == mavlink.MAV_CMD_COMPONENT_ARM_DISARM:
                 if mavmsg.param1 == 1:
-                    #  def command_ack_send(self, command, result, force_mavlink1=False):
-                    self.mav.command_ack_send(mavmsg.command, mavlink.MAV_RESULT_ACCEPTED)
                     print "trying to arm"
+                    self.mav.command_ack_send(mavmsg.command, mavlink.MAV_RESULT_ACCEPTED)
                     self.robot_heart.base_mode = mavlink.MAV_MODE_AUTO_ARMED
                     self.robot_executor.mission_copy_from()
                     self.robot_executor.mission_start()
-
                 elif mavmsg.param1 == 0:
-                    self.mav.command_ack_send(mavmsg.command, mavlink.MAV_RESULT_ACCEPTED)
                     print "trying to disarm"
+                    self.mav.command_ack_send(mavmsg.command, mavlink.MAV_RESULT_ACCEPTED)
+                    # Reset Everything
+                    self.robot_executor.mission_repeat_set(False)
                     self.robot_heart.base_mode = mavlink.MAV_MODE_AUTO_DISARMED
                     self.robot_executor.mission_stop()
             #GETCURRENTWAYPOINT
-            #SETPOINT(TELEOP)
-            #OPENVIDSTREAM/CLOSEVIDSTREAM
+            #GOT DO JUMP
+            if mavmsg.command == mavlink.MAV_CMD_DO_JUMP:
+                if mavmsg.param2 == -1:
+                    print "Do Jump Activated"
+                    # Do jump forever
+                    #jump_to_waypoint_no = mavmsg.param1
+                    self.robot_executor.mission_repeat_set(True)
+                if mavmsg.param1 == -1:
+                    print "Do Jump Deactivated"
+                    self.robot_executor.mission_repeat_set(False)

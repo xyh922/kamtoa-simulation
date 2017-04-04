@@ -12,7 +12,7 @@ class Waypoint(object):
     """
     LOCATION_SCALING_FACTOR = 111318.84502145034
 
-    def __init__(self, lat=None, lng=None, alt=None, frame=0,seq=None, rel_alt=0, mavdict=None):
+    def __init__(self, lat=None, lng=None, alt=None, frame=0,seq=None, rel_alt=0, mavdict=None, selfdict = None):
         self.lat = lat
         self.lng = lng
         self.alt = alt
@@ -32,6 +32,13 @@ class Waypoint(object):
                 self.rel_alt = mavdict["z"]
             elif self.frame == 0:
                 self.alt = mavdict["z"]
+        if selfdict:
+            self.frame = selfdict["frame"]
+            self.lat = selfdict["lat"]
+            self.lng = selfdict["lng"]
+            self.seq = selfdict["seq"]
+            self.alt = selfdict["alt"]
+            self.rel_alt = selfdict["rel_alt"]
 
 
     def __str__(self):
@@ -80,3 +87,6 @@ class Waypoint(object):
     #     return Vector2f((loc2.lat - loc1.lat) * LOCATION_SCALING_FACTOR,
     #                     (loc2.lng - loc1.lng) * LOCATION_SCALING_FACTOR * longitude_scale(loc1));
     # }
+
+    def to_dict(self):
+        return self.__dict__

@@ -8,6 +8,8 @@ Mavlink Waypoint Manager
 ##############################################################################
 # Imports
 ##############################################################################
+import json
+import os
 import rospy
 from pymavlink.dialects.v10 import common as mavlink
 from mavros_msgs.msg import Mavlink as MavlinkMsg
@@ -33,6 +35,7 @@ class MavlinkMissionManager(object):
         rospy.loginfo("[MAV] Waypoint Manager Initialized !")
 
         # Received waypoint detail
+        self.wp_file = None
         self.waypoints.wp_target_component = None
         self.waypoints.wp_target_system = None
         self.waypoints.wp_recv_seq = 0
@@ -40,7 +43,51 @@ class MavlinkMissionManager(object):
         self.waypoints.wp_manager_state = None
         self.waypoints.wp_waypoints = []
 
-    def mission_callback(self, data, debug=False):
+        # Load Last Mission
+        self.read_from_file(self.resolve_filename("waypoints.wp"))
+
+    def resolve_filename(self, relative_filename):
+        '''
+        Resolve filename to the relative path to the script
+        '''
+        script_dir = os.path.dirname(__file__)
+        rel_path = relative_filename
+        abs_file_path = os.path.join(script_dir, rel_path)
+        return abs_file_path
+
+    def write_to_file(self, filename):
+        '''
+        Write current holding waypoints to a file
+        '''
+        if len(self.waypoints.wp_waypoints) == 0:
+            return
+        # Normal Condition
+        self.wp_file = open(filename, 'w')
+        json_string = json.dumps([wp.to_dict() for wp in self.waypoints.wp_waypoints])
+        self.wp_file.write(json_string)
+        self.wp_file.close()
+
+    def read_from_file(self, filename):
+        '''
+        Read Waypoints from a file
+        '''
+        print "[MAV] Loading waypoints from file" + filename
+        with open(filename, 'r+') as self.wp_file:
+            try:
+                print "[MAV] Loading"
+                readFile = json.loads(str(self.wp_file.read())) # Got Dict json key:value
+                self.waypoints.wp_waypoints = map(lambda point : WP(selfdict = point), readFile)
+                # for point in readFile:
+                    # self.waypoints.wp_waypoints.append(WP(selfdict=point))
+                self.waypoints.wp_count = len(self.waypoints.wp_waypoints)
+                print "[MAV] Length : " + str(len(self.waypoints.wp_waypoints))
+            except ValueError:
+                print "[MAV] Error ValueError"
+                self.waypoints.wp_count = 0
+                self.waypoints.wp_waypoints = []
+        self.wp_file.close()
+
+    def mission_callback(self, data):
         '''
         Receive Mission
         '''
@@ -63,15 +110,14 @@ class MavlinkMissionManager(object):
         # While receiving Waypoints from GCS
         elif mav_type == "MISSION_ITEM":
             self.waypoints.wp_waypoints.append(WP(mavdict=mavdict))
-
             # Complete receiving mission
             if self.waypoints.wp_recv_seq == self.waypoints.wp_count:
                 self.mission_ack_send()
-                print "Finish received mission of : " + str(len(self.waypoints.wp_waypoints)) + "points"
+                print "Finish received mission of : " + str(len(self.waypoints.wp_waypoints))
+                self.write_to_file(self.resolve_filename("waypoints.wp"))
                 self.show_mission()
-
             elif self.waypoints.wp_recv_seq < self.waypoints.wp_count:
-                self.mission_request_send(self.waypoints.wp_recv_seq)  # wp_recv_seq
+                self.mission_request_send(self.waypoints.wp_recv_seq)
 
     def show_mission(self):
         '''
@@ -105,4 +151,3 @@ class MavlinkMissionManager(object):
         self.mav.mission_request_send(
             self.waypoints.wp_target_system, self.waypoints.wp_target_component, seq)
         self.waypoints.wp_recv_seq += 1
-

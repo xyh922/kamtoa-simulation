@@ -33,6 +33,6 @@ class MavlinkWaypoint(object):
         # Default home Location
         WHIZDOM_PUN = WP(13.689712, 100.606819, 113.789)
         ENG_CU = WP(13.736756, 100.533621, 113.789)
-        self.home =WHIZDOM_PUN
+        self.home = WHIZDOM_PUN
 
         #self.home = WP(0, 0, 113.789)
