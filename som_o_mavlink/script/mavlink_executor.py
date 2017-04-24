@@ -31,6 +31,7 @@ class MavlinkExecutor(object):
         self.mission_waypoints = [] # list for waypoints
         self.mission_repeat = False
         self.status_manager = StatusManager
+        self.return_to_home_call = False
 
         # Destination topics
         self.pub_goal = rospy.Publisher(
@@ -48,6 +49,7 @@ class MavlinkExecutor(object):
         '''
         # Cancle current mission
         self.mission_stop()
+        self.return_to_home_call = True
         # Set the origin point
         goal = self.get_ros_pose_msg(self.waypoints.home)
          # Reset Stats
@@ -90,6 +92,10 @@ class MavlinkExecutor(object):
         '''
         rospy.loginfo("[MAV] Waypoint reached status ENUM : " + str(msg.status.status))
         if msg.status.status == 2:  # Canceled
+            return
+
+        if self.return_to_home_call:
+            self.return_to_home_call = False
             return
 
         self.mav.mission_item_reached_send(self.mission_current_wp)
