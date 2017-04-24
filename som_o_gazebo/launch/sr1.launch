@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+    ENTRY FILE FOR LAUNCHING FULL SIMULATION
+    Company : Obodroid Corporation
+    Author : Theppasith N. <theppasith@gmail.com>
+
+    Example Run command : roslaunch gazebo_som_o.launch size:="20"
+    (For 20cm model simulation)
+
+-->
+
+<launch>
+    <!--Simulation -->
+    <param name="use_sim_time" value="true" />
+    <arg name="gui" default="true"/>
+    <!-- joint_state_publisher GUI -->
+    <param name="use_gui" value="$(arg gui)"/>
+  <!-- Parameters by Console Arguments -->
+  <arg name="version" default="version_1"/>
+  <arg name="model_name" default="sr1_version1"/>
+  <arg name="urdf_path"  default="$(find sr1_description)/urdf/$(arg version)/$(arg model_name).xacro"/>
+  <arg name="world_name" default="proj_l_mini.world"/>
+
+  <!-- ROBOT Description file for RVIZ and Gazebo [Globally Set]-->
+  <param name ="robot_description" command="$(find xacro)/xacro --inorder $(arg urdf_path)" />
+
+  <!-- No GUI Simulation (Simulation Server launching Mode) -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <!-- Initialize RVIZ for visualize sensing system -->
+  <!-- use model from robot_description param-->
+  <group if="$(arg gui)">
+    <include file="$(find som_o_description)/launch/rviz_gui.launch" />
+  </group>
+
+  <!-- Initialize Gazebo World -->
+  <include file="$(find som_o_gazebo)/launch/world.launch.xml">
+      <arg name="world_name" value="$(arg world_name)"/>
+      <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- Spawn URDF in the gazebo world -->
+  <!-- use model from robot_description param-->
+  <include file="$(find som_o_gazebo)/launch/spawner.launch.xml">
+      <arg name="model_name" value="$(arg model_name)"/>
+      <!-- Param name robot_description (global) -->
+  </include>
+
+</launch>

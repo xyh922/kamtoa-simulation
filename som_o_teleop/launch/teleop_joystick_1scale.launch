@@ -11,8 +11,8 @@
     <param name="axis_angular" value="3" type="int"/>
     <param name="button_deadman_switch" value="2" type="int"/>
 
-    <param name="scale_linear" value="0.4" type="double"/>
-    <param name="scale_angular" value="1.54" type="double"/>
+    <param name="scale_linear" value="1.8" type="double"/>
+    <param name="scale_angular" value="2.54" type="double"/>
     <param name="twist_pub_topic" type="string" value="cmd_vel"/>
 
     <!-- JOY TO COMMAND VEL -->

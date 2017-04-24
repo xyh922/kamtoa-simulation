@@ -75,3 +75,10 @@ class MavlinkCommandManager(object):
                 if mavmsg.param1 == -1:
                     print "Do Jump Deactivated"
                     self.robot_executor.mission_repeat_set(False)
+            if mavmsg.command == mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH:
+                # Go to home position (DO RETURN TO LAUNCH)
+                self.robot_executor.go_to_origin()
+        if mavmsg_type =="SET_MODE" and mavmsg.custom_mode == 6:
+            # RETURN TO LAUNCH FLAG
+            self.robot_executor.go_to_origin()
+                

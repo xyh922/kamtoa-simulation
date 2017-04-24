@@ -84,7 +84,7 @@ class MavlinkRobotOdometry(object):
         rospy.Timer(rospy.Duration(1.0 / self.rate), self.send_information)
 
 
-    def send_information(self):
+    def send_information(self, event=None):
         '''
         Send information (POSE) to GCS
         '''

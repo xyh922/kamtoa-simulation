@@ -42,6 +42,20 @@ class MavlinkExecutor(object):
         rospy.Subscriber('/move_base/result',
                          MoveBaseActionResult, self.mission_wp_reached)
 
+    def go_to_origin(self):
+        '''
+        Go back to origin position (assuming HOME)
+        '''
+        # Cancle current mission
+        self.mission_stop()
+        # Set the origin point
+        goal = self.get_ros_pose_msg(self.waypoints.home)
+         # Reset Stats
+        self.mission_current_wp = 0
+        # Issue the goal to move_base action server 
+        rospy.loginfo("[MAV] Return to Launch")
+        self.pub_goal.publish(goal)
+       
     def mission_repeat_set(self, flag):
         '''
         Set Repeat flag
@@ -96,8 +110,7 @@ class MavlinkExecutor(object):
         '''
         wp = self.mission_waypoints[seq]
         goal = self.get_ros_pose_msg(wp)
-
-        rospy.loginfo("[MAV] Going to goal : "+str(seq)+" : " + str(wp.lat) + "," + str(wp.lng)); 
+        rospy.loginfo("[MAV] Going to goal : "+str(seq)+" : " + str(wp.lat) + "," + str(wp.lng))
 
         self.pub_goal.publish(goal)
         self.mav.mission_current_send(self.mission_current_wp)

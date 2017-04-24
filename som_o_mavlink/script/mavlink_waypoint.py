@@ -31,8 +31,9 @@ class MavlinkWaypoint(object):
         self.wp_waypoints = []
 
         # Default home Location
-        WHIZDOM_PUN = WP(13.689712, 100.606819, 113.789)
-        ENG_CU = WP(13.736756, 100.533621, 113.789)
-        self.home = WHIZDOM_PUN
+        self.whizdom_pun = WP(13.689712, 100.606819, 113.789)
+        self.cu_origin = WP(13.736756, 100.533621, 113.789)
+        self.zero_origin = WP(0, 0, 0)
+        self.home = self.zero_origin
 
         #self.home = WP(0, 0, 113.789)
