@@ -13,8 +13,8 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from move_base_msgs.msg import MoveBaseActionResult
 from actionlib_msgs.msg import GoalID
-
 from custom_util.utils import get_yaw_from_direction, to_list, quaternion_from_euler
+from custom_util.movebasestatus import MoveBaseActionResultEnum
 ##############################################################################
 # Class
 ##############################################################################
@@ -55,7 +55,7 @@ class MavlinkExecutor(object):
          # Reset Stats
         self.mission_current_wp = 0
         # Issue the goal to move_base action server 
-        rospy.loginfo("[MAV] Return to Launch")
+        rospy.loginfo("[MAV] Return to Launch pending")
         self.pub_goal.publish(goal)
        
     def mission_repeat_set(self, flag):
@@ -86,18 +86,23 @@ class MavlinkExecutor(object):
 
     def mission_wp_reached(self, msg):
         '''
-        Task to do when reach a single waypoint
+        Task to do when reach any single waypoint
         - Check the next WP
         - Decide whether to go or not (Receive Mission)
         '''
-        rospy.loginfo("[MAV] Waypoint reached status ENUM : " + str(msg.status.status))
+        rospy.loginfo("[MAV] Waypoint reached status ENUM : "
+                      + str(MoveBaseActionResultEnum(msg.status.status)))
+        # Cancel state (count as reached also)
         if msg.status.status == 2:  # Canceled
             return
 
-        if self.return_to_home_call:
+        # Reach waypoint from RTL Call (Reached home)
+        if self.return_to_home_call and msg.status.status == 3:
+            rospy.loginfo("[MAV] Return to Launch Success")
             self.return_to_home_call = False
             return
 
+        # Reach Waypoint from waypoint sequence
         self.mav.mission_item_reached_send(self.mission_current_wp)
         has_next = self.mission_wp_has_next()  # Do next mission
         if not has_next:
