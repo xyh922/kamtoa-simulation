@@ -75,3 +75,5 @@ class MavlinkCommandManager(object):
                 if mavmsg.param1 == -1:
                     print "Do Jump Deactivated"
                     self.robot_executor.mission_repeat_set(False)
+	if(mavmsg_type == "SET_MODE" and mavmsg.custom_mode == 6):
+	    print "SETMODE have"
