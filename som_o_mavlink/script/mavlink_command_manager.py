@@ -81,4 +81,3 @@ class MavlinkCommandManager(object):
         if mavmsg_type =="SET_MODE" and mavmsg.custom_mode == 6:
             # RETURN TO LAUNCH FLAG
             self.robot_executor.go_to_origin()
-                

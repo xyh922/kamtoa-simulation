@@ -83,7 +83,7 @@ class MavlinkCommunication(object):
                     # print "mission_ received"
                     self.pub_mission.publish(data)
 
-                elif mavmsg_type.startswith("COMMAND_"):
+                elif mavmsg_type.startswith("COMMAND_") or mavmsg_type.startswith("SET_MODE"):
                     # Require inheritance to gcs_bridge class
                     # print "command_ received"
                     # print "command=== : " + str(mavmsg_type)
