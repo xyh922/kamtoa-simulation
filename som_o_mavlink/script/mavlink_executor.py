@@ -52,12 +52,12 @@ class MavlinkExecutor(object):
         self.return_to_home_call = True
         # Set the origin point
         goal = self.get_ros_pose_msg(self.waypoints.home)
-         # Reset Stats
+        # Reset Stats
         self.mission_current_wp = 0
-        # Issue the goal to move_base action server 
+        # Issue the goal to move_base action server
         rospy.loginfo("[MAV] Return to Launch pending")
         self.pub_goal.publish(goal)
-       
+
     def mission_repeat_set(self, flag):
         '''
         Set Repeat flag
@@ -91,7 +91,7 @@ class MavlinkExecutor(object):
         - Decide whether to go or not (Receive Mission)
         '''
         rospy.loginfo("[MAV] Waypoint reached status ENUM : "
-                      + str(MoveBaseActionResultEnum(msg.status.status)))
+                      + str(MoveBaseActionResultEnum(msg.status.status).name))
         # Cancel state (count as reached also)
         if msg.status.status == 2:  # Canceled
             return
@@ -121,7 +121,7 @@ class MavlinkExecutor(object):
         '''
         wp = self.mission_waypoints[seq]
         goal = self.get_ros_pose_msg(wp)
-        rospy.loginfo("[MAV] Going to goal : "+str(seq)+" : " + str(wp.lat) + "," + str(wp.lng))
+        rospy.loginfo("[MAV]"+ "Going to goal : "+str(seq)+" : " + str(wp.lat) + "," + str(wp.lng))
 
         self.pub_goal.publish(goal)
         self.mav.mission_current_send(self.mission_current_wp)
@@ -136,7 +136,8 @@ class MavlinkExecutor(object):
         '''
         Start the mission (from the waypoint[index] = 0)
         '''
-        rospy.loginfo("[MAV] ARMED - Mission start with waypoint counts : " + str(len(self.mission_waypoints)))
+        rospy.loginfo("[MAV] ARMED - Mission start with waypoint counts : "
+                      + str(len(self.mission_waypoints)))
         if waypoints:
             self.mission_waypoint_set(waypoints)
 
