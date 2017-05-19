@@ -17,7 +17,7 @@
     <!-- Laser filter Node  -->
     <include file="$(find som_o_base)/launch/config/laser_filters.launch"/>
     <!-- Gy-86 IMU and Magnetometer -->
-    <include file="$(find som_o_base)/launch/config/imu.launch"/>
+   <!-- <include file="$(find som_o_base)/launch/config/imu.launch"/>-->
     <!-- Odometry Fusion -->
     <include file="$(find som_o_base)/launch/config/robot_localization.launch"/>
 </launch>
