@@ -91,7 +91,7 @@ class MavlinkExecutor(object):
         - Decide whether to go or not (Receive Mission)
         '''
         rospy.loginfo("[MAV] Waypoint reached status ENUM : "
-                      + str(MoveBaseActionResultEnum(msg.status.status)))
+                      + str(MoveBaseActionResultEnum(msg.status.status).name))
         # Cancel state (count as reached also)
         if msg.status.status == 2:  # Canceled
             return
