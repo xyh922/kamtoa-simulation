@@ -1,0 +1,50 @@
+
+RUN SOM_O ! 
+
+1. ssh som-o@192.168.1.15
+2. enter password ~ 
+
+3. RUN THE SCRIPT 
+===> . robot.sh  (locate in home directory which is default landing for ssh) 
+
+4. open SCREEN app 
+===> screen 
+(keep profile of robot.sh)
+
+---------------------------------------
+5. 
+roslaunch som_o_bringup ganglia_som_o_bringup.launch 
+
+(MOTOR + CAMERA + RPLIDAR) 
+
+-----------------------------------------------------------------------------------------
+RUN GROUND CONTROL 
+
+===> . setup_script.sh 
+
+roslaunch som_o_teleop teleop_joystick.launch
+
+
+----------------------------
+visualizer 
+
+rosrun rqt_plot rqt_plot
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------
+
+TO EDIT SERIAL DRIVER 
+
+ROSNODE 
+/obodroid_common/src/hgr_ganglia/src/hgr_ganglia.cpp 
+- routing to cmd_vel , getCurrent , get Odometry 
+
+/obodroid_common/src/hgr_ganglia/src/ganglia_driver.cpp
+- Contact Board - driver 
